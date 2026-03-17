@@ -1,25 +1,62 @@
 # rqm-compiler
 
+[![PyPI version](https://img.shields.io/pypi/v/rqm-compiler)](https://pypi.org/project/rqm-compiler/)
+[![Python versions](https://img.shields.io/pypi/pyversions/rqm-compiler)](https://pypi.org/project/rqm-compiler/)
+[![License](https://img.shields.io/pypi/l/rqm-compiler)](LICENSE)
+[![Documentation](https://img.shields.io/badge/docs-rqmtechnologies.com-blue)](https://docs.rqmtechnologies.com)
+[![Website](https://img.shields.io/badge/website-rqmtechnologies.com-blue)](https://rqmtechnologies.com)
+
 `rqm-compiler` is the backend-neutral compilation layer for the RQM ecosystem.
 It converts RQM circuit objects into canonical gate descriptors that can be translated
 by execution backends such as Qiskit and Amazon Braket.
 
 ---
 
-## Ecosystem position
+## 🌐 RQM Platform
+
+This repository is part of the RQM Technologies ecosystem.
+
+→ Website: https://rqmtechnologies.com  
+→ Documentation: https://docs.rqmtechnologies.com
+
+---
+
+## Installation
+
+```bash
+pip install rqm-compiler
+```
+
+Or in development mode from the repository root:
+
+```bash
+pip install -e ".[dev]"
+```
+
+---
+
+## Where this fits
+
+`rqm-compiler` is the canonical instruction and lowering layer in the RQM stack:
 
 ```
-RQM physics / math
-        ↓
-    rqm-core
-        ↓
-   rqm-compiler          ← this repo
-        ↓
-rqm-qiskit   rqm-braket
+rqm-core          (math foundation: quaternions, spinors, SU(2))
+      ↓
+rqm-compiler      (this package — circuits, operations, normalization, compilation)
+      ↓
+rqm-qiskit   /   rqm-braket     (execution backends)
 ```
 
-`rqm-compiler` sits between the physics math layer (`rqm-core`) and the vendor execution
-layers.  It does **not** implement quantum math and does **not** import vendor SDKs.
+It sits between the physics/math layer (`rqm-core`) and the vendor execution layers.
+It does **not** implement quantum math and does **not** import vendor SDKs.
+
+---
+
+## Next steps
+
+- Documentation: https://docs.rqmtechnologies.com
+- Website: https://rqmtechnologies.com
+- Execution backends: [`rqm-qiskit`](https://github.com/RQM-Technologies-dev/rqm-qiskit) · [`rqm-braket`](https://github.com/RQM-Technologies-dev/rqm-braket)
 
 ---
 
@@ -42,20 +79,6 @@ print(compiled.descriptors)
 #   {'gate': 'measure', 'targets': [0], 'controls': [],  'params': {'key': 'm0'}},
 #   {'gate': 'measure', 'targets': [1], 'controls': [],  'params': {'key': 'm1'}},
 # ]
-```
-
----
-
-## Installation
-
-```bash
-pip install rqm-compiler
-```
-
-Or in development mode from the repository root:
-
-```bash
-pip install -e ".[dev]"
 ```
 
 ---

@@ -5,11 +5,34 @@ build-backend = "hatchling.build"
 [project]
 name = "rqm-compiler"
 version = "0.1.0"
-description = "Backend-neutral circuit compiler for the RQM quantum ecosystem"
+description = "Backend-neutral circuit compiler and canonical instruction layer for the RQM quantum ecosystem"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
+authors = [
+  { name = "RQM Technologies", email = "dev@rqmtechnologies.com" },
+]
+keywords = ["quantum", "compiler", "circuit", "qiskit", "braket", "rqm", "quantum computing"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Physics",
+  "Topic :: Software Development :: Compilers",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://rqmtechnologies.com"
+Documentation = "https://docs.rqmtechnologies.com"
+Source = "https://github.com/RQM-Technologies-dev/rqm-compiler"
+Issues = "https://github.com/RQM-Technologies-dev/rqm-compiler/issues"
 
 [project.optional-dependencies]
 dev = [
