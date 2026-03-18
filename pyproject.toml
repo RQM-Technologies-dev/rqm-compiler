@@ -10,6 +10,38 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 dependencies = []
+authors = [
+    { name = "RQM Technologies", email = "dev@rqm-technologies.io" },
+]
+keywords = [
+    "quantum",
+    "quantum-computing",
+    "circuit",
+    "compiler",
+    "quantum-circuit",
+    "rqm",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Compilers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/RQM-Technologies-dev/rqm-compiler"
+Repository = "https://github.com/RQM-Technologies-dev/rqm-compiler"
+"Bug Tracker" = "https://github.com/RQM-Technologies-dev/rqm-compiler/issues"
 
 [project.optional-dependencies]
 dev = [
