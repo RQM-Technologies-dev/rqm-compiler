@@ -46,6 +46,7 @@ from typing import Any
 
 from ..circuit import Circuit
 from ..descriptors import CANONICAL_SINGLE_QUBIT_GATE
+from ..normalize import normalize_quaternion
 from ..ops import Operation
 
 # ---------------------------------------------------------------------------
@@ -148,6 +149,7 @@ def to_u1q_pass(circuit: Circuit) -> Circuit:
     for op in circuit.operations:
         if op.gate in _COLLAPSIBLE_SINGLE_QUBIT_GATES:
             w, x, y, z = _gate_to_quaternion(op.gate, op.params)
+            w, x, y, z = normalize_quaternion(w, x, y, z)
             out.add(
                 Operation(
                     gate=CANONICAL_SINGLE_QUBIT_GATE,
