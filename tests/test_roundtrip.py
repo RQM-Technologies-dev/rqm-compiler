@@ -150,3 +150,49 @@ def test_compile_rejects_invalid_circuit():
     c.add(Operation(gate="h", targets=[5]))  # qubit 5 out of range for 1-qubit circuit
     with pytest.raises(CircuitValidationError):
         compile_circuit(c)
+
+
+# ---------------------------------------------------------------------------
+# u1q gate: quaternion-form single-qubit unitary
+# ---------------------------------------------------------------------------
+
+def test_u1q_compiles():
+    """u1q with a valid unit quaternion should compile without error."""
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)  # identity quaternion
+    compiled = compile_circuit(c)
+    assert compiled.num_qubits == 1
+    assert len(compiled.descriptors) == 1
+    d = compiled.descriptors[0]
+    assert d["gate"] == "u1q"
+    assert d["targets"] == [0]
+    assert d["params"] == {"w": 1.0, "x": 0.0, "y": 0.0, "z": 0.0}
+
+
+def test_u1q_descriptor_schema():
+    """Compiled u1q descriptor must have the canonical four fields."""
+    c = Circuit(1)
+    c.u1q(0, 0.5, 0.5, 0.5, 0.5)
+    compiled = compile_circuit(c)
+    d = compiled.descriptors[0]
+    assert {"gate", "targets", "controls", "params"} <= d.keys()
+    assert isinstance(d["params"], dict)
+    assert set(d["params"]) == {"w", "x", "y", "z"}
+
+
+def test_u1q_io_roundtrip():
+    """u1q gate must survive circuit → dict → circuit → descriptors roundtrip."""
+    c = Circuit(1)
+    c.u1q(0, 0.5, 0.5, 0.5, 0.5)
+    data = circuit_to_dict(c)
+    restored = circuit_from_dict(data)
+    assert restored.to_descriptors() == c.to_descriptors()
+
+
+def test_u1q_rejects_non_unit_quaternion():
+    """compile_circuit must reject a u1q op whose quaternion is not unit."""
+    from rqm_compiler.validate import CircuitValidationError
+    c = Circuit(1)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": 0.0, "x": 0.0, "y": 0.0, "z": 0.0}))
+    with pytest.raises(CircuitValidationError, match="not unit"):
+        compile_circuit(c)

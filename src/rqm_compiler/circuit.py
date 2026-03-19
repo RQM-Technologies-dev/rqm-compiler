@@ -132,6 +132,25 @@ class Circuit:
         """Phase-shift gate by *angle* radians."""
         return self.add(Operation(gate="phaseshift", targets=[qubit], params={"angle": angle}))
 
+    def u1q(self, qubit: int, w: float, x: float, y: float, z: float) -> "Circuit":
+        """General single-qubit gate in quaternion form.
+
+        The parameters *w*, *x*, *y*, *z* are the components of a unit quaternion
+        ``q = w + x·i + y·j + z·k`` satisfying ``w² + x² + y² + z² = 1``.  This
+        quaternion uniquely identifies an element of SU(2), which backend translators
+        use to construct the corresponding unitary matrix.
+
+        Args:
+            qubit: Target qubit index.
+            w: Real (scalar) component of the unit quaternion.
+            x: i-component of the unit quaternion.
+            y: j-component of the unit quaternion.
+            z: k-component of the unit quaternion.
+        """
+        return self.add(
+            Operation(gate="u1q", targets=[qubit], params={"w": w, "x": x, "y": y, "z": z})
+        )
+
     # ------------------------------------------------------------------
     # Builder convenience API — two-qubit gates
     # ------------------------------------------------------------------

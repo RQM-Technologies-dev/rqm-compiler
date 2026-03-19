@@ -23,6 +23,9 @@ PARAMETRIC_SINGLE_QUBIT_GATES: dict[str, tuple[str, ...]] = {
     "ry": ("angle",),
     "rz": ("angle",),
     "phaseshift": ("angle",),
+    # Quaternion form: any single-qubit unitary expressed as a unit quaternion
+    # (w, x, y, z) satisfying w² + x² + y² + z² = 1.
+    "u1q": ("w", "x", "y", "z"),
 }
 
 #: Two-qubit gates that take no parameters.

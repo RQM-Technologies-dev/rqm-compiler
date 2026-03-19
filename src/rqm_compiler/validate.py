@@ -104,7 +104,7 @@ def _validate_operation(
                 f"{prefix}: 'measure' operation must include a 'key' in params."
             )
 
-    # Parametric single-qubit gates must have an 'angle' param.
+    # Parametric single-qubit gates must have all required params.
     from .descriptors import PARAMETRIC_SINGLE_QUBIT_GATES
     if op.gate in PARAMETRIC_SINGLE_QUBIT_GATES:
         required = PARAMETRIC_SINGLE_QUBIT_GATES[op.gate]
@@ -113,3 +113,16 @@ def _validate_operation(
                 raise CircuitValidationError(
                     f"{prefix}: gate {op.gate!r} requires param {param_name!r}."
                 )
+
+    # u1q gates must represent a unit quaternion: w² + x² + y² + z² = 1.
+    if op.gate == "u1q":
+        w = op.params.get("w", 0.0)
+        x = op.params.get("x", 0.0)
+        y = op.params.get("y", 0.0)
+        z = op.params.get("z", 0.0)
+        norm_sq = w ** 2 + x ** 2 + y ** 2 + z ** 2
+        if abs(norm_sq - 1.0) > 1e-9:
+            raise CircuitValidationError(
+                f"{prefix}: u1q quaternion (w={w}, x={x}, y={y}, z={z}) is not unit "
+                f"(\u2016q\u2016\u00b2 = {norm_sq:.6g}, expected 1)."
+            )

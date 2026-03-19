@@ -104,6 +104,55 @@ def test_measure_missing_key():
 
 
 # ---------------------------------------------------------------------------
+# u1q: quaternion-form gate
+# ---------------------------------------------------------------------------
+
+def test_u1q_valid_identity_quaternion():
+    """Identity quaternion (w=1) should pass validation."""
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    validate_circuit(c)  # must not raise
+
+
+def test_u1q_valid_x_rotation_pi():
+    """Quaternion (0,1,0,0) represents a 180° rotation about X."""
+    c = Circuit(1)
+    c.u1q(0, 0.0, 1.0, 0.0, 0.0)
+    validate_circuit(c)
+
+
+def test_u1q_valid_general_unit_quaternion():
+    """Quaternion (0.5, 0.5, 0.5, 0.5) is unit."""
+    c = Circuit(1)
+    c.u1q(0, 0.5, 0.5, 0.5, 0.5)
+    validate_circuit(c)
+
+
+def test_u1q_invalid_zero_quaternion():
+    """Zero quaternion is not unit and must be rejected."""
+    c = Circuit(1)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": 0.0, "x": 0.0, "y": 0.0, "z": 0.0}))
+    with pytest.raises(CircuitValidationError, match="not unit"):
+        validate_circuit(c)
+
+
+def test_u1q_invalid_non_unit_quaternion():
+    """Non-unit quaternion (w=1, x=1) has ‖q‖²=2 and must be rejected."""
+    c = Circuit(1)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": 1.0, "x": 1.0, "y": 0.0, "z": 0.0}))
+    with pytest.raises(CircuitValidationError, match="not unit"):
+        validate_circuit(c)
+
+
+def test_u1q_missing_param():
+    """Missing a quaternion component param must be rejected."""
+    c = Circuit(1)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": 1.0, "x": 0.0, "y": 0.0}))
+    with pytest.raises(CircuitValidationError, match="requires param 'z'"):
+        validate_circuit(c)
+
+
+# ---------------------------------------------------------------------------
 # Empty targets
 # ---------------------------------------------------------------------------
 

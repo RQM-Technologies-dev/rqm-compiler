@@ -86,6 +86,23 @@ def test_rx_ry_rz_phaseshift_in_parametric():
         assert gate in PARAMETRIC_SINGLE_QUBIT_GATES
 
 
+def test_u1q_in_parametric():
+    assert "u1q" in PARAMETRIC_SINGLE_QUBIT_GATES
+
+
+def test_u1q_required_params():
+    assert set(PARAMETRIC_SINGLE_QUBIT_GATES["u1q"]) == {"w", "x", "y", "z"}
+
+
+def test_u1q_in_supported_gates():
+    assert "u1q" in SUPPORTED_GATES
+
+
+def test_u1q_is_supported_gate():
+    assert is_supported_gate("u1q")
+    assert is_supported_gate("U1Q")
+
+
 def test_cx_cy_cz_swap_iswap_in_two_qubit():
     for gate in ("cx", "cy", "cz", "swap", "iswap"):
         assert gate in TWO_QUBIT_GATES
