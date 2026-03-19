@@ -23,6 +23,9 @@ PARAMETRIC_SINGLE_QUBIT_GATES: dict[str, tuple[str, ...]] = {
     "ry": ("angle",),
     "rz": ("angle",),
     "phaseshift": ("angle",),
+    # Quaternion form: any single-qubit unitary expressed as a unit quaternion
+    # (w, x, y, z) satisfying w² + x² + y² + z² = 1.
+    "u1q": ("w", "x", "y", "z"),
 }
 
 #: Two-qubit gates that take no parameters.
@@ -38,6 +41,11 @@ SUPPORTED_GATES: frozenset[str] = (
     | TWO_QUBIT_GATES
     | OTHER_GATES
 )
+
+#: The canonical target representation for any single-qubit unitary.
+#: Compilation passes that collapse named single-qubit gates (rx, ry, h, …)
+#: use this constant to identify their output gate.
+CANONICAL_SINGLE_QUBIT_GATE: str = "u1q"
 
 
 def make_descriptor(

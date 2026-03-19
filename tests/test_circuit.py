@@ -58,6 +58,33 @@ def test_builder_parametric_gates():
         assert op.targets == [0]
 
 
+def test_builder_u1q_identity():
+    """Identity quaternion (w=1, x=y=z=0) should be accepted."""
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    op = c.operations[0]
+    assert op.gate == "u1q"
+    assert op.targets == [0]
+    assert op.params == {"w": 1.0, "x": 0.0, "y": 0.0, "z": 0.0}
+
+
+def test_builder_u1q_x_pi_rotation():
+    """Quaternion for 180° rotation about X: (0, 1, 0, 0)."""
+    c = Circuit(1)
+    c.u1q(0, 0.0, 1.0, 0.0, 0.0)
+    op = c.operations[0]
+    assert op.gate == "u1q"
+    assert op.params["x"] == 1.0
+
+
+def test_builder_u1q_general():
+    """General unit quaternion with all non-zero components."""
+    c = Circuit(1)
+    c.u1q(0, 0.5, 0.5, 0.5, 0.5)
+    op = c.operations[0]
+    assert op.params == {"w": 0.5, "x": 0.5, "y": 0.5, "z": 0.5}
+
+
 def test_builder_two_qubit_gates():
     c = Circuit(2)
     c.cx(0, 1).cy(0, 1).cz(0, 1)
