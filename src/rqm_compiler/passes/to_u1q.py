@@ -149,7 +149,7 @@ def to_u1q_pass(circuit: Circuit) -> Circuit:
     for op in circuit.operations:
         if op.gate in _COLLAPSIBLE_SINGLE_QUBIT_GATES:
             w, x, y, z = _gate_to_quaternion(op.gate, op.params)
-            w, x, y, z = normalize_quaternion(w, x, y, z)
+            w, x, y, z = normalize_quaternion(w, x, y, z, allow_renormalization=True)
             out.add(
                 Operation(
                     gate=CANONICAL_SINGLE_QUBIT_GATE,

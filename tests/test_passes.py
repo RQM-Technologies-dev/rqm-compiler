@@ -248,3 +248,38 @@ def test_to_u1q_preserves_targets():
     c.h(2)
     out = to_u1q_pass(c)
     assert out.to_descriptors()[0]["targets"] == [2]
+
+
+# ---------------------------------------------------------------------------
+# Sign canonicalization in to_u1q_pass
+# ---------------------------------------------------------------------------
+
+def test_to_u1q_w_always_nonnegative():
+    """Every u1q quaternion produced by to_u1q_pass must have w >= 0."""
+    c = Circuit(1)
+    c.i(0).x(0).y(0).z(0).h(0).s(0).t(0)
+    c.rx(0, math.pi).ry(0, math.pi).rz(0, math.pi).phaseshift(0, math.pi)
+    out = to_u1q_pass(c)
+    for d in out.to_descriptors():
+        assert d["params"]["w"] >= 0.0, f"w < 0 for gate: {d}"
+
+
+def test_to_u1q_sign_canonicalization_q_and_minus_q_agree():
+    """Equivalent gates that differ only by global quaternion sign produce the same output.
+
+    rx(π) and x both represent a π rotation around X.  Before sign canonicalization
+    they could produce (w, x, y, z) and -(w, x, y, z).  After canonicalization they
+    must be identical.
+    """
+    c_rx = Circuit(1)
+    c_rx.rx(0, math.pi)
+    c_x = Circuit(1)
+    c_x.x(0)
+
+    w_rx, x_rx, y_rx, z_rx = _u1q_params(to_u1q_pass(c_rx), 0)
+    w_x, x_x, y_x, z_x = _u1q_params(to_u1q_pass(c_x), 0)
+
+    assert math.isclose(w_rx, w_x, abs_tol=1e-9)
+    assert math.isclose(x_rx, x_x, abs_tol=1e-9)
+    assert math.isclose(y_rx, y_x, abs_tol=1e-9)
+    assert math.isclose(z_rx, z_x, abs_tol=1e-9)
