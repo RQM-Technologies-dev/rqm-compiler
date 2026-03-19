@@ -1,9 +1,10 @@
 """Tests for circuit normalization."""
 
+import math
 import pytest
 
 from rqm_compiler import Circuit, Operation
-from rqm_compiler.normalize import normalize_circuit, normalize_operation, normalize_descriptor
+from rqm_compiler.normalize import normalize_circuit, normalize_operation, normalize_descriptor, normalize_quaternion
 
 
 # ---------------------------------------------------------------------------
@@ -92,3 +93,61 @@ def test_normalize_descriptor_is_copy():
     norm = normalize_descriptor(raw)
     norm["targets"].append(1)
     assert raw["targets"] == [0]
+
+
+# ---------------------------------------------------------------------------
+# normalize_quaternion
+# ---------------------------------------------------------------------------
+
+def test_normalize_quaternion_already_unit():
+    """An already-unit quaternion is returned unchanged."""
+    result = normalize_quaternion(1.0, 0.0, 0.0, 0.0)
+    assert result == (1.0, 0.0, 0.0, 0.0)
+
+
+def test_normalize_quaternion_identity_passes():
+    """Identity quaternion (1,0,0,0) must pass without allow_renormalization."""
+    w, x, y, z = normalize_quaternion(1.0, 0.0, 0.0, 0.0)
+    assert math.isclose(w * w + x * x + y * y + z * z, 1.0, rel_tol=1e-9)
+
+
+def test_normalize_quaternion_general_unit():
+    """Any unit quaternion (0.5, 0.5, 0.5, 0.5) passes through untouched."""
+    result = normalize_quaternion(0.5, 0.5, 0.5, 0.5)
+    assert result == (0.5, 0.5, 0.5, 0.5)
+
+
+def test_normalize_quaternion_non_unit_raises_by_default():
+    """Non-unit quaternion raises ValueError without allow_renormalization."""
+    with pytest.raises(ValueError, match="not unit"):
+        normalize_quaternion(1.0, 1.0, 0.0, 0.0)
+
+
+def test_normalize_quaternion_zero_raises():
+    """Zero quaternion cannot be normalized and always raises ValueError."""
+    with pytest.raises(ValueError, match="zero quaternion"):
+        normalize_quaternion(0.0, 0.0, 0.0, 0.0, allow_renormalization=True)
+
+
+def test_normalize_quaternion_renormalization_scales_to_unit():
+    """allow_renormalization=True must return a unit quaternion."""
+    # (2, 0, 0, 0) has norm 2 → should return (1, 0, 0, 0)
+    w, x, y, z = normalize_quaternion(2.0, 0.0, 0.0, 0.0, allow_renormalization=True)
+    assert math.isclose(w * w + x * x + y * y + z * z, 1.0, rel_tol=1e-9)
+    assert math.isclose(w, 1.0, rel_tol=1e-9)
+
+
+def test_normalize_quaternion_renormalization_general():
+    """allow_renormalization=True correctly normalizes a general vector."""
+    # (1, 1, 1, 1) has norm 2
+    w, x, y, z = normalize_quaternion(1.0, 1.0, 1.0, 1.0, allow_renormalization=True)
+    assert math.isclose(w * w + x * x + y * y + z * z, 1.0, rel_tol=1e-9)
+    assert math.isclose(w, 0.5, rel_tol=1e-9)
+    assert math.isclose(x, 0.5, rel_tol=1e-9)
+
+
+def test_normalize_quaternion_near_unit_passes():
+    """Quaternion within 1e-9 tolerance of unit norm passes without renormalization."""
+    eps = 1e-12
+    result = normalize_quaternion(1.0 + eps, 0.0, 0.0, 0.0)
+    assert result == (1.0 + eps, 0.0, 0.0, 0.0)

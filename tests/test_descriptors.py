@@ -8,6 +8,7 @@ from rqm_compiler.descriptors import (
     PARAMETRIC_SINGLE_QUBIT_GATES,
     TWO_QUBIT_GATES,
     OTHER_GATES,
+    CANONICAL_SINGLE_QUBIT_GATE,
     make_descriptor,
     is_supported_gate,
 )
@@ -101,6 +102,14 @@ def test_u1q_in_supported_gates():
 def test_u1q_is_supported_gate():
     assert is_supported_gate("u1q")
     assert is_supported_gate("U1Q")
+
+
+def test_canonical_single_qubit_gate_is_u1q():
+    assert CANONICAL_SINGLE_QUBIT_GATE == "u1q"
+
+
+def test_canonical_single_qubit_gate_is_in_supported_gates():
+    assert CANONICAL_SINGLE_QUBIT_GATE in SUPPORTED_GATES
 
 
 def test_cx_cy_cz_swap_iswap_in_two_qubit():
