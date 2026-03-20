@@ -17,6 +17,9 @@ class Circuit:
 
     Args:
         num_qubits: The number of qubits in the circuit.
+        metadata: Optional dictionary of user-defined circuit metadata.  The
+            compiler preserves this dictionary through all passes and
+            propagates it to the optimized output circuit.
 
     Example::
 
@@ -31,11 +34,12 @@ class Circuit:
         descriptors = c.to_descriptors()
     """
 
-    def __init__(self, num_qubits: int) -> None:
+    def __init__(self, num_qubits: int, *, metadata: dict[str, Any] | None = None) -> None:
         if num_qubits < 1:
             raise ValueError(f"num_qubits must be >= 1, got {num_qubits}")
         self._num_qubits: int = num_qubits
         self._ops: list[Operation] = []
+        self.metadata: dict[str, Any] = dict(metadata) if metadata is not None else {}
 
     # ------------------------------------------------------------------
     # Properties

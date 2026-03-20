@@ -4,7 +4,8 @@ import math
 import pytest
 
 from rqm_compiler import Circuit, Operation, compile_circuit
-from rqm_compiler.passes import to_u1q_pass
+from rqm_compiler.passes import cancel_2q_pass, sign_canon_pass, to_u1q_pass
+from rqm_compiler.passes.cancel_2q import SELF_INVERSE_TWO_QUBIT_GATES
 from rqm_compiler.descriptors import CANONICAL_SINGLE_QUBIT_GATE
 
 
@@ -283,3 +284,297 @@ def test_to_u1q_sign_canonicalization_q_and_minus_q_agree():
     assert math.isclose(x_rx, x_x, abs_tol=1e-9)
     assert math.isclose(y_rx, y_x, abs_tol=1e-9)
     assert math.isclose(z_rx, z_x, abs_tol=1e-9)
+
+
+# ---------------------------------------------------------------------------
+# sign_canon_pass: sign-canonicalization pass for u1q gates
+# ---------------------------------------------------------------------------
+
+
+def test_sign_canon_flips_negative_w():
+    """A u1q with w < 0 must be negated to w > 0."""
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)   # w = -1 (non-canonical identity)
+    out = sign_canon_pass(c)
+    d = out.to_descriptors()[0]
+    assert d["params"]["w"] >= 0.0
+    assert math.isclose(d["params"]["w"], 1.0, rel_tol=1e-12)
+    assert math.isclose(d["params"]["x"], 0.0, abs_tol=1e-12)
+
+
+def test_sign_canon_preserves_positive_w():
+    """A u1q with w > 0 must not be altered."""
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    out = sign_canon_pass(c)
+    assert out.to_descriptors() == c.to_descriptors()
+
+
+def test_sign_canon_result_is_unit():
+    """After sign_canon, every u1q must still be a unit quaternion."""
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)
+    out = sign_canon_pass(c)
+    d = out.to_descriptors()[0]
+    p = d["params"]
+    assert _is_unit(p["w"], p["x"], p["y"], p["z"])
+
+
+def test_sign_canon_all_w_nonneg_after_flip():
+    """Every u1q in the output must satisfy w >= 0."""
+    c = Circuit(2)
+    # Manually create non-canonical quaternions (w < 0)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": -0.5, "x": 0.5, "y": 0.5, "z": 0.5}))
+    c.add(Operation(gate="u1q", targets=[1], params={"w": -0.5, "x": -0.5, "y": -0.5, "z": -0.5}))
+    out = sign_canon_pass(c)
+    for d in out.to_descriptors():
+        assert d["params"]["w"] >= 0.0, f"w < 0 for {d}"
+
+
+def test_sign_canon_non_u1q_gates_pass_through():
+    """Non-u1q gates must be unchanged by sign_canon_pass."""
+    c = Circuit(2)
+    c.cx(0, 1)
+    c.measure(0, key="m0")
+    c.barrier()
+    out = sign_canon_pass(c)
+    assert out.to_descriptors() == c.to_descriptors()
+
+
+def test_sign_canon_does_not_mutate_input():
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)
+    original = c.to_descriptors()
+    sign_canon_pass(c)
+    assert c.to_descriptors() == original
+
+
+def test_sign_canon_returns_new_circuit():
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    out = sign_canon_pass(c)
+    assert out is not c
+
+
+def test_sign_canon_preserves_num_qubits():
+    c = Circuit(5)
+    out = sign_canon_pass(c)
+    assert out.num_qubits == 5
+
+
+def test_sign_canon_idempotent():
+    """Applying sign_canon_pass twice must produce the same result as applying it once."""
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)
+    once = sign_canon_pass(c)
+    twice = sign_canon_pass(once)
+    assert once.to_descriptors() == twice.to_descriptors()
+
+
+def test_sign_canon_mixed_circuit():
+    """A circuit with mixed gate types: only u1q gates are affected."""
+    c = Circuit(2)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)   # will be flipped
+    c.cx(0, 1)                          # unchanged
+    c.u1q(1, 1.0, 0.0, 0.0, 0.0)    # already canonical, unchanged
+    c.measure(0, key="m0")              # unchanged
+
+    out = sign_canon_pass(c)
+    descs = out.to_descriptors()
+
+    assert descs[0]["gate"] == "u1q"
+    assert descs[0]["params"]["w"] >= 0.0   # was -1 → now 1
+    assert descs[1]["gate"] == "cx"
+    assert descs[2]["gate"] == "u1q"
+    assert descs[2]["params"]["w"] >= 0.0
+    assert descs[3]["gate"] == "measure"
+
+
+def test_sign_canon_after_to_u1q_all_w_nonneg():
+    """to_u1q already sign-canonicalizes, so sign_canon is idempotent on its output."""
+    c = Circuit(1)
+    c.i(0).x(0).y(0).z(0).h(0).s(0).t(0)
+    c.rx(0, math.pi).ry(0, math.pi).rz(0, math.pi)
+    after_to_u1q = to_u1q_pass(c)
+    after_sign_canon = sign_canon_pass(after_to_u1q)
+    assert after_to_u1q.to_descriptors() == after_sign_canon.to_descriptors()
+
+
+# ---------------------------------------------------------------------------
+# cancel_2q_pass: self-inverse two-qubit gate cancellation
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("gate", sorted(SELF_INVERSE_TWO_QUBIT_GATES))
+def test_cancel_2q_adjacent_pair_removed(gate: str):
+    """Two adjacent identical self-inverse gates on the same pair are cancelled."""
+    c = Circuit(2)
+    if gate == "swap":
+        c.swap(0, 1).swap(0, 1)
+    elif gate == "cx":
+        c.cx(0, 1).cx(0, 1)
+    elif gate == "cy":
+        c.cy(0, 1).cy(0, 1)
+    elif gate == "cz":
+        c.cz(0, 1).cz(0, 1)
+    result = cancel_2q_pass(c)
+    assert len(result) == 0, f"{gate}·{gate} should cancel to identity"
+
+
+def test_cancel_2q_iswap_not_cancelled():
+    """iswap is NOT self-inverse; a pair must survive cancel_2q_pass."""
+    c = Circuit(2)
+    c.iswap(0, 1).iswap(0, 1)
+    result = cancel_2q_pass(c)
+    assert len(result) == 2
+    assert result.to_descriptors()[0]["gate"] == "iswap"
+
+
+def test_cancel_2q_intervening_gate_on_same_qubit_prevents_cancel():
+    """An op touching qubit 0 between two cx(0,1) prevents cancellation."""
+    c = Circuit(2)
+    c.cx(0, 1)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": 1.0, "x": 0.0, "y": 0.0, "z": 0.0}))
+    c.cx(0, 1)
+    result = cancel_2q_pass(c)
+    gates = [op.gate for op in result.operations]
+    assert gates == ["cx", "u1q", "cx"]
+
+
+def test_cancel_2q_intervening_gate_on_control_qubit_prevents_cancel():
+    """An op touching the target qubit (qubit 1) between two cx(0,1) gates prevents cancellation."""
+    c = Circuit(2)
+    c.cx(0, 1)
+    c.add(Operation(gate="u1q", targets=[1], params={"w": 1.0, "x": 0.0, "y": 0.0, "z": 0.0}))
+    c.cx(0, 1)
+    result = cancel_2q_pass(c)
+    gates = [op.gate for op in result.operations]
+    assert gates == ["cx", "u1q", "cx"]
+
+
+def test_cancel_2q_intervening_gate_on_unrelated_qubit_does_not_prevent_cancel():
+    """An op on an unrelated qubit does not prevent cancellation."""
+    c = Circuit(3)
+    c.cx(0, 1)
+    c.add(Operation(gate="u1q", targets=[2], params={"w": 1.0, "x": 0.0, "y": 0.0, "z": 0.0}))
+    c.cx(0, 1)
+    result = cancel_2q_pass(c)
+    # cx pair cancelled; only the unrelated u1q remains
+    assert len(result) == 1
+    assert result.to_descriptors()[0]["gate"] == "u1q"
+
+
+def test_cancel_2q_different_gate_on_same_pair_not_cancelled():
+    """cx(0,1) followed by cz(0,1) on the same pair are NOT cancelled (different gates)."""
+    c = Circuit(2)
+    c.cx(0, 1).cz(0, 1)
+    result = cancel_2q_pass(c)
+    gates = [op.gate for op in result.operations]
+    assert gates == ["cx", "cz"]
+
+
+def test_cancel_2q_different_qubit_pair_not_cancelled():
+    """cx(0,1) and cx(0,2) are not cancelled (different qubit pairs)."""
+    c = Circuit(3)
+    c.cx(0, 1).cx(0, 2)
+    result = cancel_2q_pass(c)
+    assert len(result) == 2
+
+
+def test_cancel_2q_reversed_qubit_order_not_cancelled():
+    """cx(0,1) and cx(1,0) have opposite control/target and must NOT cancel."""
+    c = Circuit(2)
+    c.cx(0, 1).cx(1, 0)
+    result = cancel_2q_pass(c)
+    assert len(result) == 2
+
+
+def test_cancel_2q_does_not_mutate_input():
+    c = Circuit(2)
+    c.cx(0, 1).cx(0, 1)
+    original = c.to_descriptors()
+    cancel_2q_pass(c)
+    assert c.to_descriptors() == original
+
+
+def test_cancel_2q_returns_new_circuit():
+    c = Circuit(2)
+    c.cx(0, 1)
+    result = cancel_2q_pass(c)
+    assert result is not c
+
+
+def test_cancel_2q_preserves_num_qubits():
+    c = Circuit(5)
+    result = cancel_2q_pass(c)
+    assert result.num_qubits == 5
+
+
+def test_cancel_2q_idempotent():
+    """Applying cancel_2q_pass twice yields the same result as once."""
+    c = Circuit(2)
+    c.cx(0, 1).h(0).cx(0, 1)  # non-adjacent, should not cancel
+    once = cancel_2q_pass(c)
+    twice = cancel_2q_pass(once)
+    assert once.to_descriptors() == twice.to_descriptors()
+
+
+def test_cancel_2q_idempotent_after_full_cancel():
+    c = Circuit(2)
+    c.cx(0, 1).cx(0, 1)
+    once = cancel_2q_pass(c)
+    twice = cancel_2q_pass(once)
+    assert once.to_descriptors() == twice.to_descriptors()
+    assert len(once) == 0
+
+
+def test_cancel_2q_triple_gate_leaves_one():
+    """Three consecutive identical self-inverse gates: first two cancel, third survives."""
+    c = Circuit(2)
+    c.cx(0, 1).cx(0, 1).cx(0, 1)
+    result = cancel_2q_pass(c)
+    assert len(result) == 1
+    assert result.to_descriptors()[0]["gate"] == "cx"
+
+
+def test_cancel_2q_four_gates_all_cancel():
+    """Four consecutive identical self-inverse gates: all four cancel."""
+    c = Circuit(2)
+    c.cx(0, 1).cx(0, 1).cx(0, 1).cx(0, 1)
+    result = cancel_2q_pass(c)
+    assert len(result) == 0
+
+
+def test_cancel_2q_independent_pairs_both_cancel():
+    """Two independent adjacent pairs on different qubits both cancel."""
+    c = Circuit(4)
+    c.cx(0, 1).cx(0, 1)  # pair on {0,1}
+    c.cz(2, 3).cz(2, 3)  # pair on {2,3}
+    result = cancel_2q_pass(c)
+    assert len(result) == 0
+
+
+def test_cancel_2q_non_self_inverse_gates_pass_through():
+    """Gates that are not in the self-inverse set pass through unchanged."""
+    c = Circuit(2)
+    c.iswap(0, 1)
+    c.measure(0, key="m0")
+    c.barrier()
+    result = cancel_2q_pass(c)
+    assert result.to_descriptors() == c.to_descriptors()
+
+
+def test_cancel_2q_swap_pair_cancelled():
+    """swap(0,1) followed by swap(0,1) cancels."""
+    c = Circuit(2)
+    c.swap(0, 1).swap(0, 1)
+    result = cancel_2q_pass(c)
+    assert len(result) == 0
+
+
+def test_cancel_2q_self_inverse_set_does_not_include_iswap():
+    assert "iswap" not in SELF_INVERSE_TWO_QUBIT_GATES
+
+
+def test_cancel_2q_self_inverse_set_contains_expected_gates():
+    assert SELF_INVERSE_TWO_QUBIT_GATES >= {"cx", "cy", "cz", "swap"}
