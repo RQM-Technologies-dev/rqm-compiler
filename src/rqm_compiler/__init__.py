@@ -5,19 +5,25 @@ Backend-neutral circuit compiler for the RQM quantum ecosystem.
 
 Public API::
 
-    from rqm_compiler import Circuit, Operation, compile_circuit, optimize_circuit
+    from rqm_compiler import Circuit, Operation, optimize_circuit
 
     c = Circuit(2)
     c.h(0)
     c.cx(0, 1)
-    c.measure(0, key="m0")
-    c.measure(1, key="m1")
+    c.measure_all()
 
+    # Tier 2 — preferred entry point: optimize then export
+    optimized, report = optimize_circuit(c)
+    print(report)
+    print(optimized.to_descriptors())
+
+    # Tier 2 — lightweight compile (no optimization)
+    from rqm_compiler import compile_circuit
     compiled = compile_circuit(c)
     print(compiled.descriptors)
 
-    optimized, report = optimize_circuit(c)
-    print(report)
+    # Reconstruct a circuit from descriptors
+    restored = Circuit.from_descriptors(compiled.descriptors, num_qubits=c.num_qubits)
 """
 
 from importlib.metadata import PackageNotFoundError, version

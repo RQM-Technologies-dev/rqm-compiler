@@ -196,3 +196,87 @@ def test_u1q_rejects_non_unit_quaternion():
     c.add(Operation(gate="u1q", targets=[0], params={"w": 0.0, "x": 0.0, "y": 0.0, "z": 0.0}))
     with pytest.raises(CircuitValidationError, match="not unit"):
         compile_circuit(c)
+
+
+# ---------------------------------------------------------------------------
+# Circuit.from_descriptors
+# ---------------------------------------------------------------------------
+
+def test_from_descriptors_basic():
+    """from_descriptors reconstructs a circuit identical to to_descriptors output."""
+    c = Circuit(2)
+    c.h(0).cx(0, 1).measure_all()
+    descriptors = c.to_descriptors()
+    restored = Circuit.from_descriptors(descriptors, num_qubits=2)
+    assert restored.num_qubits == 2
+    assert restored.to_descriptors() == descriptors
+
+
+def test_from_descriptors_is_inverse_of_to_descriptors():
+    """to_descriptors → from_descriptors → to_descriptors must be stable."""
+    c = _build_full_gate_circuit()
+    d1 = c.to_descriptors()
+    restored = Circuit.from_descriptors(d1, num_qubits=c.num_qubits)
+    d2 = restored.to_descriptors()
+    assert d1 == d2
+
+
+def test_from_descriptors_empty():
+    """An empty descriptor list produces an empty circuit."""
+    c = Circuit.from_descriptors([], num_qubits=3)
+    assert c.num_qubits == 3
+    assert len(c) == 0
+
+
+def test_from_descriptors_single_op():
+    d = [{"gate": "h", "targets": [0], "controls": [], "params": {}}]
+    c = Circuit.from_descriptors(d, num_qubits=1)
+    assert len(c) == 1
+    assert c.operations[0].gate == "h"
+
+
+def test_from_descriptors_preserves_operation_order():
+    c = Circuit(2)
+    c.h(0).cx(0, 1).measure(0, key="m0").measure(1, key="m1")
+    descriptors = c.to_descriptors()
+    restored = Circuit.from_descriptors(descriptors, num_qubits=2)
+    assert [op.gate for op in restored.operations] == [op.gate for op in c.operations]
+
+
+def test_from_descriptors_with_metadata():
+    descriptors = [{"gate": "h", "targets": [0], "controls": [], "params": {}}]
+    c = Circuit.from_descriptors(descriptors, num_qubits=1, metadata={"label": "test"})
+    assert c.metadata["label"] == "test"
+
+
+def test_from_descriptors_metadata_defaults_empty():
+    descriptors = [{"gate": "h", "targets": [0], "controls": [], "params": {}}]
+    c = Circuit.from_descriptors(descriptors, num_qubits=1)
+    assert c.metadata == {}
+
+
+def test_from_descriptors_compiles_cleanly():
+    """A circuit built via from_descriptors must pass compile_circuit."""
+    c = Circuit(2)
+    c.h(0).cx(0, 1).measure_all()
+    descriptors = c.to_descriptors()
+    restored = Circuit.from_descriptors(descriptors, num_qubits=2)
+    compiled = compile_circuit(restored)
+    assert compiled.num_qubits == 2
+    assert compiled.descriptors == descriptors
+
+
+def test_from_descriptors_optimized_roundtrip():
+    """optimize_circuit output can be reconstructed via from_descriptors."""
+    from rqm_compiler import optimize_circuit
+    c = Circuit(2)
+    c.h(0).cx(0, 1).measure_all()
+    optimized, _ = optimize_circuit(c)
+    desc = optimized.to_descriptors()
+    restored = Circuit.from_descriptors(desc, num_qubits=optimized.num_qubits)
+    assert restored.to_descriptors() == desc
+
+
+def test_from_descriptors_returns_circuit_instance():
+    c = Circuit.from_descriptors([], num_qubits=1)
+    assert isinstance(c, Circuit)

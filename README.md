@@ -21,17 +21,17 @@ pip install -e ".[dev]"
 ## Quickstart
 
 ```python
-from rqm_compiler import Circuit
+from rqm_compiler import Circuit, optimize_circuit
 
-c = Circuit(1)
-c.ry(0, 1.0)
+c = Circuit(2)
+c.h(0)
+c.cx(0, 1)
 c.measure_all()
 
-descriptors = c.to_descriptors()
-# [
-#   {'gate': 'ry',      'targets': [0], 'controls': [], 'params': {'angle': 1.0}},
-#   {'gate': 'measure', 'targets': [0], 'controls': [], 'params': {'key': 'm0'}},
-# ]
+# Recommended: optimize and export
+optimized, report = optimize_circuit(c)
+print(report)
+descriptors = optimized.to_descriptors()
 ```
 
 ---
@@ -129,37 +129,70 @@ c.measure_all()   # measures all qubits with default keys
 # Barrier
 c.barrier()
 
-# Export
+# Export to canonical descriptor list
 descriptors = c.to_descriptors()
+
+# Reconstruct from a descriptor list (inverse of to_descriptors)
+restored = Circuit.from_descriptors(descriptors, num_qubits=3)
 ```
 
 ---
 
 ## Transformation API (Tier 2 — Experimental)
 
-`compile_circuit` and `optimize_circuit` are the Tier 2 entry points.
-They are optional — basic circuit construction works without them.
+`optimize_circuit` is the **recommended** Tier 2 entry point.  It runs the full
+optimization pipeline (validate → normalize → canonicalize → flatten → gate
+merging → cancellation) and returns an optimized circuit plus a
+:class:`CompilerReport`.  Use this as your default mental model for backend
+integration.
+
+`compile_circuit` is the lightweight alternative when you only need validation
+and normalization without optimization.
+
+Both functions are optional — basic circuit construction works without them.
 
 ```python
-from rqm_compiler import compile_circuit, optimize_circuit
+from rqm_compiler import optimize_circuit, compile_circuit
 
-# compile_circuit: validate + normalize + canonicalize + export
+# Preferred: optimize first, then export to backend
+optimized, report = optimize_circuit(c)
+print(report)
+for op in optimized.to_descriptors():
+    translate_to_backend(op)
+
+# Lightweight alternative: validate + normalize + export (no optimization)
 compiled = compile_circuit(c)
 compiled.descriptors   # list of canonical descriptor dicts
 compiled.num_qubits    # int
 compiled.metadata      # dict with compilation metadata
-
-# optimize_circuit: full pipeline including gate merging and cancellation
-optimized, report = optimize_circuit(c)
-print(report)
 ```
 
-Backend repos use the compiler output like this:
+Backend repos should prefer `optimize_circuit` because it runs gate merging and
+cancellation before translation — circuits with redundant or adjacent single-qubit
+gates will be cheaper to execute after optimization.  Verify the trade-off for
+your specific circuit patterns.
+
+---
+
+## Reconstructing a circuit from descriptors
+
+`Circuit.from_descriptors(descriptors, num_qubits)` is the inverse of
+`to_descriptors()`.  It is useful for API ingestion, backend-to-compiler
+roundtrips, debugging, and reproducibility.
 
 ```python
-compiled = compile_circuit(circuit)
-for op in compiled.descriptors:
-    translate_to_backend(op)
+from rqm_compiler import Circuit, optimize_circuit
+
+c = Circuit(2)
+c.h(0).cx(0, 1).measure_all()
+
+# Optimize and capture the canonical IR
+optimized, report = optimize_circuit(c)
+descriptors = optimized.to_descriptors()
+
+# Later: reconstruct a Circuit from those descriptors
+restored = Circuit.from_descriptors(descriptors, num_qubits=optimized.num_qubits)
+assert restored.to_descriptors() == descriptors
 ```
 
 ---
