@@ -4,7 +4,7 @@ import math
 import pytest
 
 from rqm_compiler import Circuit, Operation, compile_circuit
-from rqm_compiler.passes import to_u1q_pass
+from rqm_compiler.passes import sign_canon_pass, to_u1q_pass
 from rqm_compiler.descriptors import CANONICAL_SINGLE_QUBIT_GATE
 
 
@@ -283,3 +283,117 @@ def test_to_u1q_sign_canonicalization_q_and_minus_q_agree():
     assert math.isclose(x_rx, x_x, abs_tol=1e-9)
     assert math.isclose(y_rx, y_x, abs_tol=1e-9)
     assert math.isclose(z_rx, z_x, abs_tol=1e-9)
+
+
+# ---------------------------------------------------------------------------
+# sign_canon_pass: sign-canonicalization pass for u1q gates
+# ---------------------------------------------------------------------------
+
+
+def test_sign_canon_flips_negative_w():
+    """A u1q with w < 0 must be negated to w > 0."""
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)   # w = -1 (non-canonical identity)
+    out = sign_canon_pass(c)
+    d = out.to_descriptors()[0]
+    assert d["params"]["w"] >= 0.0
+    assert math.isclose(d["params"]["w"], 1.0, rel_tol=1e-12)
+    assert math.isclose(d["params"]["x"], 0.0, abs_tol=1e-12)
+
+
+def test_sign_canon_preserves_positive_w():
+    """A u1q with w > 0 must not be altered."""
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    out = sign_canon_pass(c)
+    assert out.to_descriptors() == c.to_descriptors()
+
+
+def test_sign_canon_result_is_unit():
+    """After sign_canon, every u1q must still be a unit quaternion."""
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)
+    out = sign_canon_pass(c)
+    d = out.to_descriptors()[0]
+    p = d["params"]
+    assert _is_unit(p["w"], p["x"], p["y"], p["z"])
+
+
+def test_sign_canon_all_w_nonneg_after_flip():
+    """Every u1q in the output must satisfy w >= 0."""
+    c = Circuit(2)
+    # Manually create non-canonical quaternions (w < 0)
+    c.add(Operation(gate="u1q", targets=[0], params={"w": -0.5, "x": 0.5, "y": 0.5, "z": 0.5}))
+    c.add(Operation(gate="u1q", targets=[1], params={"w": -0.5, "x": -0.5, "y": -0.5, "z": -0.5}))
+    out = sign_canon_pass(c)
+    for d in out.to_descriptors():
+        assert d["params"]["w"] >= 0.0, f"w < 0 for {d}"
+
+
+def test_sign_canon_non_u1q_gates_pass_through():
+    """Non-u1q gates must be unchanged by sign_canon_pass."""
+    c = Circuit(2)
+    c.cx(0, 1)
+    c.measure(0, key="m0")
+    c.barrier()
+    out = sign_canon_pass(c)
+    assert out.to_descriptors() == c.to_descriptors()
+
+
+def test_sign_canon_does_not_mutate_input():
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)
+    original = c.to_descriptors()
+    sign_canon_pass(c)
+    assert c.to_descriptors() == original
+
+
+def test_sign_canon_returns_new_circuit():
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    out = sign_canon_pass(c)
+    assert out is not c
+
+
+def test_sign_canon_preserves_num_qubits():
+    c = Circuit(5)
+    out = sign_canon_pass(c)
+    assert out.num_qubits == 5
+
+
+def test_sign_canon_idempotent():
+    """Applying sign_canon_pass twice must produce the same result as applying it once."""
+    c = Circuit(1)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)
+    once = sign_canon_pass(c)
+    twice = sign_canon_pass(once)
+    assert once.to_descriptors() == twice.to_descriptors()
+
+
+def test_sign_canon_mixed_circuit():
+    """A circuit with mixed gate types: only u1q gates are affected."""
+    c = Circuit(2)
+    c.u1q(0, -1.0, 0.0, 0.0, 0.0)   # will be flipped
+    c.cx(0, 1)                          # unchanged
+    c.u1q(1, 1.0, 0.0, 0.0, 0.0)    # already canonical, unchanged
+    c.measure(0, key="m0")              # unchanged
+
+    out = sign_canon_pass(c)
+    descs = out.to_descriptors()
+
+    assert descs[0]["gate"] == "u1q"
+    assert descs[0]["params"]["w"] >= 0.0   # was -1 → now 1
+    assert descs[1]["gate"] == "cx"
+    assert descs[2]["gate"] == "u1q"
+    assert descs[2]["params"]["w"] >= 0.0
+    assert descs[3]["gate"] == "measure"
+
+
+def test_sign_canon_after_to_u1q_all_w_nonneg():
+    """to_u1q already sign-canonicalizes, so sign_canon is idempotent on its output."""
+    c = Circuit(1)
+    c.i(0).x(0).y(0).z(0).h(0).s(0).t(0)
+    c.rx(0, math.pi).ry(0, math.pi).rz(0, math.pi)
+    after_to_u1q = to_u1q_pass(c)
+    after_sign_canon = sign_canon_pass(after_to_u1q)
+    assert after_to_u1q.to_descriptors() == after_sign_canon.to_descriptors()

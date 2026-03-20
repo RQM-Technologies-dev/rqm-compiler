@@ -6,7 +6,7 @@ Top-level compilation entry point.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Callable
 
 from .circuit import Circuit
 from .depth import circuit_depth
@@ -14,6 +14,7 @@ from .normalize import normalize_circuit
 from .passes.canonicalize import canonicalize_pass
 from .passes.flatten import flatten_pass
 from .passes.merge_u1q import merge_u1q_pass
+from .passes.sign_canon import sign_canon_pass
 from .passes.to_u1q import to_u1q_pass
 from .report import CompilerReport
 from .validate import validate_circuit
@@ -48,6 +49,34 @@ class CompiledCircuit:
             f"CompiledCircuit(num_qubits={self.num_qubits}, "
             f"ops={len(self.descriptors)})"
         )
+
+
+# ---------------------------------------------------------------------------
+# Optimization pipeline definition
+# ---------------------------------------------------------------------------
+
+#: The ordered optimization pipeline used by :func:`optimize_circuit`.
+#:
+#: Each entry is a ``(name, pass_function)`` pair.  The passes are applied in
+#: the order listed here.  Downstream code that needs to inspect or reproduce
+#: the pipeline can iterate over this tuple rather than hard-coding pass names.
+#:
+#: Pipeline order:
+#:
+#: 1. ``normalize``   — canonical IR shape (lowercase names, list fields, …)
+#: 2. ``canonicalize``— stable operation form
+#: 3. ``flatten``     — resolve nesting (no-op for v0 flat circuits)
+#: 4. ``to_u1q``      — collapse all named single-qubit gates to u1q form
+#: 5. ``merge_u1q``   — merge adjacent u1q gates on the same qubit; drop identities
+#: 6. ``sign_canon``  — enforce w ≥ 0 on every u1q quaternion
+OPTIMIZATION_PIPELINE: tuple[tuple[str, Callable[[Circuit], Circuit]], ...] = (
+    ("normalize", normalize_circuit),
+    ("canonicalize", canonicalize_pass),
+    ("flatten", flatten_pass),
+    ("to_u1q", to_u1q_pass),
+    ("merge_u1q", merge_u1q_pass),
+    ("sign_canon", sign_canon_pass),
+)
 
 
 def compile_circuit(circuit: Circuit) -> CompiledCircuit:
@@ -106,15 +135,17 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
     :class:`~rqm_compiler.circuit.Circuit` objects — no backend-specific
     representations are introduced.
 
-    Optimization pipeline:
+    The pipeline is defined by :data:`OPTIMIZATION_PIPELINE` and applied in the
+    order listed there:
 
-    1. **Validate** — reject invalid circuits before any work is done.
-    2. **Normalize** — ensure canonical IR shape (lowercase names, list fields).
-    3. **Canonicalize** — apply the canonicalization pass.
-    4. **Flatten** — resolve any nesting (no-op for v0 flat circuits).
-    5. **to_u1q** — collapse all named single-qubit gates to ``u1q`` quaternion form.
-    6. **merge_u1q** — merge adjacent ``u1q`` gates on the same qubit, dropping
+    1. **normalize**    — canonical IR shape (lowercase names, list fields, …).
+    2. **canonicalize** — stable operation form.
+    3. **flatten**      — resolve nesting (no-op for v0 flat circuits).
+    4. **to_u1q**       — collapse all named single-qubit gates to ``u1q`` quaternion form.
+    5. **merge_u1q**    — merge adjacent ``u1q`` gates on the same qubit, dropping
        identities to reduce gate count and circuit depth.
+    6. **sign_canon**   — enforce ``w ≥ 0`` on every ``u1q`` quaternion for
+       deterministic equality, cache stability, and optimization stability.
 
     Args:
         circuit: The source :class:`~rqm_compiler.circuit.Circuit`.
@@ -129,34 +160,19 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
     Raises:
         CircuitValidationError: If the circuit fails validation.
     """
-    # Step 1: validate
+    # Validate before any transformation.
     validate_circuit(circuit)
 
     # Capture original metrics before any transformation.
     original_gate_count = len(circuit)
     original_depth = circuit_depth(circuit)
 
+    # Apply the ordered optimization pipeline.
     passes_applied: list[str] = []
-
-    # Step 2: normalize
-    working = normalize_circuit(circuit)
-    passes_applied.append("normalize")
-
-    # Step 3: canonicalize
-    working = canonicalize_pass(working)
-    passes_applied.append("canonicalize")
-
-    # Step 4: flatten
-    working = flatten_pass(working)
-    passes_applied.append("flatten")
-
-    # Step 5: collapse named single-qubit gates to u1q quaternion form.
-    working = to_u1q_pass(working)
-    passes_applied.append("to_u1q")
-
-    # Step 6: merge adjacent u1q gates on the same qubit (reduces gate count).
-    working = merge_u1q_pass(working)
-    passes_applied.append("merge_u1q")
+    working: Circuit = circuit
+    for name, pass_fn in OPTIMIZATION_PIPELINE:
+        working = pass_fn(working)
+        passes_applied.append(name)
 
     # Build the output circuit, carrying the original metadata forward.
     # This is done at the compile layer rather than inside individual passes,

@@ -23,7 +23,12 @@ Public API::
 from importlib.metadata import PackageNotFoundError, version
 
 from .circuit import Circuit
-from .compile import CompiledCircuit, compile_circuit, optimize_circuit
+from .compile import (
+    OPTIMIZATION_PIPELINE,
+    CompiledCircuit,
+    compile_circuit,
+    optimize_circuit,
+)
 from .ops import Operation
 from .report import CompilerReport
 from .validate import CircuitValidationError
@@ -33,6 +38,7 @@ __all__ = [
     "Operation",
     "CompiledCircuit",
     "CompilerReport",
+    "OPTIMIZATION_PIPELINE",
     "compile_circuit",
     "optimize_circuit",
     "CircuitValidationError",

@@ -119,7 +119,7 @@ def test_report_optimized_depth_correct():
 def test_report_passes_applied_contains_expected_names():
     c = _bell()
     _, report = optimize_circuit(c)
-    for name in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q"):
+    for name in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon"):
         assert name in report.passes_applied
 
 
@@ -460,3 +460,78 @@ def test_compiler_report_depth_delta_positive_on_reduction():
     c.x(0).x(0)
     _, report = optimize_circuit(c)
     assert report.depth_delta == 2
+
+
+# ---------------------------------------------------------------------------
+# OPTIMIZATION_PIPELINE constant
+# ---------------------------------------------------------------------------
+
+
+def test_optimization_pipeline_is_importable():
+    from rqm_compiler import OPTIMIZATION_PIPELINE
+    assert OPTIMIZATION_PIPELINE is not None
+
+
+def test_optimization_pipeline_is_ordered_tuple():
+    from rqm_compiler import OPTIMIZATION_PIPELINE
+    assert isinstance(OPTIMIZATION_PIPELINE, tuple)
+    assert len(OPTIMIZATION_PIPELINE) > 0
+
+
+def test_optimization_pipeline_entries_have_name_and_callable():
+    from rqm_compiler import OPTIMIZATION_PIPELINE
+    for entry in OPTIMIZATION_PIPELINE:
+        name, fn = entry
+        assert isinstance(name, str) and name
+        assert callable(fn)
+
+
+def test_optimization_pipeline_contains_all_pass_names():
+    from rqm_compiler import OPTIMIZATION_PIPELINE
+    names = [name for name, _ in OPTIMIZATION_PIPELINE]
+    for expected in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon"):
+        assert expected in names
+
+
+def test_optimization_pipeline_order_is_stable():
+    """Pipeline entries must appear in the defined order."""
+    from rqm_compiler import OPTIMIZATION_PIPELINE
+    names = [name for name, _ in OPTIMIZATION_PIPELINE]
+    assert names.index("to_u1q") < names.index("merge_u1q")
+    assert names.index("merge_u1q") < names.index("sign_canon")
+
+
+def test_optimization_pipeline_matches_report_passes_applied():
+    """The passes_applied list in the report must match OPTIMIZATION_PIPELINE order."""
+    from rqm_compiler import OPTIMIZATION_PIPELINE
+    c = _bell()
+    _, report = optimize_circuit(c)
+    pipeline_names = [name for name, _ in OPTIMIZATION_PIPELINE]
+    assert report.passes_applied == pipeline_names
+
+
+# ---------------------------------------------------------------------------
+# sign_canon in optimize_circuit end-to-end
+# ---------------------------------------------------------------------------
+
+
+def test_optimize_all_u1q_w_nonneg():
+    """Every u1q in the optimized output must have w >= 0."""
+    c = Circuit(2)
+    c.h(0).rx(0, math.pi).y(1).cx(0, 1)
+    optimized, _ = optimize_circuit(c)
+    for op in optimized.operations:
+        if op.gate == "u1q":
+            assert op.params["w"] >= 0.0, f"w < 0 for {op}"
+
+
+def test_optimize_sign_canon_in_passes_applied():
+    c = _bell()
+    _, report = optimize_circuit(c)
+    assert "sign_canon" in report.passes_applied
+
+
+def test_optimize_sign_canon_applied_after_merge_u1q():
+    c = _bell()
+    _, report = optimize_circuit(c)
+    assert report.passes_applied.index("merge_u1q") < report.passes_applied.index("sign_canon")
