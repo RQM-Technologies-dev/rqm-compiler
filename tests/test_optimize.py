@@ -119,7 +119,7 @@ def test_report_optimized_depth_correct():
 def test_report_passes_applied_contains_expected_names():
     c = _bell()
     _, report = optimize_circuit(c)
-    for name in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon"):
+    for name in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon", "cancel_2q"):
         assert name in report.passes_applied
 
 
@@ -258,7 +258,7 @@ def test_no_invalid_circuit_emitted():
 
 
 def test_two_qubit_gates_unchanged_in_optimized_circuit():
-    """Two-qubit gates must pass through optimization unchanged."""
+    """Non-adjacent (no cancellable pair) two-qubit gates pass through optimization unchanged."""
     c = Circuit(2)
     c.cx(0, 1).cy(0, 1).cz(0, 1).swap(0, 1).iswap(0, 1)
     optimized, _ = optimize_circuit(c)
@@ -394,7 +394,7 @@ def test_merge_u1q_identity_dropped():
 
 
 def test_merge_u1q_non_adjacent_not_merged():
-    """A two-qubit gate between two u1q gates prevents merging."""
+    """A two-qubit gate between two u1q gates on the same qubit prevents merging."""
     c = Circuit(2)
     c.u1q(0, 0.0, -1.0, 0.0, 0.0)  # X on q0
     c.cx(0, 1)                       # uses q0 → flushes pending
@@ -489,7 +489,7 @@ def test_optimization_pipeline_entries_have_name_and_callable():
 def test_optimization_pipeline_contains_all_pass_names():
     from rqm_compiler import OPTIMIZATION_PIPELINE
     names = [name for name, _ in OPTIMIZATION_PIPELINE]
-    for expected in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon"):
+    for expected in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon", "cancel_2q"):
         assert expected in names
 
 
@@ -499,6 +499,7 @@ def test_optimization_pipeline_order_is_stable():
     names = [name for name, _ in OPTIMIZATION_PIPELINE]
     assert names.index("to_u1q") < names.index("merge_u1q")
     assert names.index("merge_u1q") < names.index("sign_canon")
+    assert names.index("sign_canon") < names.index("cancel_2q")
 
 
 def test_optimization_pipeline_matches_report_passes_applied():
@@ -535,3 +536,70 @@ def test_optimize_sign_canon_applied_after_merge_u1q():
     c = _bell()
     _, report = optimize_circuit(c)
     assert report.passes_applied.index("merge_u1q") < report.passes_applied.index("sign_canon")
+
+
+# ---------------------------------------------------------------------------
+# cancel_2q in optimize_circuit end-to-end
+# ---------------------------------------------------------------------------
+
+
+def test_optimize_cancel_2q_in_passes_applied():
+    c = _bell()
+    _, report = optimize_circuit(c)
+    assert "cancel_2q" in report.passes_applied
+
+
+def test_optimize_cancel_2q_applied_after_sign_canon():
+    c = _bell()
+    _, report = optimize_circuit(c)
+    assert report.passes_applied.index("sign_canon") < report.passes_applied.index("cancel_2q")
+
+
+def test_optimize_cancels_adjacent_cx_pair():
+    """cx(0,1) followed by cx(0,1) → both removed by cancel_2q."""
+    c = Circuit(2)
+    c.cx(0, 1).cx(0, 1)
+    optimized, report = optimize_circuit(c)
+    assert len(optimized) == 0
+    assert report.gate_count_delta == 2
+
+
+def test_optimize_cancels_adjacent_cy_pair():
+    c = Circuit(2)
+    c.cy(0, 1).cy(0, 1)
+    optimized, report = optimize_circuit(c)
+    assert len(optimized) == 0
+
+
+def test_optimize_cancels_adjacent_cz_pair():
+    c = Circuit(2)
+    c.cz(0, 1).cz(0, 1)
+    optimized, report = optimize_circuit(c)
+    assert len(optimized) == 0
+
+
+def test_optimize_cancels_adjacent_swap_pair():
+    c = Circuit(2)
+    c.swap(0, 1).swap(0, 1)
+    optimized, report = optimize_circuit(c)
+    assert len(optimized) == 0
+
+
+def test_optimize_iswap_not_cancelled():
+    """iswap is NOT self-inverse; a pair must not be removed."""
+    c = Circuit(2)
+    c.iswap(0, 1).iswap(0, 1)
+    optimized, _ = optimize_circuit(c)
+    gates = [op.gate for op in optimized.operations]
+    assert gates == ["iswap", "iswap"]
+
+
+def test_optimize_cancel_2q_gate_count_delta():
+    """Gate count delta reflects 2-qubit cancellation."""
+    c = Circuit(2)
+    c.h(0).cx(0, 1).cx(0, 1).measure(0, key="m0")
+    optimized, report = optimize_circuit(c)
+    # The two cx gates cancel; h→u1q stays, measure stays
+    assert report.optimized_gate_count < report.original_gate_count
+    cx_gates = [op for op in optimized.operations if op.gate == "cx"]
+    assert len(cx_gates) == 0

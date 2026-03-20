@@ -30,6 +30,7 @@ from .compile import (
     optimize_circuit,
 )
 from .ops import Operation
+from .passes.cancel_2q import cancel_2q_pass
 from .report import CompilerReport
 from .validate import CircuitValidationError
 
@@ -39,6 +40,7 @@ __all__ = [
     "CompiledCircuit",
     "CompilerReport",
     "OPTIMIZATION_PIPELINE",
+    "cancel_2q_pass",
     "compile_circuit",
     "optimize_circuit",
     "CircuitValidationError",

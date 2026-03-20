@@ -11,6 +11,7 @@ from typing import Any, Callable
 from .circuit import Circuit
 from .depth import circuit_depth
 from .normalize import normalize_circuit
+from .passes.cancel_2q import cancel_2q_pass
 from .passes.canonicalize import canonicalize_pass
 from .passes.flatten import flatten_pass
 from .passes.merge_u1q import merge_u1q_pass
@@ -69,6 +70,7 @@ class CompiledCircuit:
 #: 4. ``to_u1q``      — collapse all named single-qubit gates to u1q form
 #: 5. ``merge_u1q``   — merge adjacent u1q gates on the same qubit; drop identities
 #: 6. ``sign_canon``  — enforce w ≥ 0 on every u1q quaternion
+#: 7. ``cancel_2q``   — cancel adjacent self-inverse two-qubit gate pairs (cx·cx, cy·cy, cz·cz, swap·swap)
 OPTIMIZATION_PIPELINE: tuple[tuple[str, Callable[[Circuit], Circuit]], ...] = (
     ("normalize", normalize_circuit),
     ("canonicalize", canonicalize_pass),
@@ -76,6 +78,7 @@ OPTIMIZATION_PIPELINE: tuple[tuple[str, Callable[[Circuit], Circuit]], ...] = (
     ("to_u1q", to_u1q_pass),
     ("merge_u1q", merge_u1q_pass),
     ("sign_canon", sign_canon_pass),
+    ("cancel_2q", cancel_2q_pass),
 )
 
 
@@ -146,6 +149,8 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
        identities to reduce gate count and circuit depth.
     6. **sign_canon**   — enforce ``w ≥ 0`` on every ``u1q`` quaternion for
        deterministic equality, cache stability, and optimization stability.
+    7. **cancel_2q**    — cancel adjacent self-inverse two-qubit gate pairs
+       (``cx·cx``, ``cy·cy``, ``cz·cz``, ``swap·swap``) on the same qubit pair.
 
     Args:
         circuit: The source :class:`~rqm_compiler.circuit.Circuit`.
