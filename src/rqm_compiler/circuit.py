@@ -193,6 +193,19 @@ class Circuit:
         resolved_key = key if key is not None else f"m{qubit}"
         return self.add(Operation(gate="measure", targets=[qubit], params={"key": resolved_key}))
 
+    def measure_all(self) -> "Circuit":
+        """Measure all qubits using default keys ``m0``, ``m1``, …
+
+        This is a Tier-1 convenience wrapper that calls :meth:`measure` for
+        every qubit in order.  Keys follow the convention ``"m{qubit}"``.
+
+        Returns:
+            ``self`` to allow method chaining.
+        """
+        for qubit in range(self._num_qubits):
+            self.measure(qubit)
+        return self
+
     def barrier(self, *qubits: int) -> "Circuit":
         """Barrier across *qubits* (or all qubits if none given)."""
         target_list = list(qubits) if qubits else list(range(self._num_qubits))
