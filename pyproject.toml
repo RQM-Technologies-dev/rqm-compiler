@@ -21,6 +21,12 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Mathematics"
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+  "pytest-cov",
+]
+
 [project.urls]
 Homepage = "https://github.com/RQM-Technologies-dev/rqm-compiler"
 Repository = "https://github.com/RQM-Technologies-dev/rqm-compiler"
