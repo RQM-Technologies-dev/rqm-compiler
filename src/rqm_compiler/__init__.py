@@ -17,6 +17,8 @@ Public API::
     print(compiled.descriptors)
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from .circuit import Circuit
 from .compile import CompiledCircuit, compile_circuit
 from .ops import Operation
@@ -30,4 +32,7 @@ __all__ = [
     "CircuitValidationError",
 ]
 
-__version__ = "0.1.0"
+try:
+    __version__ = version("rqm-compiler")
+except PackageNotFoundError:
+    __version__ = "unknown"
