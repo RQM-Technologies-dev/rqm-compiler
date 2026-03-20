@@ -74,12 +74,53 @@ class Circuit:
         return self
 
     # ------------------------------------------------------------------
-    # Export
+    # Export / import
     # ------------------------------------------------------------------
 
     def to_descriptors(self) -> list[dict[str, Any]]:
         """Export the circuit as a list of canonical descriptor dictionaries."""
         return [op.to_descriptor() for op in self._ops]
+
+    @classmethod
+    def from_descriptors(
+        cls,
+        descriptors: list[dict[str, Any]],
+        num_qubits: int,
+        *,
+        metadata: dict[str, Any] | None = None,
+    ) -> "Circuit":
+        """Construct a :class:`Circuit` from a list of canonical descriptor dicts.
+
+        This is the inverse of :meth:`to_descriptors`.  It is useful for API
+        ingestion, backend-to-compiler roundtrips, debugging, and
+        reproducibility.
+
+        Args:
+            descriptors: Ordered list of canonical descriptor dictionaries, each
+                with keys ``"gate"``, ``"targets"``, ``"controls"``, and
+                ``"params"``.
+            num_qubits: Number of qubits in the resulting circuit.
+            metadata: Optional metadata dictionary to attach to the circuit.
+                Defaults to ``None``, which results in an empty ``{}`` metadata
+                dict on the returned circuit (same behaviour as
+                ``Circuit(num_qubits)`` with no *metadata* argument).
+
+        Returns:
+            A new :class:`Circuit` containing one :class:`~rqm_compiler.ops.Operation`
+            per descriptor, in order.
+
+        Example::
+
+            descriptors = [
+                {"gate": "h",  "targets": [0], "controls": [], "params": {}},
+                {"gate": "cx", "targets": [1], "controls": [0], "params": {}},
+            ]
+            c = Circuit.from_descriptors(descriptors, num_qubits=2)
+        """
+        circuit = cls(num_qubits, metadata=metadata)
+        for descriptor in descriptors:
+            circuit.add(Operation.from_descriptor(descriptor))
+        return circuit
 
     # ------------------------------------------------------------------
     # Builder convenience API — single-qubit no-parameter gates
@@ -192,6 +233,19 @@ class Circuit:
         """
         resolved_key = key if key is not None else f"m{qubit}"
         return self.add(Operation(gate="measure", targets=[qubit], params={"key": resolved_key}))
+
+    def measure_all(self) -> "Circuit":
+        """Measure all qubits using default keys ``m0``, ``m1``, …
+
+        This is a Tier-1 convenience wrapper that calls :meth:`measure` for
+        every qubit in order.  Keys follow the convention ``"m{qubit}"``.
+
+        Returns:
+            ``self`` to allow method chaining.
+        """
+        for qubit in range(self._num_qubits):
+            self.measure(qubit)
+        return self
 
     def barrier(self, *qubits: int) -> "Circuit":
         """Barrier across *qubits* (or all qubits if none given)."""
