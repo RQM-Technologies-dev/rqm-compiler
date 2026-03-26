@@ -1,7 +1,7 @@
 """
 rqm_compiler.descriptors
 ~~~~~~~~~~~~~~~~~~~~~~~~
-Canonical gate name registry and descriptor utilities.
+Compiler-internal gate name registry and descriptor utilities.
 """
 
 from __future__ import annotations

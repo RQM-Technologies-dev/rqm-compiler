@@ -1,6 +1,10 @@
 # rqm-compiler
 
-Canonical circuit IR and compilation layer for the RQM ecosystem.
+Backend-neutral optimization and rewriting engine for the RQM ecosystem.
+
+rqm-compiler owns the internal compiler circuit model and the optimization
+pipeline.  The canonical external/public circuit schema is defined by
+**rqm-circuits**; rqm-compiler is the next layer after that boundary.
 
 ---
 
@@ -19,6 +23,13 @@ pip install -e ".[dev]"
 ---
 
 ## Quickstart
+
+> **Note for external integrations:** Callers coming from the RQM API, Studio,
+> or any external integration will typically enter the ecosystem through
+> **rqm-circuits**, which owns the canonical public circuit schema.
+> rqm-compiler is the next layer: it receives a parsed/validated circuit
+> object and runs the optimization pipeline before handing off to a backend
+> adapter.
 
 ```python
 from rqm_compiler import Circuit, optimize_circuit
@@ -43,8 +54,8 @@ Lower tiers exist for transformations and advanced workflows.
 
 | Tier | Entrypoint | When to use | Stability |
 |------|-----------|-------------|-----------|
-| 1 — Build | `Circuit`, `Operation` | Construct programs | Stable |
-| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)` | Normalize and export canonical descriptor IR | Experimental |
+| 1 — Build | `Circuit`, `Operation` | Construct programs in the compiler's internal model | Stable |
+| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)` | Run optimization passes, export internal descriptor IR | Experimental |
 | 3 — Internal | low-level IR utilities | Advanced use | Subject to change |
 
 ---
@@ -54,14 +65,22 @@ Lower tiers exist for transformations and advanced workflows.
 ```
 rqm-core
     ↓
-rqm-compiler   ← this repo
+rqm-circuits   ← canonical external/public circuit IR
     ↓
-rqm-qiskit
+rqm-compiler   ← this repo (internal optimization engine)
+    ↓
+rqm-qiskit / rqm-braket   ← backend lowering and execution bridges
+    ↓ (optional)
+rqm-optimize
 ```
 
-`rqm-core` owns all quantum math (quaternions, SU(2), Bloch sphere, spinors).
-`rqm-compiler` owns the canonical circuit IR and compilation logic.
-`rqm-qiskit` (and other backend repos) translate the compiler IR into vendor objects.
+| Layer | Responsibility |
+|-------|---------------|
+| `rqm-core` | Quaternion algebra, SU(2), Bloch sphere, spinor math |
+| `rqm-circuits` | Canonical external/public circuit schema and IR boundary |
+| `rqm-compiler` | Internal optimization and rewriting engine |
+| `rqm-qiskit` / `rqm-braket` | Backend lowering and execution bridges |
+| `rqm-optimize` | Optional backend-adjacent optimization and compression |
 
 `rqm-compiler` does **not** implement quantum math and does **not** import any vendor SDK.
 
@@ -69,18 +88,21 @@ rqm-qiskit
 
 ## What rqm-compiler owns
 
-- `Circuit` — the only canonical quantum program container
-- `Operation` — the only canonical instruction type
-- Gate semantics and supported gate set
+- `Circuit` — the internal compiler circuit model used by optimization passes
+- `Operation` — the internal instruction model used by compiler transforms
+- Gate semantics and supported gate set (compiler-internal)
 - Circuit structure and composition rules
-- Validation, normalization, and compilation passes
+- Pass pipelines: normalization, canonicalization, gate fusion, cancellation
 - Serialization helpers (`circuit_to_dict`, `circuit_from_dict`)
-- Backend-neutral descriptor IR export
+- Internal backend-neutral descriptor export for translation and debugging
+- Compiler reports and optimization metadata (`CompilerReport`)
 
 ---
 
 ## What rqm-compiler does NOT own
 
+- The canonical public/external circuit schema — belongs in `rqm-circuits`
+- API wire format or Studio payload format — belongs in `rqm-circuits`
 - Quaternion algebra — belongs in `rqm-core`
 - Spinor math — belongs in `rqm-core`
 - SU(2) or Bloch sphere math — belongs in `rqm-core`
@@ -90,9 +112,12 @@ rqm-qiskit
 
 ---
 
-## Canonical descriptor schema
+## Internal compiler descriptor format
 
-Every gate operation is a plain dictionary — the source of truth for the whole ecosystem:
+Every gate operation inside the compiler is represented as a plain dictionary.
+This is the **internal compiler descriptor format** — useful for debugging,
+backend translation, and pass inspection.  It is not the canonical external
+public circuit schema (that lives in rqm-circuits).
 
 ```python
 {
@@ -129,7 +154,7 @@ c.measure_all()   # measures all qubits with default keys
 # Barrier
 c.barrier()
 
-# Export to canonical descriptor list
+# Export to internal compiler descriptor list
 descriptors = c.to_descriptors()
 
 # Reconstruct from a descriptor list (inverse of to_descriptors)
@@ -162,7 +187,7 @@ for op in optimized.to_descriptors():
 
 # Lightweight alternative: validate + normalize + export (no optimization)
 compiled = compile_circuit(c)
-compiled.descriptors   # list of canonical descriptor dicts
+compiled.descriptors   # list of internal compiler descriptor dicts
 compiled.num_qubits    # int
 compiled.metadata      # dict with compilation metadata
 ```
@@ -177,8 +202,10 @@ your specific circuit patterns.
 ## Reconstructing a circuit from descriptors
 
 `Circuit.from_descriptors(descriptors, num_qubits)` is the inverse of
-`to_descriptors()`.  It is useful for API ingestion, backend-to-compiler
-roundtrips, debugging, and reproducibility.
+`to_descriptors()`.  It reconstructs a compiler `Circuit` from the internal
+descriptor format — useful for debugging, reproducibility, backend roundtrips,
+and tests.  This is not the canonical external public IR boundary (which is
+owned by rqm-circuits).
 
 ```python
 from rqm_compiler import Circuit, optimize_circuit
@@ -186,7 +213,7 @@ from rqm_compiler import Circuit, optimize_circuit
 c = Circuit(2)
 c.h(0).cx(0, 1).measure_all()
 
-# Optimize and capture the canonical IR
+# Optimize and capture the internal compiler descriptor IR
 optimized, report = optimize_circuit(c)
 descriptors = optimized.to_descriptors()
 

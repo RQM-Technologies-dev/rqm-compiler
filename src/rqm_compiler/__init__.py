@@ -1,7 +1,13 @@
 """
 rqm_compiler
 ~~~~~~~~~~~~
-Backend-neutral circuit compiler for the RQM quantum ecosystem.
+Backend-neutral optimization and rewriting engine for the RQM quantum ecosystem.
+
+rqm-compiler is the internal compiler layer that sits between the canonical
+external circuit IR (rqm-circuits) and backend execution bridges
+(rqm-qiskit, rqm-braket).  Typical flow::
+
+    rqm-circuits payload → bridge/import → rqm-compiler optimization → backend lowering
 
 Public API::
 
@@ -12,17 +18,17 @@ Public API::
     c.cx(0, 1)
     c.measure_all()
 
-    # Tier 2 — preferred entry point: optimize then export
+    # Tier 2 — preferred entry point: optimize then export to backend
     optimized, report = optimize_circuit(c)
     print(report)
-    print(optimized.to_descriptors())
+    print(optimized.to_descriptors())  # internal compiler descriptor format
 
     # Tier 2 — lightweight compile (no optimization)
     from rqm_compiler import compile_circuit
     compiled = compile_circuit(c)
-    print(compiled.descriptors)
+    print(compiled.descriptors)  # internal compiler descriptor format
 
-    # Reconstruct a circuit from descriptors
+    # Reconstruct a compiler circuit from internal descriptors
     restored = Circuit.from_descriptors(compiled.descriptors, num_qubits=c.num_qubits)
 """
 
