@@ -1,7 +1,7 @@
 """
 rqm_compiler.circuit
 ~~~~~~~~~~~~~~~~~~~~
-Canonical circuit container with builder convenience API.
+Internal compiler circuit container with builder convenience API.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from .ops import Operation
 
 
 class Circuit:
-    """A backend-neutral quantum circuit.
+    """Internal compiler representation of a backend-neutral quantum circuit.
 
     Args:
         num_qubits: The number of qubits in the circuit.
