@@ -89,7 +89,15 @@ def test_report_has_all_required_fields():
     assert isinstance(report.original_depth, int)
     assert isinstance(report.optimized_depth, int)
     assert isinstance(report.passes_applied, list)
-    assert isinstance(report.equivalence_verified, bool)
+    assert report.equivalence_status in {
+        "VERIFIED",
+        "UNVERIFIED",
+        "COUNTEREXAMPLE",
+        "UNSUPPORTED",
+        "ERROR",
+    }
+    assert isinstance(report.equivalence_report, dict)
+    assert report.equivalence_verified in {True, False, None}
 
 
 def test_report_original_gate_count_matches_input():
@@ -130,10 +138,12 @@ def test_report_passes_applied_is_ordered():
     assert report.passes_applied.index("to_u1q") < report.passes_applied.index("merge_u1q")
 
 
-def test_report_equivalence_verified_is_false_by_default():
+def test_report_equivalence_fields_are_populated():
     c = _bell()
     _, report = optimize_circuit(c)
-    assert report.equivalence_verified is False
+    assert report.equivalence_status in {"UNSUPPORTED", "UNVERIFIED"}
+    assert report.equivalence_verified is None
+    assert report.equivalence_report is not None
 
 
 # ---------------------------------------------------------------------------

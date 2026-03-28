@@ -7,6 +7,7 @@ Compiler report/result object produced by optimization passes.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -19,8 +20,12 @@ class CompilerReport:
         original_depth: Circuit depth of the input circuit.
         optimized_depth: Circuit depth of the optimized circuit.
         passes_applied: Ordered list of pass names that were applied.
-        equivalence_verified: ``True`` if the optimizer verified semantic
-            equivalence between the input and output circuits.
+        equivalence_status: Semantic verification status string
+            (``VERIFIED``, ``UNVERIFIED``, ``COUNTEREXAMPLE``, ``UNSUPPORTED``, ``ERROR``).
+        equivalence_report: Full semantic equivalence report payload.
+        equivalence_verified: Backward-compatible boolean-ish summary:
+            ``True`` only when verified, ``False`` only on proven mismatch,
+            and ``None`` when equivalence was not established.
     """
 
     original_gate_count: int
@@ -28,7 +33,9 @@ class CompilerReport:
     original_depth: int
     optimized_depth: int
     passes_applied: list[str] = field(default_factory=list)
-    equivalence_verified: bool = False
+    equivalence_status: str = "UNVERIFIED"
+    equivalence_report: dict[str, Any] | None = None
+    equivalence_verified: bool | None = None
 
     @property
     def gate_count_delta(self) -> int:
@@ -45,5 +52,6 @@ class CompilerReport:
             f"CompilerReport("
             f"gates: {self.original_gate_count}->{self.optimized_gate_count}, "
             f"depth: {self.original_depth}->{self.optimized_depth}, "
+            f"equivalence_status={self.equivalence_status}, "
             f"passes={self.passes_applied})"
         )
