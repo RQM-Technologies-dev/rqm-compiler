@@ -45,6 +45,12 @@ from .ops import Operation
 from .passes.cancel_2q import cancel_2q_pass
 from .report import CompilerReport
 from .validate import CircuitValidationError
+from .verification import (
+    EquivalenceMethod,
+    EquivalenceReport,
+    EquivalenceStatus,
+    verify_equivalence,
+)
 
 __all__ = [
     "Circuit",
@@ -56,6 +62,10 @@ __all__ = [
     "compile_circuit",
     "optimize_circuit",
     "CircuitValidationError",
+    "EquivalenceStatus",
+    "EquivalenceMethod",
+    "EquivalenceReport",
+    "verify_equivalence",
 ]
 
 try:

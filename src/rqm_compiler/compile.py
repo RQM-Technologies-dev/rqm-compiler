@@ -19,6 +19,7 @@ from .passes.sign_canon import sign_canon_pass
 from .passes.to_u1q import to_u1q_pass
 from .report import CompilerReport
 from .validate import validate_circuit
+from .verification import verify_equivalence
 
 
 class CompiledCircuit:
@@ -190,13 +191,32 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
     optimized_gate_count = len(output)
     optimized_depth = circuit_depth(output)
 
+    equivalence = verify_equivalence(circuit, output)
+
     report = CompilerReport(
         original_gate_count=original_gate_count,
         optimized_gate_count=optimized_gate_count,
         original_depth=original_depth,
         optimized_depth=optimized_depth,
         passes_applied=passes_applied,
-        equivalence_verified=False,
+        equivalence_status=equivalence.status.value,
+        equivalence_report={
+            "status": equivalence.status.value,
+            "method": equivalence.method,
+            "verified": equivalence.verified,
+            "phase_invariant": equivalence.phase_invariant,
+            "atol": equivalence.atol,
+            "rtol": equivalence.rtol,
+            "max_abs_err": equivalence.max_abs_err,
+            "max_rel_err": equivalence.max_rel_err,
+            "notes": list(equivalence.notes),
+            "unsupported_reasons": list(equivalence.unsupported_reasons),
+            "witness": equivalence.witness,
+            "compared_qubits": equivalence.compared_qubits,
+            "compared_gate_count_original": equivalence.compared_gate_count_original,
+            "compared_gate_count_optimized": equivalence.compared_gate_count_optimized,
+        },
+        equivalence_verified=equivalence.verified,
     )
 
     return output, report

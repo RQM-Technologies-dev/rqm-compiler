@@ -192,6 +192,27 @@ compiled.num_qubits    # int
 compiled.metadata      # dict with compilation metadata
 ```
 
+### Semantic verification in `optimize_circuit`
+
+`optimize_circuit` now performs compiler-owned semantic verification and records
+it in `CompilerReport`:
+
+- `equivalence_status`: `VERIFIED`, `UNVERIFIED`, `COUNTEREXAMPLE`, `UNSUPPORTED`, or `ERROR`
+- `equivalence_verified`: compatibility field (`True` / `False` / `None`)
+- `equivalence_report`: structured payload with method, tolerances, error metrics, notes, and optional witness data
+
+Current verifier methods:
+
+- `U1Q_CANONICAL`: exact single-qubit canonical-u1q comparison
+- `UNITARY_NUMERICAL`: dense unitary comparison up to global phase for supported small circuits
+- `GATEWISE_IDENTITY`: exact descriptor identity check for fully-resolved circuits
+
+Important semantics:
+
+- `VERIFIED` means equivalence was actually checked and passed.
+- `COUNTEREXAMPLE` means a real mismatch was detected.
+- `UNVERIFIED` / `UNSUPPORTED` means optimization completed, but no semantic certificate was established.
+
 Backend repos should prefer `optimize_circuit` because it runs gate merging and
 cancellation before translation — circuits with redundant or adjacent single-qubit
 gates will be cheaper to execute after optimization.  Verify the trade-off for
