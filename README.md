@@ -194,14 +194,26 @@ compiled.metadata      # dict with compilation metadata
 
 ### Semantic verification in `optimize_circuit`
 
-`optimize_circuit` now performs compiler-owned semantic verification and records
-it in `CompilerReport`:
+`optimize_circuit` is **proof-gated and fail-closed**. It always follows:
 
-- `equivalence_status`: `VERIFIED`, `UNVERIFIED`, `COUNTEREXAMPLE`, `UNSUPPORTED`, or `ERROR`
-- `equivalence_verified`: compatibility field (`True` / `False` / `None`)
-- `equivalence_report`: structured payload with method, tolerances, error metrics, notes, and optional witness data
+1. build a candidate optimized circuit
+2. run mandatory semantic verification
+3. commit only if verification is `VERIFIED`
+4. otherwise withhold optimization and return the original circuit unchanged
 
-Current verifier methods:
+This means no successful optimization output is ever unverified.
+
+`CompilerReport` records:
+
+- `equivalence_status`: always `VERIFIED` for the returned circuit
+- `equivalence_verified`: always `True` for the returned circuit
+- `equivalence_guaranteed`: explicit proof-gated guarantee for the returned circuit
+- `optimization_applied`: `True` only when a verified candidate was committed
+- `fallback_reason`: `"verification_not_established"` when optimization is withheld
+- `equivalence_report`: structured payload for the committed output, plus
+  `internal_candidate_proof_result` for development diagnostics
+
+Current verifier methods used internally:
 
 - `U1Q_CANONICAL`: exact single-qubit canonical-u1q comparison
 - `UNITARY_NUMERICAL`: dense unitary comparison up to global phase for supported small circuits
@@ -209,9 +221,9 @@ Current verifier methods:
 
 Important semantics:
 
-- `VERIFIED` means equivalence was actually checked and passed.
-- `COUNTEREXAMPLE` means a real mismatch was detected.
-- `UNVERIFIED` / `UNSUPPORTED` means optimization completed, but no semantic certificate was established.
+- Only verified candidates are committed as optimized output.
+- If proof fails, is unsupported, or errors, optimization is not committed.
+- Unsupported proof coverage causes optimization refusal/fallback, not uncertain output.
 
 Backend repos should prefer `optimize_circuit` because it runs gate merging and
 cancellation before translation — circuits with redundant or adjacent single-qubit
