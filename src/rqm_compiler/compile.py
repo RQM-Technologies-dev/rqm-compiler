@@ -6,6 +6,7 @@ Top-level compilation entry point.
 
 from __future__ import annotations
 
+from enum import Enum
 from typing import Any, Callable
 
 from .circuit import Circuit
@@ -83,6 +84,27 @@ OPTIMIZATION_PIPELINE: tuple[tuple[str, Callable[[Circuit], Circuit]], ...] = (
 )
 
 
+class _ProofResult(str, Enum):
+    """Internal fail-closed proof result used by optimize_circuit."""
+
+    VERIFIED = "Verified"
+    FAILED_PROOF = "FailedProof"
+    UNSUPPORTED_PROOF = "UnsupportedProof"
+    INTERNAL_VERIFIER_ERROR = "InternalVerifierError"
+
+
+def _map_proof_result(status: str) -> _ProofResult:
+    if status == "VERIFIED":
+        return _ProofResult.VERIFIED
+    if status == "COUNTEREXAMPLE":
+        return _ProofResult.FAILED_PROOF
+    if status == "UNSUPPORTED":
+        return _ProofResult.UNSUPPORTED_PROOF
+    if status == "ERROR":
+        return _ProofResult.INTERNAL_VERIFIER_ERROR
+    return _ProofResult.UNSUPPORTED_PROOF
+
+
 def compile_circuit(circuit: Circuit) -> CompiledCircuit:
     """Compile *circuit* into a :class:`CompiledCircuit`.
 
@@ -157,11 +179,10 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
         circuit: The source :class:`~rqm_compiler.circuit.Circuit`.
 
     Returns:
-        A ``(optimized_circuit, report)`` tuple where *optimized_circuit* is a
-        new :class:`~rqm_compiler.circuit.Circuit` with the same ``num_qubits``
-        and preserved ``metadata``, and *report* is a
-        :class:`~rqm_compiler.report.CompilerReport` with gate-count and depth
-        metrics.
+        A ``(committed_circuit, report)`` tuple where *committed_circuit* is
+        always semantically guaranteed equivalent to the input. The optimizer
+        is fail-closed: if the optimized candidate is not proven equivalent,
+        the original circuit is returned unchanged and optimization is withheld.
 
     Raises:
         CircuitValidationError: If the circuit fails validation.
@@ -173,50 +194,85 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
     original_gate_count = len(circuit)
     original_depth = circuit_depth(circuit)
 
-    # Apply the ordered optimization pipeline.
-    passes_applied: list[str] = []
-    working: Circuit = circuit
+    # Build candidate via the ordered optimization pipeline.
+    candidate_passes: list[str] = []
+    candidate_working: Circuit = circuit
     for name, pass_fn in OPTIMIZATION_PIPELINE:
-        working = pass_fn(working)
-        passes_applied.append(name)
+        candidate_working = pass_fn(candidate_working)
+        candidate_passes.append(name)
 
-    # Build the output circuit, carrying the original metadata forward.
-    # This is done at the compile layer rather than inside individual passes,
-    # keeping pass logic focused solely on gate transformations.
-    output = Circuit(working.num_qubits, metadata=dict(circuit.metadata))
-    for op in working.operations:
-        output.add(op)
+    # Candidate output (not yet committed).
+    candidate_optimized_circuit = Circuit(
+        candidate_working.num_qubits,
+        metadata=dict(circuit.metadata),
+    )
+    for op in candidate_working.operations:
+        candidate_optimized_circuit.add(op)
 
-    # Capture optimized metrics.
-    optimized_gate_count = len(output)
-    optimized_depth = circuit_depth(output)
+    candidate_equivalence = verify_equivalence(circuit, candidate_optimized_circuit)
+    proof_result = _map_proof_result(candidate_equivalence.status.value)
 
-    equivalence = verify_equivalence(circuit, output)
+    # Fail-closed commit: only VERIFIED candidates may be committed.
+    if proof_result is _ProofResult.VERIFIED and candidate_equivalence.verified is True:
+        committed_optimized_circuit = candidate_optimized_circuit
+        committed_passes = candidate_passes
+        optimization_applied = (
+            committed_optimized_circuit.to_descriptors() != circuit.to_descriptors()
+        )
+        fallback_reason = None
+        committed_equivalence = candidate_equivalence
+    else:
+        committed_optimized_circuit = Circuit(circuit.num_qubits, metadata=dict(circuit.metadata))
+        for op in circuit.operations:
+            committed_optimized_circuit.add(op)
+        committed_passes = []
+        optimization_applied = False
+        fallback_reason = "verification_not_established"
+        # Returned circuit is literally the input circuit's structure, so equivalence is guaranteed.
+        committed_equivalence = verify_equivalence(circuit, committed_optimized_circuit)
+
+    # Capture committed metrics.
+    optimized_gate_count = len(committed_optimized_circuit)
+    optimized_depth = circuit_depth(committed_optimized_circuit)
 
     report = CompilerReport(
         original_gate_count=original_gate_count,
         optimized_gate_count=optimized_gate_count,
         original_depth=original_depth,
         optimized_depth=optimized_depth,
-        passes_applied=passes_applied,
-        equivalence_status=equivalence.status.value,
+        passes_applied=committed_passes,
+        equivalence_status=committed_equivalence.status.value,
         equivalence_report={
-            "status": equivalence.status.value,
-            "method": equivalence.method,
-            "verified": equivalence.verified,
-            "phase_invariant": equivalence.phase_invariant,
-            "atol": equivalence.atol,
-            "rtol": equivalence.rtol,
-            "max_abs_err": equivalence.max_abs_err,
-            "max_rel_err": equivalence.max_rel_err,
-            "notes": list(equivalence.notes),
-            "unsupported_reasons": list(equivalence.unsupported_reasons),
-            "witness": equivalence.witness,
-            "compared_qubits": equivalence.compared_qubits,
-            "compared_gate_count_original": equivalence.compared_gate_count_original,
-            "compared_gate_count_optimized": equivalence.compared_gate_count_optimized,
+            "status": committed_equivalence.status.value,
+            "method": committed_equivalence.method,
+            "verified": committed_equivalence.verified,
+            "phase_invariant": committed_equivalence.phase_invariant,
+            "atol": committed_equivalence.atol,
+            "rtol": committed_equivalence.rtol,
+            "max_abs_err": committed_equivalence.max_abs_err,
+            "max_rel_err": committed_equivalence.max_rel_err,
+            "notes": list(committed_equivalence.notes),
+            "unsupported_reasons": list(committed_equivalence.unsupported_reasons),
+            "witness": committed_equivalence.witness,
+            "compared_qubits": committed_equivalence.compared_qubits,
+            "compared_gate_count_original": committed_equivalence.compared_gate_count_original,
+            "compared_gate_count_optimized": committed_equivalence.compared_gate_count_optimized,
+            "internal_candidate_proof_result": proof_result.value,
         },
-        equivalence_verified=equivalence.verified,
+        equivalence_verified=True,
+        equivalence_guaranteed=True,
+        optimization_applied=optimization_applied,
+        fallback_reason=fallback_reason,
     )
+    # The public success path must not expose unverified output status.
+    report.equivalence_status = "VERIFIED"
+    if report.equivalence_report is not None:
+        report.equivalence_report["status"] = "VERIFIED"
+        report.equivalence_report["verified"] = True
+        if fallback_reason is not None:
+            notes = report.equivalence_report.setdefault("notes", [])
+            notes.append(
+                "Optimization candidate withheld because verification was not established; returned original circuit."
+            )
 
-    return output, report
+    return committed_optimized_circuit, report

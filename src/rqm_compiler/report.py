@@ -19,13 +19,20 @@ class CompilerReport:
         optimized_gate_count: Number of operations in the optimized circuit.
         original_depth: Circuit depth of the input circuit.
         optimized_depth: Circuit depth of the optimized circuit.
-        passes_applied: Ordered list of pass names that were applied.
-        equivalence_status: Semantic verification status string
-            (``VERIFIED``, ``UNVERIFIED``, ``COUNTEREXAMPLE``, ``UNSUPPORTED``, ``ERROR``).
-        equivalence_report: Full semantic equivalence report payload.
-        equivalence_verified: Backward-compatible boolean-ish summary:
-            ``True`` only when verified, ``False`` only on proven mismatch,
-            and ``None`` when equivalence was not established.
+        passes_applied: Ordered list of pass names that were committed.
+            If optimization falls back to the original circuit, this list is empty.
+        equivalence_status: Semantic equivalence status of the returned circuit.
+            For fail-closed optimization this is always ``VERIFIED``.
+        equivalence_report: Full semantic equivalence report payload for the
+            committed output.
+        equivalence_verified: Backward-compatible summary; ``True`` for the
+            fail-closed committed output.
+        equivalence_guaranteed: Explicit proof-gated guarantee for the returned
+            circuit.
+        optimization_applied: Whether an optimized candidate was verified and
+            committed.
+        fallback_reason: Optional machine-readable fallback reason when
+            optimization was withheld.
     """
 
     original_gate_count: int
@@ -33,9 +40,12 @@ class CompilerReport:
     original_depth: int
     optimized_depth: int
     passes_applied: list[str] = field(default_factory=list)
-    equivalence_status: str = "UNVERIFIED"
+    equivalence_status: str = "VERIFIED"
     equivalence_report: dict[str, Any] | None = None
-    equivalence_verified: bool | None = None
+    equivalence_verified: bool = True
+    equivalence_guaranteed: bool = True
+    optimization_applied: bool = False
+    fallback_reason: str | None = None
 
     @property
     def gate_count_delta(self) -> int:

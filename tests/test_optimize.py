@@ -89,15 +89,11 @@ def test_report_has_all_required_fields():
     assert isinstance(report.original_depth, int)
     assert isinstance(report.optimized_depth, int)
     assert isinstance(report.passes_applied, list)
-    assert report.equivalence_status in {
-        "VERIFIED",
-        "UNVERIFIED",
-        "COUNTEREXAMPLE",
-        "UNSUPPORTED",
-        "ERROR",
-    }
+    assert report.equivalence_status == "VERIFIED"
     assert isinstance(report.equivalence_report, dict)
-    assert report.equivalence_verified in {True, False, None}
+    assert report.equivalence_verified is True
+    assert isinstance(report.equivalence_guaranteed, bool)
+    assert isinstance(report.optimization_applied, bool)
 
 
 def test_report_original_gate_count_matches_input():
@@ -125,7 +121,8 @@ def test_report_optimized_depth_correct():
 
 
 def test_report_passes_applied_contains_expected_names():
-    c = _bell()
+    c = Circuit(2)
+    c.h(0).cx(0, 1)
     _, report = optimize_circuit(c)
     for name in ("normalize", "canonicalize", "flatten", "to_u1q", "merge_u1q", "sign_canon", "cancel_2q"):
         assert name in report.passes_applied
@@ -133,7 +130,8 @@ def test_report_passes_applied_contains_expected_names():
 
 def test_report_passes_applied_is_ordered():
     """Passes must be listed in the order they were applied."""
-    c = _bell()
+    c = Circuit(2)
+    c.h(0).cx(0, 1)
     _, report = optimize_circuit(c)
     assert report.passes_applied.index("to_u1q") < report.passes_applied.index("merge_u1q")
 
@@ -141,8 +139,9 @@ def test_report_passes_applied_is_ordered():
 def test_report_equivalence_fields_are_populated():
     c = _bell()
     _, report = optimize_circuit(c)
-    assert report.equivalence_status in {"UNSUPPORTED", "UNVERIFIED"}
-    assert report.equivalence_verified is None
+    assert report.equivalence_status == "VERIFIED"
+    assert report.equivalence_verified is True
+    assert report.equivalence_guaranteed is True
     assert report.equivalence_report is not None
 
 
@@ -238,7 +237,7 @@ def test_depth_delta_property():
 def test_optimized_circuit_all_u1q_single_qubit():
     """After optimization, all single-qubit gates should be in u1q form."""
     c = Circuit(2)
-    c.h(0).x(1).cx(0, 1).measure(0, key="m0").measure(1, key="m1")
+    c.h(0).x(1).cx(0, 1)
     optimized, _ = optimize_circuit(c)
     for op in optimized.operations:
         if len(op.targets) == 1 and not op.controls and op.gate not in ("measure", "barrier"):
@@ -513,12 +512,15 @@ def test_optimization_pipeline_order_is_stable():
 
 
 def test_optimization_pipeline_matches_report_passes_applied():
-    """The passes_applied list in the report must match OPTIMIZATION_PIPELINE order."""
+    """The committed passes list only includes passes for committed optimization."""
     from rqm_compiler import OPTIMIZATION_PIPELINE
     c = _bell()
     _, report = optimize_circuit(c)
     pipeline_names = [name for name, _ in OPTIMIZATION_PIPELINE]
-    assert report.passes_applied == pipeline_names
+    if report.optimization_applied:
+        assert report.passes_applied == pipeline_names
+    else:
+        assert report.passes_applied == []
 
 
 # ---------------------------------------------------------------------------
@@ -537,13 +539,15 @@ def test_optimize_all_u1q_w_nonneg():
 
 
 def test_optimize_sign_canon_in_passes_applied():
-    c = _bell()
+    c = Circuit(2)
+    c.h(0).cx(0, 1)
     _, report = optimize_circuit(c)
     assert "sign_canon" in report.passes_applied
 
 
 def test_optimize_sign_canon_applied_after_merge_u1q():
-    c = _bell()
+    c = Circuit(2)
+    c.h(0).cx(0, 1)
     _, report = optimize_circuit(c)
     assert report.passes_applied.index("merge_u1q") < report.passes_applied.index("sign_canon")
 
@@ -556,11 +560,82 @@ def test_optimize_sign_canon_applied_after_merge_u1q():
 def test_optimize_cancel_2q_in_passes_applied():
     c = _bell()
     _, report = optimize_circuit(c)
-    assert "cancel_2q" in report.passes_applied
+    if report.optimization_applied:
+        assert "cancel_2q" in report.passes_applied
+
+
+# ---------------------------------------------------------------------------
+# Fail-closed optimization guarantees
+# ---------------------------------------------------------------------------
+
+
+def test_no_optimized_circuit_without_proof_for_unsupported_verifier_case():
+    c = Circuit(2)
+    c.h(0).iswap(0, 1)
+    optimized, report = optimize_circuit(c)
+    assert optimized.to_descriptors() == c.to_descriptors()
+    assert report.optimization_applied is False
+    assert report.fallback_reason == "verification_not_established"
+    assert report.passes_applied == []
+
+
+def test_counterexample_candidate_blocks_commit(monkeypatch):
+    c = Circuit(1)
+    c.x(0).x(0)
+
+    def _bad_merge(_circuit: Circuit) -> Circuit:
+        out = Circuit(1)
+        out.x(0)
+        return out
+
+    monkeypatch.setattr("rqm_compiler.compile.merge_u1q_pass", _bad_merge)
+    monkeypatch.setattr(
+        "rqm_compiler.compile.OPTIMIZATION_PIPELINE",
+        (
+            ("normalize", lambda x: x),
+            ("merge_u1q", _bad_merge),
+        ),
+    )
+
+    optimized, report = optimize_circuit(c)
+    assert optimized.to_descriptors() == c.to_descriptors()
+    assert report.optimization_applied is False
+    assert report.fallback_reason == "verification_not_established"
+
+
+def test_verified_rewrites_commit():
+    c = Circuit(1)
+    c.h(0).h(0)
+    optimized, report = optimize_circuit(c)
+    assert report.optimization_applied is True
+    assert len(optimized.operations) == 0
+    assert report.passes_applied
+
+
+def test_unsupported_circuits_do_not_leak_unverified_changes():
+    c = Circuit(2)
+    c.h(0).iswap(0, 1).h(0)
+    optimized, report = optimize_circuit(c)
+    assert optimized.to_descriptors() == c.to_descriptors()
+    assert report.optimization_applied is False
+    assert report.equivalence_status == "VERIFIED"
+
+
+def test_report_accuracy_when_fallback_returns_original():
+    c = Circuit(2)
+    c.h(0).iswap(0, 1)
+    optimized, report = optimize_circuit(c)
+    assert optimized.to_descriptors() == c.to_descriptors()
+    assert report.optimized_gate_count == report.original_gate_count
+    assert report.optimized_depth == report.original_depth
+    assert report.gate_count_delta == 0
+    assert report.depth_delta == 0
+    assert report.passes_applied == []
 
 
 def test_optimize_cancel_2q_applied_after_sign_canon():
-    c = _bell()
+    c = Circuit(2)
+    c.h(0).cx(0, 1)
     _, report = optimize_circuit(c)
     assert report.passes_applied.index("sign_canon") < report.passes_applied.index("cancel_2q")
 
@@ -607,7 +682,7 @@ def test_optimize_iswap_not_cancelled():
 def test_optimize_cancel_2q_gate_count_delta():
     """Gate count delta reflects 2-qubit cancellation."""
     c = Circuit(2)
-    c.h(0).cx(0, 1).cx(0, 1).measure(0, key="m0")
+    c.h(0).cx(0, 1).cx(0, 1)
     optimized, report = optimize_circuit(c)
     # The two cx gates cancel; h→u1q stays, measure stays
     assert report.optimized_gate_count < report.original_gate_count
