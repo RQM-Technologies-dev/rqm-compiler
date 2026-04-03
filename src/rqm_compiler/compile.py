@@ -15,6 +15,7 @@ from .normalize import normalize_circuit
 from .passes.cancel_2q import cancel_2q_pass
 from .passes.canonicalize import canonicalize_pass
 from .passes.flatten import flatten_pass
+from .passes.lower_u1q_named_1q import lower_u1q_named_1q_pass
 from .passes.merge_u1q import merge_u1q_pass
 from .passes.sign_canon import sign_canon_pass
 from .passes.to_u1q import to_u1q_pass
@@ -82,6 +83,8 @@ OPTIMIZATION_PIPELINE: tuple[tuple[str, Callable[[Circuit], Circuit]], ...] = (
     ("sign_canon", sign_canon_pass),
     ("cancel_2q", cancel_2q_pass),
 )
+
+_BACKEND_FAMILY_BRAKET_GATE_MODEL = "braket_gate_model"
 
 
 class _ProofResult(str, Enum):
@@ -276,3 +279,41 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
             )
 
     return committed_optimized_circuit, report
+
+
+def lower_circuit_for_backend(circuit: Circuit, *, backend_family: str) -> Circuit:
+    """Lower *circuit* for a backend family without changing optimize defaults.
+
+    ``optimize_circuit`` keeps ``u1q`` as the canonical internal 1Q IR.  This
+    function performs an explicit backend-targeted export/lowering stage.
+
+    Supported backend families:
+
+    * ``\"braket_gate_model\"``: lower ``u1q`` to named 1Q gates (``rz/ry/rz``).
+    """
+    working = Circuit(circuit.num_qubits, metadata=dict(circuit.metadata))
+    for op in circuit.operations:
+        working.add(op)
+
+    if backend_family == _BACKEND_FAMILY_BRAKET_GATE_MODEL:
+        working = lower_u1q_named_1q_pass(working)
+    else:
+        raise ValueError(
+            f"Unsupported backend_family={backend_family!r}. "
+            f"Supported values: {_BACKEND_FAMILY_BRAKET_GATE_MODEL!r}."
+        )
+
+    for op in working.operations:
+        if op.gate == "u1q" and len(op.targets) == 1 and not op.controls:
+            raise RuntimeError(
+                "Backend-targeted lowering must eliminate all single-qubit 'u1q' gates."
+            )
+
+    return working
+
+
+def compile_for_backend(circuit: Circuit, *, backend_family: str) -> tuple[Circuit, CompilerReport]:
+    """Optimize then perform explicit backend-targeted lowering."""
+    optimized, report = optimize_circuit(circuit)
+    lowered = lower_circuit_for_backend(optimized, backend_family=backend_family)
+    return lowered, report

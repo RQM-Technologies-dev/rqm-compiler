@@ -4,11 +4,19 @@ import math
 
 import pytest
 
-from rqm_compiler import Circuit, CompilerReport, Operation, optimize_circuit
+from rqm_compiler import (
+    Circuit,
+    CompilerReport,
+    Operation,
+    compile_for_backend,
+    lower_circuit_for_backend,
+    optimize_circuit,
+)
 from rqm_compiler.compile import CompiledCircuit, compile_circuit
 from rqm_compiler.depth import circuit_depth
-from rqm_compiler.passes import merge_u1q_pass, to_u1q_pass
+from rqm_compiler.passes import lower_u1q_named_1q_pass, merge_u1q_pass, to_u1q_pass
 from rqm_compiler.validate import CircuitValidationError
+from rqm_compiler.verification import verify_equivalence
 
 
 # ---------------------------------------------------------------------------
@@ -282,6 +290,71 @@ def test_measure_gates_unchanged_in_optimized_circuit():
     ops = optimized.operations
     assert ops[0].gate == "measure" and ops[0].params["key"] == "a"
     assert ops[1].gate == "measure" and ops[1].params["key"] == "b"
+
+
+# ---------------------------------------------------------------------------
+# Backend-targeted lowering (u1q -> named 1Q)
+# ---------------------------------------------------------------------------
+
+
+def test_lower_u1q_named_1q_removes_u1q_ops():
+    c = Circuit(1)
+    c.h(0).rx(0, 0.37).rz(0, -0.22)
+    optimized, _ = optimize_circuit(c)
+    lowered = lower_u1q_named_1q_pass(optimized)
+    assert all(op.gate != "u1q" for op in lowered.operations)
+    for op in lowered.operations:
+        if len(op.targets) == 1 and not op.controls and op.gate not in ("measure", "barrier"):
+            assert op.gate in {"rz", "ry"}
+
+
+def test_lower_circuit_for_braket_gate_model_removes_u1q():
+    c = Circuit(2)
+    c.h(0).x(0).cx(0, 1).measure(0, key="m0").measure(1, key="m1")
+    optimized, _ = optimize_circuit(c)
+    lowered = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
+    assert all(op.gate != "u1q" for op in lowered.operations)
+
+
+def test_braket_targeted_lowering_preserves_equivalence():
+    c = Circuit(2)
+    c.h(0).rx(0, 1.2).ry(1, -0.4).cx(0, 1)
+    optimized, _ = optimize_circuit(c)
+    lowered = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
+    proof = verify_equivalence(optimized, lowered)
+    assert proof.status.value == "VERIFIED"
+    assert proof.verified is True
+
+
+def test_braket_targeted_lowering_identity_simplifies():
+    c = Circuit(1)
+    c.u1q(0, 1.0, 0.0, 0.0, 0.0)
+    lowered = lower_circuit_for_backend(c, backend_family="braket_gate_model")
+    assert lowered.to_descriptors() == []
+
+
+def test_braket_targeted_lowering_is_deterministic():
+    c = Circuit(1)
+    c.h(0).rx(0, 0.3).rz(0, -0.8)
+    optimized, _ = optimize_circuit(c)
+    lowered_a = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
+    lowered_b = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
+    assert lowered_a.to_descriptors() == lowered_b.to_descriptors()
+
+
+def test_optimize_default_behavior_still_u1q_canonical():
+    c = Circuit(1)
+    c.h(0).rx(0, 0.5)
+    optimized, _ = optimize_circuit(c)
+    assert any(op.gate == "u1q" for op in optimized.operations)
+
+
+def test_compile_for_backend_braket_returns_named_1q_only():
+    c = Circuit(2)
+    c.h(0).rx(0, 0.17).cx(0, 1)
+    lowered, report = compile_for_backend(c, backend_family="braket_gate_model")
+    assert isinstance(report, CompilerReport)
+    assert all(op.gate != "u1q" for op in lowered.operations)
 
 
 # ---------------------------------------------------------------------------
