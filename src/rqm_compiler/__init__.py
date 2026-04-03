@@ -38,7 +38,9 @@ from .circuit import Circuit
 from .compile import (
     OPTIMIZATION_PIPELINE,
     CompiledCircuit,
+    compile_for_backend,
     compile_circuit,
+    lower_circuit_for_backend,
     optimize_circuit,
 )
 from .ops import Operation
@@ -59,7 +61,9 @@ __all__ = [
     "CompilerReport",
     "OPTIMIZATION_PIPELINE",
     "cancel_2q_pass",
+    "compile_for_backend",
     "compile_circuit",
+    "lower_circuit_for_backend",
     "optimize_circuit",
     "CircuitValidationError",
     "EquivalenceStatus",

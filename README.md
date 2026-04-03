@@ -32,7 +32,7 @@ pip install -e ".[dev]"
 > adapter.
 
 ```python
-from rqm_compiler import Circuit, optimize_circuit
+from rqm_compiler import Circuit, optimize_circuit, lower_circuit_for_backend
 
 c = Circuit(2)
 c.h(0)
@@ -42,7 +42,11 @@ c.measure_all()
 # Recommended: optimize and export
 optimized, report = optimize_circuit(c)
 print(report)
-descriptors = optimized.to_descriptors()
+
+# Optional backend-targeted lowering stage (example: Braket gate model).
+# Internal optimization IR remains canonical u1q unless this is requested.
+lowered = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
+descriptors = lowered.to_descriptors()
 ```
 
 ---
@@ -55,7 +59,7 @@ Lower tiers exist for transformations and advanced workflows.
 | Tier | Entrypoint | When to use | Stability |
 |------|-----------|-------------|-----------|
 | 1 — Build | `Circuit`, `Operation` | Construct programs in the compiler's internal model | Stable |
-| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)` | Run optimization passes, export internal descriptor IR | Experimental |
+| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)`, `lower_circuit_for_backend(...)`, `compile_for_backend(...)` | Run optimization passes, then optional backend-targeted lowering/export | Experimental |
 | 3 — Internal | low-level IR utilities | Advanced use | Subject to change |
 
 ---
@@ -166,10 +170,14 @@ restored = Circuit.from_descriptors(descriptors, num_qubits=3)
 ## Transformation API (Tier 2 — Experimental)
 
 `optimize_circuit` is the **recommended** Tier 2 entry point.  It runs the full
-optimization pipeline (validate → normalize → canonicalize → flatten → gate
-merging → cancellation) and returns an optimized circuit plus a
+optimization pipeline (validate → normalize → canonicalize → flatten → to_u1q →
+gate merging → cancellation) and returns an optimized circuit plus a
 :class:`CompilerReport`.  Use this as your default mental model for backend
 integration.
+
+Important: ``u1q`` is the canonical internal single-qubit optimization IR.
+Named-gate lowering (e.g. ``rz/ry/rz``) is an explicit backend-targeted stage
+via ``lower_circuit_for_backend(...)`` or ``compile_for_backend(...)``.
 
 `compile_circuit` is the lightweight alternative when you only need validation
 and normalization without optimization.
