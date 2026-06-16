@@ -95,6 +95,7 @@ rqm-optimize
 | `rqm-optimize` | Optional backend-adjacent optimization and compression |
 
 `rqm-compiler` does **not** implement quantum math and does **not** import any vendor SDK.
+Quaternion/SU(2) decomposition used by compiler passes is delegated to `rqm-core`.
 
 ---
 
