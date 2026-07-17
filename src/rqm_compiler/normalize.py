@@ -97,9 +97,11 @@ def normalize_quaternion(
 
     Sign canonicalization
     ~~~~~~~~~~~~~~~~~~~~~
-    Because ``q`` and ``-q`` represent the same SU(2) element, the function
-    enforces a unique representative by negating the quaternion whenever
-    ``w < 0``.  This guarantees:
+    ``q`` and ``-q`` represent the same SO(3)/Bloch rotation, but their SU(2)
+    matrices differ by a global phase of ``-1``.  The function enforces a
+    unique phase-invariant representative by negating the quaternion whenever
+    ``w < 0``.  Callers should only use that representative in contexts where
+    global phase is known to be unobservable.  This guarantees:
 
     * deterministic output — the same rotation always produces the same tuple,
     * stable comparisons — callers can use ``==`` instead of checking ``±q``.
@@ -142,8 +144,8 @@ def normalize_quaternion(
             )
         w, x, y, z = w / norm, x / norm, y / norm, z / norm
 
-    # Sign canonicalization: enforce w >= 0 so that q and -q collapse to the
-    # same representative.
+    # Sign canonicalization: enforce w >= 0 for phase-invariant descriptor
+    # comparisons where q and -q are intentionally folded together.
     if w < 0.0:
         w, x, y, z = -w, -x, -y, -z
 

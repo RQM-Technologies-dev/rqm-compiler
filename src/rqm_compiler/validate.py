@@ -9,7 +9,12 @@ from __future__ import annotations
 from typing import Any
 
 from .circuit import Circuit
-from .descriptors import SUPPORTED_GATES
+from .descriptors import (
+    PARAMETRIC_SINGLE_QUBIT_GATES,
+    SINGLE_QUBIT_GATES,
+    SUPPORTED_GATES,
+    TWO_QUBIT_GATES,
+)
 from .ops import Operation
 
 
@@ -97,6 +102,38 @@ def _validate_operation(
             f"{prefix}: qubit(s) {sorted(overlap)} appear in both targets and controls."
         )
 
+    controlled_gates = {"cx", "cy", "cz"}
+    symmetric_two_target_gates = TWO_QUBIT_GATES - controlled_gates
+    single_target_gates = SINGLE_QUBIT_GATES | set(PARAMETRIC_SINGLE_QUBIT_GATES) | {"measure"}
+
+    if op.controls and op.gate == "u1q":
+        raise CircuitValidationError(
+            f"{prefix}: controlled 'u1q' is not supported; refusing to discard "
+            "a phase that may become observable under coherent control."
+        )
+
+    if op.controls and op.gate not in controlled_gates:
+        raise CircuitValidationError(
+            f"{prefix}: controls are only supported for {sorted(controlled_gates)}; "
+            f"gate {op.gate!r} must not carry controls."
+        )
+
+    if op.gate in controlled_gates:
+        if len(op.controls) != 1 or len(op.targets) != 1:
+            raise CircuitValidationError(
+                f"{prefix}: controlled gate {op.gate!r} requires exactly one control and one target."
+            )
+    elif op.gate in symmetric_two_target_gates:
+        if len(op.targets) != 2:
+            raise CircuitValidationError(
+                f"{prefix}: gate {op.gate!r} requires exactly two targets."
+            )
+    elif op.gate in single_target_gates:
+        if len(op.targets) != 1:
+            raise CircuitValidationError(
+                f"{prefix}: gate {op.gate!r} requires exactly one target."
+            )
+
     # Measurement must have a key param.
     if op.gate == "measure":
         if "key" not in op.params:
@@ -105,7 +142,6 @@ def _validate_operation(
             )
 
     # Parametric single-qubit gates must have all required params.
-    from .descriptors import PARAMETRIC_SINGLE_QUBIT_GATES
     if op.gate in PARAMETRIC_SINGLE_QUBIT_GATES:
         required = PARAMETRIC_SINGLE_QUBIT_GATES[op.gate]
         for param_name in required:

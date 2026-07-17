@@ -7,7 +7,7 @@ Policy in this module:
 
 * Input IR may contain ``u1q`` gates.
 * Output IR contains only named 1Q gates for lowered operations.
-* Default decomposition is deterministic ``rz -> ry -> rz``.
+* Default decomposition is deterministic ``rz -> ry -> rz`` in circuit order.
 * If the middle angle is (numerically) zero, the sequence is simplified to one
   ``rz`` with combined angle.
 """
@@ -41,7 +41,7 @@ def _quaternion_to_zyz(
     z: float,
 ) -> tuple[float, float, float]:
     """Delegate canonical quaternion decomposition to ``rqm-core``."""
-    alpha, beta, gamma = quaternion_to_zyz(w, x, y, z)
+    alpha, beta, gamma = quaternion_to_zyz(w, x, y, z, atol=_ZERO_TOL)
     return _wrap_angle(alpha), _wrap_angle(beta), _wrap_angle(gamma)
 
 
@@ -68,11 +68,15 @@ def lower_u1q_named_1q_pass(circuit: Circuit) -> Circuit:
                     out.add(Operation(gate="rz", targets=[qubit], params={"angle": theta}))
                 continue
 
-            if not math.isclose(alpha, 0.0, abs_tol=_ZERO_TOL):
-                out.add(Operation(gate="rz", targets=[qubit], params={"angle": alpha}))
-            out.add(Operation(gate="ry", targets=[qubit], params={"angle": beta}))
+            # rqm-core returns angles for the matrix product
+            # RZ(alpha) @ RY(beta) @ RZ(gamma).  Circuit descriptors are
+            # applied sequentially to the state vector, so emit the reverse
+            # order to realize that product.
             if not math.isclose(gamma, 0.0, abs_tol=_ZERO_TOL):
                 out.add(Operation(gate="rz", targets=[qubit], params={"angle": gamma}))
+            out.add(Operation(gate="ry", targets=[qubit], params={"angle": beta}))
+            if not math.isclose(alpha, 0.0, abs_tol=_ZERO_TOL):
+                out.add(Operation(gate="rz", targets=[qubit], params={"angle": alpha}))
         else:
             out.add(op)
     return out

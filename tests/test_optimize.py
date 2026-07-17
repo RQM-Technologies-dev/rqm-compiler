@@ -326,6 +326,21 @@ def test_braket_targeted_lowering_preserves_equivalence():
     assert proof.verified is True
 
 
+def test_lower_u1q_named_1q_direct_u1q_preserves_equivalence():
+    c = Circuit(1)
+    c.u1q(
+        0,
+        0.39926252188357425,
+        -0.5836004100574025,
+        0.39926252188357425,
+        -0.5836004100574025,
+    )
+    lowered = lower_u1q_named_1q_pass(c)
+    proof = verify_equivalence(c, lowered)
+    assert proof.status.value == "VERIFIED"
+    assert proof.verified is True
+
+
 def test_braket_targeted_lowering_identity_simplifies():
     c = Circuit(1)
     c.u1q(0, 1.0, 0.0, 0.0, 0.0)

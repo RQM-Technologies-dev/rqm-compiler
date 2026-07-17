@@ -74,6 +74,25 @@ def test_overlapping_control_target():
         validate_circuit(c)
 
 
+def test_controlled_u1q_is_rejected_to_preserve_phase_semantics():
+    c = Circuit(2)
+    c.add(Operation(gate="u1q", targets=[1], controls=[0], params={
+        "w": 1.0,
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+    }))
+    with pytest.raises(CircuitValidationError, match="controlled 'u1q' is not supported"):
+        validate_circuit(c)
+
+
+def test_controlled_gate_requires_one_control_and_one_target():
+    c = Circuit(3)
+    c.add(Operation(gate="cx", targets=[1], controls=[0, 2]))
+    with pytest.raises(CircuitValidationError, match="exactly one control and one target"):
+        validate_circuit(c)
+
+
 # ---------------------------------------------------------------------------
 # Unknown gate
 # ---------------------------------------------------------------------------

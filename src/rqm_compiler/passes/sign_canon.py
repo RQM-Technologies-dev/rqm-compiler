@@ -3,13 +3,15 @@ rqm_compiler.passes.sign_canon
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Sign-canonicalization pass for u1q gates.
 
-Because ``q`` and ``-q`` represent the same SU(2) element, there is a degree
-of freedom in how a unit quaternion is stored.  This pass enforces the
-canonical convention::
+``q`` and ``-q`` represent the same SO(3)/Bloch rotation, but their SU(2)
+matrices differ by a global phase of ``-1``.  For the compiler's uncontrolled
+single-qubit internal IR, that global phase is intentionally ignored during
+semantic comparison, so there is a phase-invariant degree of freedom in how a
+unit quaternion is stored.  This pass enforces the canonical convention::
 
     w ≥ 0
 
-for every ``u1q`` gate in the circuit, which gives:
+for every uncontrolled single-target ``u1q`` gate in the circuit, which gives:
 
 * **Deterministic equality** — two circuits that encode the same sequence of
   rotations will compare equal as descriptors without needing ``±q`` checks.
@@ -35,9 +37,12 @@ from ..ops import Operation
 def sign_canon_pass(circuit: Circuit) -> Circuit:
     """Return a new circuit with all u1q quaternions in canonical form (w ≥ 0).
 
-    Every ``u1q`` operation whose ``w`` component is negative is replaced with
-    its sign-negated equivalent ``(-w, -x, -y, -z)``, which represents the same
-    SU(2) element.  All other gates are copied unchanged.
+    Every uncontrolled single-target ``u1q`` operation whose ``w`` component is
+    negative is replaced with its sign-negated equivalent
+    ``(-w, -x, -y, -z)``.  This is semantically safe for the current internal IR
+    because verifier comparisons are global-phase invariant.  Controlled or
+    otherwise non-standard ``u1q`` operations are copied unchanged because a
+    local global phase can become observable once conditioned.
 
     Args:
         circuit: Source circuit (not mutated).
@@ -60,7 +65,7 @@ def sign_canon_pass(circuit: Circuit) -> Circuit:
     """
     out = Circuit(circuit.num_qubits)
     for op in circuit.operations:
-        if op.gate == "u1q":
+        if op.gate == "u1q" and len(op.targets) == 1 and not op.controls:
             w, x, y, z = normalize_quaternion(
                 op.params["w"],
                 op.params["x"],

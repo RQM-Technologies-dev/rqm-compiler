@@ -27,16 +27,27 @@ Supported single-qubit gates (collapsed to u1q)
 
 Quaternion convention
 ---------------------
-A unit quaternion ``q = (w, x, y, z)`` represents the SU(2) element
-``U = w·I − i(x·σ_x + y·σ_y + z·σ_z)``.  For a rotation by angle *θ* around
-unit axis *(n_x, n_y, n_z)* this gives::
+``rqm-core`` is the math authority.  A unit quaternion
+``q = w + xi + yj + zk`` maps to the SU(2) matrix::
 
-    w = cos(θ/2),  x = −n_x·sin(θ/2),  y = −n_y·sin(θ/2),  z = −n_z·sin(θ/2)
+    [[ w − iz ,  −y − ix ],
+     [ y − ix ,   w + iz ]]
+
+Under that embedding, ``Quaternion.from_axis_angle(axis, θ)`` agrees with the
+standard ``Rx(θ)``, ``Ry(θ)``, and ``Rz(θ)`` matrices.  For a rotation by angle
+*θ* around unit axis *(n_x, n_y, n_z)* this pass emits::
+
+    w = cos(θ/2),  x = n_x·sin(θ/2),  y = n_y·sin(θ/2),  z = n_z·sin(θ/2)
+
+Named gates such as ``x``, ``h``, ``s``, ``t``, and ``phaseshift`` may differ
+from their textbook matrices by a global phase because ``u1q`` stores the
+determinant-one SU(2) representative.
 
 Passes that are not collapsed
 ------------------------------
-Two-qubit gates (cx, cy, cz, swap, iswap), ``measure``, ``barrier``, and any
-operation that is already ``u1q`` are left unchanged.
+Two-qubit gates (cx, cy, cz, swap, iswap), ``measure``, ``barrier``, any
+operation that is already ``u1q``, and non-standard controlled variants of
+named 1Q gates are left unchanged.
 """
 
 from __future__ import annotations
@@ -79,40 +90,40 @@ def _gate_to_quaternion(gate: str, params: dict[str, Any]) -> tuple[float, float
         return (1.0, 0.0, 0.0, 0.0)
 
     if gate == "x":
-        # π rotation around X: (cos(π/2), −sin(π/2)·(1,0,0)) = (0,−1,0,0)
-        return (0.0, -1.0, 0.0, 0.0)
+        # π rotation around X: (cos(π/2), sin(π/2)·(1,0,0)) = (0,1,0,0)
+        return (0.0, 1.0, 0.0, 0.0)
 
     if gate == "y":
-        # π rotation around Y: (cos(π/2), −sin(π/2)·(0,1,0)) = (0,0,−1,0)
-        return (0.0, 0.0, -1.0, 0.0)
+        # π rotation around Y: (cos(π/2), sin(π/2)·(0,1,0)) = (0,0,1,0)
+        return (0.0, 0.0, 1.0, 0.0)
 
     if gate == "z":
-        # π rotation around Z: (cos(π/2), −sin(π/2)·(0,0,1)) = (0,0,0,−1)
-        return (0.0, 0.0, 0.0, -1.0)
+        # π rotation around Z: (cos(π/2), sin(π/2)·(0,0,1)) = (0,0,0,1)
+        return (0.0, 0.0, 0.0, 1.0)
 
     if gate == "h":
-        # π rotation around (X+Z)/√2 axis: (0, −1/√2, 0, −1/√2)
-        return (0.0, -_SQRT2_INV, 0.0, -_SQRT2_INV)
+        # π rotation around (X+Z)/√2 axis: (0, 1/√2, 0, 1/√2)
+        return (0.0, _SQRT2_INV, 0.0, _SQRT2_INV)
 
     if gate == "s":
-        # π/2 rotation around Z: (cos(π/4), 0, 0, −sin(π/4)) = (1/√2, 0, 0, −1/√2)
-        return (_SQRT2_INV, 0.0, 0.0, -_SQRT2_INV)
+        # π/2 rotation around Z: (cos(π/4), 0, 0, sin(π/4)) = (1/√2, 0, 0, 1/√2)
+        return (_SQRT2_INV, 0.0, 0.0, _SQRT2_INV)
 
     if gate == "t":
-        # π/4 rotation around Z: (cos(π/8), 0, 0, −sin(π/8))
-        return (_COS_PI_8, 0.0, 0.0, -_SIN_PI_8)
+        # π/4 rotation around Z: (cos(π/8), 0, 0, sin(π/8))
+        return (_COS_PI_8, 0.0, 0.0, _SIN_PI_8)
 
     if gate == "rx":
         angle = params["angle"]
-        return (math.cos(angle / 2.0), -math.sin(angle / 2.0), 0.0, 0.0)
+        return (math.cos(angle / 2.0), math.sin(angle / 2.0), 0.0, 0.0)
 
     if gate == "ry":
         angle = params["angle"]
-        return (math.cos(angle / 2.0), 0.0, -math.sin(angle / 2.0), 0.0)
+        return (math.cos(angle / 2.0), 0.0, math.sin(angle / 2.0), 0.0)
 
     if gate in ("rz", "phaseshift"):
         angle = params["angle"]
-        return (math.cos(angle / 2.0), 0.0, 0.0, -math.sin(angle / 2.0))
+        return (math.cos(angle / 2.0), 0.0, 0.0, math.sin(angle / 2.0))
 
     raise ValueError(f"Internal error: unexpected gate {gate!r} in _gate_to_quaternion.")  # pragma: no cover
 
@@ -122,7 +133,7 @@ def to_u1q_pass(circuit: Circuit) -> Circuit:
 
     Any single-qubit gate in ``{i, x, y, z, h, s, t, rx, ry, rz, phaseshift}``
     is replaced with an equivalent ``u1q`` operation whose quaternion parameters
-    represent the same SU(2) element (up to global phase, which is unobservable).
+    represent the same single-qubit action up to global phase.
 
     Two-qubit gates (cx, cy, cz, swap, iswap), ``measure``, ``barrier``, and
     operations that are already ``u1q`` are passed through unchanged.
@@ -147,7 +158,7 @@ def to_u1q_pass(circuit: Circuit) -> Circuit:
     """
     out = Circuit(circuit.num_qubits)
     for op in circuit.operations:
-        if op.gate in _COLLAPSIBLE_SINGLE_QUBIT_GATES:
+        if op.gate in _COLLAPSIBLE_SINGLE_QUBIT_GATES and not op.controls:
             w, x, y, z = _gate_to_quaternion(op.gate, op.params)
             w, x, y, z = normalize_quaternion(w, x, y, z, allow_renormalization=True)
             out.add(

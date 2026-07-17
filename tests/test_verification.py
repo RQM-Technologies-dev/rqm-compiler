@@ -12,6 +12,7 @@ from rqm_compiler.verification import (
     compare_unitaries_up_to_global_phase,
     verify_equivalence,
 )
+from rqm_compiler.passes.to_u1q import to_u1q_pass
 
 
 def test_merge_u1q_semantics_verified():
@@ -38,6 +39,22 @@ def test_sign_canonical_semantics_verified_for_q_and_minus_q():
     assert report.status == EquivalenceStatus.VERIFIED
     assert report.method == EquivalenceMethod.U1Q_CANONICAL.value
     assert report.verified is True
+    assert report.comparison["exact_su2_equality"] is False
+    assert report.comparison["equal_up_to_global_phase"] is True
+    assert report.comparison["so3_bloch_equivalent_quaternion_sign"] is True
+
+
+def test_named_to_u1q_verification_uses_matrix_path():
+    original = Circuit(1)
+    original.rx(0, 0.37)
+
+    optimized = to_u1q_pass(original)
+
+    report = verify_equivalence(original, optimized)
+    assert report.status == EquivalenceStatus.VERIFIED
+    assert report.method == EquivalenceMethod.UNITARY_NUMERICAL.value
+    assert report.comparison["exact_su2_equality"] is True
+    assert report.comparison["equal_up_to_global_phase"] is True
 
 
 def test_identity_pruning_verified():

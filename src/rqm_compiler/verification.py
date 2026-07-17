@@ -63,6 +63,7 @@ class EquivalenceReport:
     compared_qubits: int | None = None
     compared_gate_count_original: int | None = None
     compared_gate_count_optimized: int | None = None
+    comparison: dict[str, Any] = field(default_factory=dict)
 
 
 def verify_equivalence(
@@ -84,6 +85,7 @@ def verify_equivalence(
         compared_qubits=original.num_qubits,
         compared_gate_count_original=len(original),
         compared_gate_count_optimized=len(optimized),
+        comparison=_comparison_payload(original, optimized),
     )
 
     try:
@@ -106,6 +108,8 @@ def verify_equivalence(
             base.method = EquivalenceMethod.GATEWISE_IDENTITY.value
             base.verified = True
             base.notes.append("Descriptor-identical circuits are semantically equivalent.")
+            base.comparison["exact_descriptor_identity"] = True
+            base.comparison["equal_up_to_global_phase"] = True
             return base
 
         # Stage A: exact 1-qubit canonical-u1q check.
@@ -142,6 +146,9 @@ def _verify_single_qubit_u1q_canonical(
     if not (_is_unitary_supported(original) and _is_unitary_supported(optimized)):
         return None
 
+    if not (_is_uncontrolled_u1q_only(original) and _is_uncontrolled_u1q_only(optimized)):
+        return None
+
     left = _canonical_u1q_single_qubit(original)
     right = _canonical_u1q_single_qubit(optimized)
 
@@ -155,11 +162,33 @@ def _verify_single_qubit_u1q_canonical(
             compared_qubits=1,
             compared_gate_count_original=len(original),
             compared_gate_count_optimized=len(optimized),
+            comparison=_comparison_payload(original, optimized),
         )
         report.notes.append("Single-qubit canonical u1q representatives match exactly.")
+        report.comparison.update(
+            {
+                "exact_su2_equality": _unitaries_exactly_equal(
+                    _circuit_unitary(original),
+                    _circuit_unitary(optimized),
+                    atol=atol,
+                    rtol=rtol,
+                ),
+                "equal_up_to_global_phase": True,
+                "so3_bloch_equivalent_quaternion_sign": (
+                    original.to_descriptors() != optimized.to_descriptors()
+                ),
+            }
+        )
         return report
 
     return None
+
+
+def _is_uncontrolled_u1q_only(circuit: Circuit) -> bool:
+    return all(
+        op.gate == "u1q" and len(op.targets) == 1 and not op.controls
+        for op in circuit.operations
+    )
 
 
 def _canonical_u1q_single_qubit(circuit: Circuit) -> list[dict[str, Any]]:
@@ -189,6 +218,7 @@ def _verify_dense_unitary(
         compared_qubits=original.num_qubits,
         compared_gate_count_original=len(original),
         compared_gate_count_optimized=len(optimized),
+        comparison=_comparison_payload(original, optimized),
     )
 
     if not _is_unitary_supported(original) or not _is_unitary_supported(optimized):
@@ -209,6 +239,11 @@ def _verify_dense_unitary(
 
     u = _circuit_unitary(original)
     v = _circuit_unitary(optimized)
+    report.comparison["exact_su2_equality"] = (
+        _unitaries_exactly_equal(u, v, atol=atol, rtol=rtol)
+        if original.num_qubits == optimized.num_qubits == 1
+        else None
+    )
     phase, max_abs_err, max_rel_err, pivot, notes = compare_unitaries_up_to_global_phase(
         u,
         v,
@@ -222,11 +257,13 @@ def _verify_dense_unitary(
     if max_abs_err <= atol + rtol * max(1.0, _matrix_max_abs(v)):
         report.status = EquivalenceStatus.VERIFIED
         report.verified = True
+        report.comparison["equal_up_to_global_phase"] = True
         report.notes.append("Numerical unitary comparison passed up to global phase.")
         return report
 
     report.status = EquivalenceStatus.COUNTEREXAMPLE
     report.verified = False
+    report.comparison["equal_up_to_global_phase"] = False
     i, j = pivot
     report.witness = {
         "pivot": {"row": i, "col": j},
@@ -303,6 +340,36 @@ def compare_unitaries_up_to_global_phase(
 
 def _matrix_max_abs(m: list[list[complex]]) -> float:
     return max(abs(x) for row in m for x in row)
+
+
+def _comparison_payload(original: Circuit, optimized: Circuit) -> dict[str, Any]:
+    return {
+        "exact_descriptor_identity": original.to_descriptors() == optimized.to_descriptors(),
+        "exact_su2_equality": None,
+        "equal_up_to_global_phase": None,
+        "so3_bloch_equivalent_quaternion_sign": None,
+        "optimization_withheld": False,
+    }
+
+
+def _unitaries_exactly_equal(
+    u: list[list[complex]],
+    v: list[list[complex]],
+    *,
+    atol: float,
+    rtol: float,
+) -> bool:
+    if len(u) != len(v):
+        return False
+    if any(len(ur) != len(vr) for ur, vr in zip(u, v)):
+        return False
+    max_abs_err = 0.0
+    max_ref = 1.0
+    for ur, vr in zip(u, v):
+        for a, b in zip(ur, vr):
+            max_abs_err = max(max_abs_err, abs(a - b))
+            max_ref = max(max_ref, abs(b))
+    return max_abs_err <= atol + rtol * max_ref
 
 
 def _circuit_unitary(circuit: Circuit) -> list[list[complex]]:

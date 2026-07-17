@@ -120,7 +120,7 @@ def test_rx_angle_pi_gives_x_quaternion():
     w_rx, x_rx, y_rx, z_rx = _u1q_params(out_rx, 0)
     w_x, x_x, y_x, z_x = _u1q_params(out_x, 0)
 
-    # The two quaternions represent the same rotation (may differ by global sign ±q).
+    # The two quaternions represent the same Bloch rotation up to global phase.
     same_or_negated = all(
         math.isclose(a, b, abs_tol=1e-9) for a, b in [(w_rx, w_x), (x_rx, x_x), (y_rx, y_x), (z_rx, z_x)]
     ) or all(
@@ -177,6 +177,13 @@ def test_u1q_already_passes_through_unchanged():
     assert len(out) == 1
     d = out.to_descriptors()[0]
     assert d == c.to_descriptors()[0]
+
+
+def test_to_u1q_leaves_nonstandard_controlled_1q_unchanged():
+    c = Circuit(2)
+    c.add(Operation(gate="rx", targets=[1], controls=[0], params={"angle": 0.5}))
+    out = to_u1q_pass(c)
+    assert out.to_descriptors() == c.to_descriptors()
 
 
 # ---------------------------------------------------------------------------
@@ -266,11 +273,11 @@ def test_to_u1q_w_always_nonnegative():
 
 
 def test_to_u1q_sign_canonicalization_q_and_minus_q_agree():
-    """Equivalent gates that differ only by global quaternion sign produce the same output.
+    """Equivalent gates that differ only by quaternion sign produce the same output.
 
-    rx(π) and x both represent a π rotation around X.  Before sign canonicalization
-    they could produce (w, x, y, z) and -(w, x, y, z).  After canonicalization they
-    must be identical.
+    rx(π) and x both represent a π rotation around X up to global phase.  Before
+    sign canonicalization they could produce (w, x, y, z) and -(w, x, y, z).
+    After canonicalization they must be identical.
     """
     c_rx = Circuit(1)
     c_rx.rx(0, math.pi)
@@ -337,6 +344,19 @@ def test_sign_canon_non_u1q_gates_pass_through():
     c.cx(0, 1)
     c.measure(0, key="m0")
     c.barrier()
+    out = sign_canon_pass(c)
+    assert out.to_descriptors() == c.to_descriptors()
+
+
+def test_sign_canon_preserves_controlled_u1q_sign():
+    """Controlled u1q is non-standard; a local phase could become observable."""
+    c = Circuit(2)
+    c.add(Operation(gate="u1q", targets=[1], controls=[0], params={
+        "w": -1.0,
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+    }))
     out = sign_canon_pass(c)
     assert out.to_descriptors() == c.to_descriptors()
 

@@ -187,6 +187,12 @@ integration.
 Important: ``u1q`` is the canonical internal single-qubit optimization IR.
 Named-gate lowering (e.g. ``rz/ry/rz``) is an explicit backend-targeted stage
 via ``lower_circuit_for_backend(...)`` or ``compile_for_backend(...)``.
+The ``u1q`` convention is inherited from ``rqm-core``:
+``q = w + xi + yj + zk`` maps to ``[[w-iz, -y-ix], [y-ix, w+iz]]``.
+With this convention ``Quaternion.from_axis_angle("x", θ)`` agrees with
+``Rx(θ)``, and likewise for ``Ry`` and ``Rz``.  The sign pair ``q``/``-q`` is
+only folded in phase-invariant, uncontrolled ``u1q`` contexts: it is the same
+SO(3)/Bloch rotation, while the SU(2) matrices differ by global phase.
 
 `compile_circuit` is the lightweight alternative when you only need validation
 and normalization without optimization.
@@ -229,6 +235,10 @@ This means no successful optimization output is ever unverified.
 - `fallback_reason`: `"verification_not_established"` when optimization is withheld
 - `equivalence_report`: structured payload for the committed output, plus
   `internal_candidate_proof_result` for development diagnostics
+- `equivalence_report["comparison"]`: structured comparison metadata covering
+  exact descriptor identity, exact single-qubit matrix equality where known,
+  equality up to global phase, quaternion sign/Bloch equivalence, and whether
+  an optimization candidate was withheld
 
 Current verifier methods used internally:
 

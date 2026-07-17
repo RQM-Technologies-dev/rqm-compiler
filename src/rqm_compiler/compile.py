@@ -260,6 +260,7 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
             "compared_qubits": committed_equivalence.compared_qubits,
             "compared_gate_count_original": committed_equivalence.compared_gate_count_original,
             "compared_gate_count_optimized": committed_equivalence.compared_gate_count_optimized,
+            "comparison": dict(committed_equivalence.comparison),
             "internal_candidate_proof_result": proof_result.value,
         },
         equivalence_verified=True,
@@ -277,6 +278,10 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
             notes.append(
                 "Optimization candidate withheld because verification was not established; returned original circuit."
             )
+            comparison = report.equivalence_report.setdefault("comparison", {})
+            comparison["optimization_withheld"] = True
+            comparison["candidate_status"] = candidate_equivalence.status.value
+            comparison["candidate_method"] = candidate_equivalence.method
 
     return committed_optimized_circuit, report
 

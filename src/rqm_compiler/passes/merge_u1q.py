@@ -6,7 +6,8 @@ Pass that merges adjacent u1q gates on the same qubit.
 After :func:`~rqm_compiler.passes.to_u1q.to_u1q_pass`, consecutive ``u1q``
 gates on the same qubit can be combined into a single ``u1q`` gate whose
 quaternion is the product of the individual quaternions.  When the result is
-the identity rotation it is dropped entirely, reducing the gate count.
+identity up to global phase (``q = ±1``) it is dropped entirely, reducing the
+gate count.
 
 Quaternion product
 ------------------
@@ -46,7 +47,7 @@ def _mul_quaternion(
 
 
 def _is_identity(w: float, x: float, y: float, z: float) -> bool:
-    """Return ``True`` if the quaternion is ±identity within tolerance."""
+    """Return ``True`` if the quaternion is identity up to global phase."""
     return (
         abs(abs(w) - 1.0) <= _IDENTITY_TOL
         and math.isclose(abs(x), 0.0, abs_tol=_IDENTITY_TOL)
@@ -60,8 +61,9 @@ def merge_u1q_pass(circuit: Circuit) -> Circuit:
 
     Consecutive ``u1q`` gates on the same qubit (with no intervening gate that
     touches that qubit) are replaced by a single ``u1q`` gate whose quaternion
-    is the product of the individual quaternions.  Identity results (up to
-    :data:`_IDENTITY_TOL`) are dropped to further reduce the gate count.
+    is the product of the individual quaternions.  Identity results up to
+    global phase (within :data:`_IDENTITY_TOL`) are dropped to further reduce
+    the gate count.
 
     This pass is designed to operate on circuits that have already been through
     :func:`~rqm_compiler.passes.to_u1q.to_u1q_pass`.  Non-u1q gates and
