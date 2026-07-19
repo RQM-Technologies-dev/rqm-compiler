@@ -7,9 +7,10 @@ name = "rqm-compiler"
 dynamic = ["version"]
 description = "Quaternionic quantum compiler for the RQM ecosystem"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
   "rqm-core @ git+https://github.com/RQM-Technologies-dev/rqm-core.git",
+  "rqm-entanglement @ git+https://github.com/RQM-Technologies-dev/rqm-entanglement.git@f2105bb694764d8d73798d3f482a598db39226e0",
 ]
 license = "MIT"
 license-files = ["LICENSE"]

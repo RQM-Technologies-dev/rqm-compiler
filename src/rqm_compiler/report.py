@@ -46,6 +46,12 @@ class CompilerReport:
     equivalence_guaranteed: bool = True
     optimization_applied: bool = False
     fallback_reason: str | None = None
+    su4q_candidates: list[dict[str, Any]] = field(default_factory=list)
+    nonlocal_fingerprints: list[str] = field(default_factory=list)
+    weyl_classes: list[str] = field(default_factory=list)
+    candidate_reconstruction_errors: list[float] = field(default_factory=list)
+    candidate_original_operation_ranges: list[list[int]] = field(default_factory=list)
+    selected_two_qubit_strategy: str = "original_operations"
 
     @property
     def gate_count_delta(self) -> int:

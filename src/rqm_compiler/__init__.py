@@ -46,6 +46,7 @@ from .compile import (
 from .ops import Operation
 from .passes.cancel_2q import cancel_2q_pass
 from .report import CompilerReport
+from .su4_blocks import analyze_two_qubit_blocks, extract_su4q_blocks
 from .validate import CircuitValidationError
 from .verification import (
     EquivalenceMethod,
@@ -65,6 +66,8 @@ __all__ = [
     "compile_circuit",
     "lower_circuit_for_backend",
     "optimize_circuit",
+    "analyze_two_qubit_blocks",
+    "extract_su4q_blocks",
     "CircuitValidationError",
     "EquivalenceStatus",
     "EquivalenceMethod",

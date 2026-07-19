@@ -95,13 +95,16 @@ rqm-optimize
 | Layer | Responsibility |
 |-------|---------------|
 | `rqm-core` | Quaternion algebra, SU(2), Bloch sphere, spinor math |
-| `rqm-circuits` | Canonical external/public circuit schema and IR boundary |
-| `rqm-compiler` | Internal optimization and rewriting engine |
-| `rqm-qiskit` / `rqm-braket` | Backend lowering and execution bridges |
+| `rqm-entanglement` | Two-qubit tensor structure, arbitrary SU(4) quaternion–Cartan decomposition, Weyl classification, nonlocal fingerprints |
+| `rqm-circuits` | Canonical external/public circuit schema, including RXX/RYY/RZZ |
+| `rqm-compiler` | Backend-neutral optimization and opt-in internal `su4q` block IR |
+| `rqm-qiskit` / `rqm-braket` | Backend candidate synthesis, lowering, and execution bridges |
 | `rqm-optimize` | Optional backend-adjacent optimization and compression |
 
-`rqm-compiler` does **not** implement quantum math and does **not** import any vendor SDK.
-Quaternion/SU(2) decomposition used by compiler passes is delegated to `rqm-core`.
+`rqm-compiler` does **not** implement decomposition math and does **not** import
+any vendor SDK. Quaternion/SU(2) work is delegated to `rqm-core`; arbitrary
+SU(4) decomposition, reconstruction, Weyl classification, and fingerprints are
+delegated to `rqm-entanglement`.
 
 ---
 
@@ -115,6 +118,7 @@ Quaternion/SU(2) decomposition used by compiler passes is delegated to `rqm-core
 - Serialization helpers (`circuit_to_dict`, `circuit_from_dict`)
 - Internal backend-neutral descriptor export for translation and debugging
 - Compiler reports and optimization metadata (`CompilerReport`)
+- Opt-in proof-gated extraction of internal `su4q` candidates
 
 ---
 
@@ -165,6 +169,7 @@ c.rx(0, 1.57).ry(1, 0.78).rz(2, 3.14).phaseshift(0, 0.5)
 # Two-qubit gates
 c.cx(0, 1).cy(1, 2).cz(0, 2)
 c.swap(0, 1).iswap(1, 2)
+c.rxx(0, 1, 0.25).ryy(1, 2, 0.5).rzz(0, 2, 0.75)
 
 # Measurement
 c.measure(0, key="m0")
@@ -179,6 +184,33 @@ descriptors = c.to_descriptors()
 # Reconstruct from a descriptor list (inverse of to_descriptors)
 restored = Circuit.from_descriptors(descriptors, num_qubits=3)
 ```
+
+### Opt-in internal `su4q` analysis
+
+`su4q` means a universal two-qubit quaternion–Cartan compiler block. It is an
+internal compiler descriptor, not part of the public `rqm-circuits` wire
+format and not a claim of quaternionic composite mechanics.
+
+```python
+from rqm_compiler import analyze_two_qubit_blocks, extract_su4q_blocks
+
+report = analyze_two_qubit_blocks(circuit)  # default: no replacement
+
+candidate_view, report = extract_su4q_blocks(circuit, mode="emit_candidate")
+assert candidate_view.to_descriptors() == circuit.to_descriptors()
+
+lowering_input, report = extract_su4q_blocks(
+    circuit,
+    mode="replace_if_backend_requests",
+    backend_requests_su4q=True,
+)
+```
+
+Only maximal, same-pair, resolved unitary windows below the dense-verification
+limit are considered. Measurement, reset-like unsupported operations, barrier,
+classical conditions, a third qubit, unresolved parameters, ordering failures,
+or reconstruction error cause fail-closed preservation of the original
+operations. The normal `optimize_circuit` pipeline never introduces `su4q`.
 
 ---
 
@@ -307,7 +339,8 @@ restored = circuit_from_dict(data)  # reconstruct Circuit from dict
 |---|---|
 | Single-qubit | `i x y z h s t` |
 | Parameterised single-qubit | `rx ry rz phaseshift` (param: `angle`) |
-| Two-qubit | `cx cy cz swap iswap` |
+| Two-qubit | `cx cy cz swap iswap rxx ryy rzz` |
+| Internal structured two-qubit | `su4q` (nested versioned `QuaternionCartanBlock`) |
 | Other | `measure barrier` |
 
 ---
@@ -327,3 +360,5 @@ pytest
 ## Architecture rules
 
 See [AGENTS.md](AGENTS.md) for the full list of contributor boundary rules.
+See [docs/EXP012_SU4Q_BOUNDARY.md](docs/EXP012_SU4Q_BOUNDARY.md) for the
+validated source and claim boundary.

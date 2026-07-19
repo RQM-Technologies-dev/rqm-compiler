@@ -6,11 +6,13 @@ Circuit and operation validation.
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 from .circuit import Circuit
 from .descriptors import (
     PARAMETRIC_SINGLE_QUBIT_GATES,
+    PARAMETRIC_TWO_QUBIT_GATES,
     SINGLE_QUBIT_GATES,
     SUPPORTED_GATES,
     TWO_QUBIT_GATES,
@@ -103,7 +105,9 @@ def _validate_operation(
         )
 
     controlled_gates = {"cx", "cy", "cz"}
-    symmetric_two_target_gates = TWO_QUBIT_GATES - controlled_gates
+    symmetric_two_target_gates = (
+        TWO_QUBIT_GATES - controlled_gates
+    ) | set(PARAMETRIC_TWO_QUBIT_GATES)
     single_target_gates = SINGLE_QUBIT_GATES | set(PARAMETRIC_SINGLE_QUBIT_GATES) | {"measure"}
 
     if op.controls and op.gate == "u1q":
@@ -149,6 +153,32 @@ def _validate_operation(
                 raise CircuitValidationError(
                     f"{prefix}: gate {op.gate!r} requires param {param_name!r}."
                 )
+
+    if op.gate in PARAMETRIC_TWO_QUBIT_GATES:
+        required = PARAMETRIC_TWO_QUBIT_GATES[op.gate]
+        for param_name in required:
+            if param_name not in op.params:
+                raise CircuitValidationError(
+                    f"{prefix}: gate {op.gate!r} requires param {param_name!r}."
+                )
+
+    if op.gate in {"rxx", "ryy", "rzz"}:
+        angle = op.params.get("angle")
+        if isinstance(angle, bool) or not isinstance(angle, (int, float)) or not math.isfinite(angle):
+            raise CircuitValidationError(f"{prefix}: angle must be a finite real number.")
+
+    if op.gate == "su4q":
+        from rqm_entanglement import QuaternionCartanBlock
+
+        payload = op.params.get("block")
+        if not isinstance(payload, dict):
+            raise CircuitValidationError(f"{prefix}: block must be a JSON-compatible object.")
+        try:
+            block = QuaternionCartanBlock.from_dict(payload)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise CircuitValidationError(f"{prefix}: invalid quaternion-Cartan block: {exc}") from exc
+        if not block.validate()["valid"]:
+            raise CircuitValidationError(f"{prefix}: quaternion-Cartan block validation failed.")
 
     # u1q gates must represent a unit quaternion: w² + x² + y² + z² = 1.
     if op.gate == "u1q":

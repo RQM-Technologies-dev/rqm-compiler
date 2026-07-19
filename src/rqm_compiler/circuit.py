@@ -6,7 +6,6 @@ Internal compiler circuit container with builder convenience API.
 
 from __future__ import annotations
 
-import math
 from typing import Any
 
 from .ops import Operation
@@ -219,6 +218,32 @@ class Circuit:
     def iswap(self, qubit_a: int, qubit_b: int) -> "Circuit":
         """iSWAP gate between *qubit_a* and *qubit_b*."""
         return self.add(Operation(gate="iswap", targets=[qubit_a, qubit_b]))
+
+    def rxx(self, qubit_a: int, qubit_b: int, angle: float) -> "Circuit":
+        """XX interaction rotation ``exp[-i·angle·XX/2]``."""
+        return self.add(
+            Operation(gate="rxx", targets=[qubit_a, qubit_b], params={"angle": angle})
+        )
+
+    def ryy(self, qubit_a: int, qubit_b: int, angle: float) -> "Circuit":
+        """YY interaction rotation ``exp[-i·angle·YY/2]``."""
+        return self.add(
+            Operation(gate="ryy", targets=[qubit_a, qubit_b], params={"angle": angle})
+        )
+
+    def rzz(self, qubit_a: int, qubit_b: int, angle: float) -> "Circuit":
+        """ZZ interaction rotation ``exp[-i·angle·ZZ/2]``."""
+        return self.add(
+            Operation(gate="rzz", targets=[qubit_a, qubit_b], params={"angle": angle})
+        )
+
+    def su4q(self, q0: int, q1: int, block: Any) -> "Circuit":
+        """Append an internal versioned quaternion-Cartan two-qubit block."""
+        from rqm_entanglement import QuaternionCartanBlock
+
+        if not isinstance(block, QuaternionCartanBlock):
+            raise TypeError("block must be an rqm_entanglement.QuaternionCartanBlock")
+        return self.add(Operation(gate="su4q", targets=[q0, q1], params={"block": block.to_dict()}))
 
     # ------------------------------------------------------------------
     # Builder convenience API — measurement and barrier

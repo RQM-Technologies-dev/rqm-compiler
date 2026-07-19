@@ -28,6 +28,15 @@ PARAMETRIC_SINGLE_QUBIT_GATES: dict[str, tuple[str, ...]] = {
     "u1q": ("w", "x", "y", "z"),
 }
 
+#: Parameterised two-qubit operations. ``su4q`` is compiler-internal and is
+#: intentionally absent from the public rqm-circuits wire format.
+PARAMETRIC_TWO_QUBIT_GATES: dict[str, tuple[str, ...]] = {
+    "rxx": ("angle",),
+    "ryy": ("angle",),
+    "rzz": ("angle",),
+    "su4q": ("block",),
+}
+
 #: Two-qubit gates that take no parameters.
 TWO_QUBIT_GATES: frozenset[str] = frozenset({"cx", "cy", "cz", "swap", "iswap"})
 
@@ -38,6 +47,7 @@ OTHER_GATES: frozenset[str] = frozenset({"measure", "barrier"})
 SUPPORTED_GATES: frozenset[str] = (
     SINGLE_QUBIT_GATES
     | frozenset(PARAMETRIC_SINGLE_QUBIT_GATES)
+    | frozenset(PARAMETRIC_TWO_QUBIT_GATES)
     | TWO_QUBIT_GATES
     | OTHER_GATES
 )

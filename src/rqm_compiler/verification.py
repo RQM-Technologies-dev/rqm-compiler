@@ -413,6 +413,42 @@ def _apply_gate_to_state(state: list[complex], op: Any, num_qubits: int) -> list
         a, b = op.targets
         return _apply_swap(state, a, b, num_qubits)
 
+    if gate == "iswap":
+        return _apply_two_qubit_matrix(
+            state,
+            op.targets[0],
+            op.targets[1],
+            [
+                [1, 0, 0, 0],
+                [0, 0, 1j, 0],
+                [0, 1j, 0, 0],
+                [0, 0, 0, 1],
+            ],
+            num_qubits,
+        )
+
+    if gate in {"rxx", "ryy", "rzz"}:
+        angle = _require_real_param(op.params, "angle")
+        return _apply_two_qubit_matrix(
+            state,
+            op.targets[0],
+            op.targets[1],
+            _pauli_pair_rotation(gate[-1], angle),
+            num_qubits,
+        )
+
+    if gate == "su4q":
+        from rqm_entanglement import QuaternionCartanBlock
+
+        block = QuaternionCartanBlock.from_dict(op.params["block"])
+        return _apply_two_qubit_matrix(
+            state,
+            op.targets[0],
+            op.targets[1],
+            block.to_unitary().tolist(),
+            num_qubits,
+        )
+
     raise ValueError(f"Unsupported gate in unitary simulation: {gate!r}")
 
 
@@ -536,6 +572,50 @@ def _apply_swap(state: list[complex], a: int, b: int, num_qubits: int) -> list[c
     return out
 
 
+def _pauli_pair_rotation(axis: str, angle: float) -> list[list[complex]]:
+    pauli = {
+        "x": [[0, 1], [1, 0]],
+        "y": [[0, -1j], [1j, 0]],
+        "z": [[1, 0], [0, -1]],
+    }[axis]
+    product = [
+        [pauli[i // 2][j // 2] * pauli[i % 2][j % 2] for j in range(4)]
+        for i in range(4)
+    ]
+    cosine = math.cos(angle / 2.0)
+    sine = math.sin(angle / 2.0)
+    return [
+        [
+            (cosine if row == col else 0.0) - 1j * sine * product[row][col]
+            for col in range(4)
+        ]
+        for row in range(4)
+    ]
+
+
+def _apply_two_qubit_matrix(
+    state: list[complex],
+    q0: int,
+    q1: int,
+    matrix: list[list[complex]],
+    num_qubits: int,
+) -> list[complex]:
+    """Apply a 4x4 matrix in the ordered basis ``|q0 q1>``."""
+    if q0 == q1:
+        raise ValueError("two-qubit matrix requires distinct qubits")
+    out = list(state)
+    q0_mask = 1 << q0
+    q1_mask = 1 << q1
+    for base in range(1 << num_qubits):
+        if base & q0_mask or base & q1_mask:
+            continue
+        indices = [base, base | q1_mask, base | q0_mask, base | q0_mask | q1_mask]
+        amplitudes = [state[index] for index in indices]
+        for row, index in enumerate(indices):
+            out[index] = sum(matrix[row][col] * amplitudes[col] for col in range(4))
+    return out
+
+
 def _require_real_param(params: dict[str, Any], name: str) -> float:
     if name not in params:
         raise ValueError(f"Missing parameter {name!r}")
@@ -554,7 +634,7 @@ def _unsupported_reasons(circuit: Circuit) -> list[str]:
     supported = {
         "id", "i", "x", "y", "z", "h", "s", "sdg", "t", "tdg",
         "rx", "ry", "rz", "p", "phase", "phaseshift", "u", "u3", "u1q",
-        "cx", "cy", "cz", "swap",
+        "cx", "cy", "cz", "swap", "rxx", "ryy", "rzz", "su4q",
     }
     for idx, op in enumerate(circuit.operations):
         if op.gate in {"measure", "barrier"}:
@@ -564,7 +644,9 @@ def _unsupported_reasons(circuit: Circuit) -> list[str]:
             reasons.append(f"Operation[{idx}] gate {op.gate!r} is not supported by verifier.")
             continue
         try:
-            if op.gate in {"rx", "ry", "rz", "p", "phase", "phaseshift"}:
+            if op.gate in {
+                "rx", "ry", "rz", "p", "phase", "phaseshift", "rxx", "ryy", "rzz"
+            }:
                 _require_real_param(op.params, "angle")
             elif op.gate in {"u", "u3"}:
                 _require_real_param(op.params, "theta")
@@ -575,6 +657,10 @@ def _unsupported_reasons(circuit: Circuit) -> list[str]:
                 _require_real_param(op.params, "x")
                 _require_real_param(op.params, "y")
                 _require_real_param(op.params, "z")
+            elif op.gate == "su4q":
+                from rqm_entanglement import QuaternionCartanBlock
+
+                QuaternionCartanBlock.from_dict(op.params["block"])
         except ValueError as exc:
             reasons.append(f"Operation[{idx}] unresolved/symbolic params: {exc}")
     return reasons
