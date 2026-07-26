@@ -12,7 +12,7 @@ dependencies = [
   "rqm-core @ git+https://github.com/RQM-Technologies-dev/rqm-core.git",
   "rqm-entanglement @ git+https://github.com/RQM-Technologies-dev/rqm-entanglement.git@f2105bb694764d8d73798d3f482a598db39226e0",
 ]
-license = "MIT"
+license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [
   { name = "RQM Technologies" }
