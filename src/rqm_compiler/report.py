@@ -52,6 +52,8 @@ class CompilerReport:
     candidate_reconstruction_errors: list[float] = field(default_factory=list)
     candidate_original_operation_ranges: list[list[int]] = field(default_factory=list)
     selected_two_qubit_strategy: str = "original_operations"
+    adaptive_routing: dict[str, Any] = field(default_factory=dict)
+    stage_timings_ns: dict[str, int] = field(default_factory=dict)
 
     @property
     def gate_count_delta(self) -> int:

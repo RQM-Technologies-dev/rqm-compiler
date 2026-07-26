@@ -35,6 +35,14 @@ Public API::
 from importlib.metadata import PackageNotFoundError, version
 
 from .circuit import Circuit
+from .adaptive import (
+    AdaptiveCartanPolicy,
+    CandidateWindow,
+    CompilationWorkBudget,
+    TwoQubitCostModel,
+    apply_adaptive_cartan,
+    circuit_two_qubit_cost,
+)
 from .compile import (
     OPTIMIZATION_PIPELINE,
     CompiledCircuit,
@@ -57,6 +65,12 @@ from .verification import (
 
 __all__ = [
     "Circuit",
+    "AdaptiveCartanPolicy",
+    "CandidateWindow",
+    "CompilationWorkBudget",
+    "TwoQubitCostModel",
+    "apply_adaptive_cartan",
+    "circuit_two_qubit_cost",
     "Operation",
     "CompiledCircuit",
     "CompilerReport",

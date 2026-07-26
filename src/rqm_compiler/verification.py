@@ -600,7 +600,11 @@ def _apply_two_qubit_matrix(
     matrix: list[list[complex]],
     num_qubits: int,
 ) -> list[complex]:
-    """Apply a 4x4 matrix in the ordered basis ``|q0 q1>``."""
+    """Apply a 4x4 matrix in Qiskit order ``|q1 q0>``.
+
+    The first argument is the least-significant qubit and therefore occupies
+    the right Kronecker factor.
+    """
     if q0 == q1:
         raise ValueError("two-qubit matrix requires distinct qubits")
     out = list(state)
@@ -609,7 +613,7 @@ def _apply_two_qubit_matrix(
     for base in range(1 << num_qubits):
         if base & q0_mask or base & q1_mask:
             continue
-        indices = [base, base | q1_mask, base | q0_mask, base | q0_mask | q1_mask]
+        indices = [base, base | q0_mask, base | q1_mask, base | q0_mask | q1_mask]
         amplitudes = [state[index] for index in indices]
         for row, index in enumerate(indices):
             out[index] = sum(matrix[row][col] * amplitudes[col] for col in range(4))

@@ -10,6 +10,11 @@ from enum import Enum
 from typing import Any, Callable
 
 from .circuit import Circuit
+from .adaptive import (
+    AdaptiveCartanPolicy,
+    apply_adaptive_cartan,
+    circuit_two_qubit_cost,
+)
 from .depth import circuit_depth
 from .normalize import normalize_circuit
 from .passes.cancel_2q import cancel_2q_pass
@@ -155,7 +160,11 @@ def compile_circuit(circuit: Circuit) -> CompiledCircuit:
     )
 
 
-def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
+def optimize_circuit(
+    circuit: Circuit,
+    *,
+    adaptive_policy: AdaptiveCartanPolicy | None = None,
+) -> tuple[Circuit, CompilerReport]:
     """Optimize *circuit* and return the optimized :class:`~rqm_compiler.circuit.Circuit`
     together with a :class:`~rqm_compiler.report.CompilerReport`.
 
@@ -212,6 +221,19 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
     for op in candidate_working.operations:
         candidate_optimized_circuit.add(op)
 
+    policy = adaptive_policy or AdaptiveCartanPolicy.safe()
+    pre_adaptive_cost = circuit_two_qubit_cost(
+        candidate_optimized_circuit, policy.cost_model
+    )
+    candidate_optimized_circuit, adaptive_routing = apply_adaptive_cartan(
+        candidate_optimized_circuit, policy
+    )
+    if adaptive_routing.get("selected_windows"):
+        candidate_passes.append("adaptive_cartan")
+    adaptive_routing["symbolic_two_qubit_cost_reduction"] = (
+        circuit_two_qubit_cost(circuit, policy.cost_model) - pre_adaptive_cost
+    )
+
     candidate_equivalence = verify_equivalence(circuit, candidate_optimized_circuit)
     proof_result = _map_proof_result(candidate_equivalence.status.value)
 
@@ -267,6 +289,10 @@ def optimize_circuit(circuit: Circuit) -> tuple[Circuit, CompilerReport]:
         equivalence_guaranteed=True,
         optimization_applied=optimization_applied,
         fallback_reason=fallback_reason,
+        adaptive_routing=adaptive_routing,
+        stage_timings_ns={
+            "adaptive_cartan": int(adaptive_routing.get("elapsed_ns", 0))
+        },
     )
     # The public success path must not expose unverified output status.
     report.equivalence_status = "VERIFIED"

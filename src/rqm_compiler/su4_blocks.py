@@ -109,14 +109,16 @@ def _controlled_matrix(
 ) -> NDArray[np.complex128]:
     matrix = np.zeros((4, 4), dtype=np.complex128)
     for column in range(4):
-        bits = [(column >> 1) & 1, column & 1]
+        # ``pair[0]`` is Qiskit's least-significant qubit and therefore the
+        # right Kronecker factor in ``kron(q1, q0)``.
+        bits = [column & 1, (column >> 1) & 1]
         if bits[control] == 0:
             matrix[column, column] = 1.0
             continue
         for output_bit in (0, 1):
             output = list(bits)
             output[target] = output_bit
-            row = 2 * output[0] + output[1]
+            row = output[0] + 2 * output[1]
             matrix[row, column] = base[output_bit, bits[target]]
     return matrix
 
@@ -127,7 +129,7 @@ def _operation_matrix(op: Operation, pair: tuple[int, int]) -> NDArray[np.comple
         raise ValueError("operation touches a qubit outside the candidate pair")
     if len(touched) == 1:
         local = _single_qubit_matrix(op)
-        return np.kron(local, I2) if next(iter(touched)) == pair[0] else np.kron(I2, local)
+        return np.kron(I2, local) if next(iter(touched)) == pair[0] else np.kron(local, I2)
     if op.gate in {"cx", "cy", "cz"}:
         control = pair.index(op.controls[0])
         target = pair.index(op.targets[0])

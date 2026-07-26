@@ -53,6 +53,8 @@ Key correctness properties
 
 from __future__ import annotations
 
+import math
+
 from ..circuit import Circuit
 from ..ops import Operation
 
@@ -63,6 +65,29 @@ SELF_INVERSE_TWO_QUBIT_GATES: frozenset[str] = frozenset({"cx", "cy", "cz", "swa
 def _gate_signature(op: Operation) -> tuple[str, tuple[int, ...], tuple[int, ...]]:
     """Return a hashable tuple that uniquely identifies the gate and its qubit assignment."""
     return (op.gate, tuple(op.targets), tuple(op.controls))
+
+
+def _are_exact_inverses(left: Operation, right: Operation) -> bool:
+    if _gate_signature(left) != _gate_signature(right):
+        return False
+    if left.gate in SELF_INVERSE_TWO_QUBIT_GATES:
+        return True
+    if left.gate not in {"rxx", "ryy", "rzz"}:
+        return False
+    left_angle = left.params.get("angle")
+    right_angle = right.params.get("angle")
+    if (
+        isinstance(left_angle, bool)
+        or isinstance(right_angle, bool)
+        or not isinstance(left_angle, (int, float))
+        or not isinstance(right_angle, (int, float))
+    ):
+        return False
+    return (
+        math.isfinite(float(left_angle))
+        and math.isfinite(float(right_angle))
+        and float(left_angle) == -float(right_angle)
+    )
 
 
 def cancel_2q_pass(circuit: Circuit) -> Circuit:
@@ -111,7 +136,7 @@ def cancel_2q_pass(circuit: Circuit) -> Circuit:
     for op in circuit.operations:
         qubits: frozenset[int] = frozenset(list(op.targets) + list(op.controls))
 
-        if op.gate in SELF_INVERSE_TWO_QUBIT_GATES and len(qubits) == 2:
+        if op.gate in SELF_INVERSE_TWO_QUBIT_GATES | {"rxx", "ryy", "rzz"} and len(qubits) == 2:
             key = qubits
             pending_idx = pending_by_pair.get(key)
 
@@ -119,7 +144,7 @@ def cancel_2q_pass(circuit: Circuit) -> Circuit:
                 pending_op = output_ops[pending_idx]
                 if (
                     pending_op is not None
-                    and _gate_signature(pending_op) == _gate_signature(op)
+                    and _are_exact_inverses(pending_op, op)
                 ):
                     # Cancel both gates: tombstone the pending one, skip the current.
                     output_ops[pending_idx] = None
