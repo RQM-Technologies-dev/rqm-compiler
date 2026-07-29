@@ -127,15 +127,16 @@ def test_altered_target_detects_counterexample():
     assert report.verified is False
 
 
-def test_unsupported_gate_is_not_counterexample():
+def test_iswap_is_supported_by_dense_verifier():
     original = Circuit(2)
     original.iswap(0, 1)
     optimized = Circuit(2)
-    optimized.iswap(0, 1)
+    optimized.swap(0, 1)
 
     report = verify_equivalence(original, optimized)
-    # Descriptor-identical path can still verify exactly.
-    assert report.status == EquivalenceStatus.VERIFIED
+    assert report.status == EquivalenceStatus.COUNTEREXAMPLE
+    assert report.method == EquivalenceMethod.UNITARY_NUMERICAL.value
+    assert report.verified is False
 
 
 

@@ -638,7 +638,7 @@ def _unsupported_reasons(circuit: Circuit) -> list[str]:
     supported = {
         "id", "i", "x", "y", "z", "h", "s", "sdg", "t", "tdg",
         "rx", "ry", "rz", "p", "phase", "phaseshift", "u", "u3", "u1q",
-        "cx", "cy", "cz", "swap", "rxx", "ryy", "rzz", "su4q",
+        "cx", "cy", "cz", "swap", "iswap", "rxx", "ryy", "rzz", "su4q",
     }
     for idx, op in enumerate(circuit.operations):
         if op.gate in {"measure", "barrier"}:
