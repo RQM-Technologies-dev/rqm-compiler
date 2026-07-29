@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61", "wheel", "setuptools-scm>=8"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "rqm-compiler"
-dynamic = ["version"]
+version = "0.2.0"
 description = "Quaternionic quantum compiler for the RQM ecosystem"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -41,8 +41,3 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools_scm]
-tag_regex = "^v(?P<version>\\d+\\.\\d+\\.\\d+)$"
-version_scheme = "no-guess-dev"
-local_scheme = "no-local-version"
