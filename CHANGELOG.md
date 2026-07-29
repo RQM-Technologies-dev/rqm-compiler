@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.2.1...v0.2.2) (2026-07-29)
+
+
+### Bug Fixes
+
+* dispatch protected publication by repository ([#20](https://github.com/RQM-Technologies-dev/rqm-compiler/issues/20)) ([64eaae9](https://github.com/RQM-Technologies-dev/rqm-compiler/commit/64eaae9178a36115f4f0756b28ec7da60798b652))
+
 ## [0.2.1](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.2.0...v0.2.1) (2026-07-29)
 
 
