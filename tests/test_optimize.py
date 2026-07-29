@@ -657,14 +657,15 @@ def test_optimize_cancel_2q_in_passes_applied():
 # ---------------------------------------------------------------------------
 
 
-def test_no_optimized_circuit_without_proof_for_unsupported_verifier_case():
+def test_iswap_circuit_commits_verified_single_qubit_rewrite():
     c = Circuit(2)
     c.h(0).iswap(0, 1)
     optimized, report = optimize_circuit(c)
-    assert optimized.to_descriptors() == c.to_descriptors()
-    assert report.optimization_applied is False
-    assert report.fallback_reason == "verification_not_established"
-    assert report.passes_applied == []
+    assert optimized.to_descriptors() != c.to_descriptors()
+    assert report.optimization_applied is True
+    assert report.equivalence_status == "VERIFIED"
+    assert report.fallback_reason is None
+    assert report.passes_applied
 
 
 def test_counterexample_candidate_blocks_commit(monkeypatch):
@@ -700,18 +701,18 @@ def test_verified_rewrites_commit():
     assert report.passes_applied
 
 
-def test_unsupported_circuits_do_not_leak_unverified_changes():
+def test_iswap_circuits_no_longer_trigger_false_unsupported_fallback():
     c = Circuit(2)
     c.h(0).iswap(0, 1).h(0)
     optimized, report = optimize_circuit(c)
-    assert optimized.to_descriptors() == c.to_descriptors()
-    assert report.optimization_applied is False
+    assert optimized.to_descriptors() != c.to_descriptors()
+    assert report.optimization_applied is True
     assert report.equivalence_status == "VERIFIED"
 
 
 def test_report_accuracy_when_fallback_returns_original():
-    c = Circuit(2)
-    c.h(0).iswap(0, 1)
+    c = Circuit(1)
+    c.h(0).measure(0, key="m0")
     optimized, report = optimize_circuit(c)
     assert optimized.to_descriptors() == c.to_descriptors()
     assert report.optimized_gate_count == report.original_gate_count
