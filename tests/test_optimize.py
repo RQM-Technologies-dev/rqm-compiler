@@ -153,6 +153,29 @@ def test_report_equivalence_fields_are_populated():
     assert report.equivalence_report is not None
 
 
+def test_report_to_dict_preserves_dataclass_shape():
+    from dataclasses import asdict
+
+    c = _bell()
+    _, report = optimize_circuit(c)
+
+    assert report.to_dict() == asdict(report)
+
+
+def test_report_to_dict_does_not_alias_mutable_evidence():
+    c = _bell()
+    _, report = optimize_circuit(c)
+    payload = report.to_dict()
+
+    payload["passes_applied"].append("external_mutation")
+    payload["equivalence_report"]["notes"].append("external_mutation")
+    payload["adaptive_routing"]["external_mutation"] = True
+
+    assert "external_mutation" not in report.passes_applied
+    assert "external_mutation" not in report.equivalence_report["notes"]
+    assert "external_mutation" not in report.adaptive_routing
+
+
 # ---------------------------------------------------------------------------
 # Gate count reduction
 # ---------------------------------------------------------------------------
