@@ -6,7 +6,7 @@ Compiler report/result object produced by optimization passes.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 
@@ -73,3 +73,8 @@ class CompilerReport:
             f"equivalence_status={self.equivalence_status}, "
             f"passes={self.passes_applied})"
         )
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-compatible representation of the compiler report."""
+
+        return asdict(self)
