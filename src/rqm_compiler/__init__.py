@@ -54,6 +54,11 @@ from .compile import (
 from .ops import Operation
 from .passes.cancel_2q import cancel_2q_pass
 from .report import CompilerReport
+from .regional import (
+    RegionalCompilerReport,
+    RegionalOptimizationRecord,
+    optimize_circuit_regions,
+)
 from .su4_blocks import analyze_two_qubit_blocks, extract_su4q_blocks
 from .validate import CircuitValidationError
 from .verification import (
@@ -74,12 +79,15 @@ __all__ = [
     "Operation",
     "CompiledCircuit",
     "CompilerReport",
+    "RegionalCompilerReport",
+    "RegionalOptimizationRecord",
     "OPTIMIZATION_PIPELINE",
     "cancel_2q_pass",
     "compile_for_backend",
     "compile_circuit",
     "lower_circuit_for_backend",
     "optimize_circuit",
+    "optimize_circuit_regions",
     "analyze_two_qubit_blocks",
     "extract_su4q_blocks",
     "CircuitValidationError",

@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.0] — Verified Regional Optimization
+
+- Added `optimize_circuit_regions` for deterministic contiguous regions of at
+  most three qubits.
+- Added all-or-nothing proof gating: if any changed region is not verified, the
+  exact original circuit structure is returned and every tentative change is
+  withheld.
+- Added JSON-safe `RegionalCompilerReport`, `RegionalOptimizationRecord`, and
+  `CompilerReport.to_dict()` interfaces.
+- Preserved measurements and barriers as exact region boundaries without
+  introducing backend-specific objects.
+
 ## [0.2.2](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.2.1...v0.2.2) (2026-07-29)
 
 

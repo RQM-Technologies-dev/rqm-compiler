@@ -46,7 +46,12 @@ pip install -e ".[dev]"
 > adapter.
 
 ```python
-from rqm_compiler import Circuit, optimize_circuit, lower_circuit_for_backend
+from rqm_compiler import (
+    Circuit,
+    lower_circuit_for_backend,
+    optimize_circuit,
+    optimize_circuit_regions,
+)
 
 c = Circuit(2)
 c.h(0)
@@ -61,6 +66,10 @@ print(report)
 # Internal optimization IR remains canonical u1q unless this is requested.
 lowered = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
 descriptors = lowered.to_descriptors()
+
+# Larger circuits: optimize only independently verified <=3-qubit regions.
+regional, regional_report = optimize_circuit_regions(c)
+print(regional_report.to_dict())
 ```
 
 ---
@@ -73,7 +82,7 @@ Lower tiers exist for transformations and advanced workflows.
 | Tier | Entrypoint | When to use | Stability |
 |------|-----------|-------------|-----------|
 | 1 — Build | `Circuit`, `Operation` | Construct programs in the compiler's internal model | Stable |
-| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)`, `lower_circuit_for_backend(...)`, `compile_for_backend(...)` | Run optimization passes, then optional backend-targeted lowering/export | Experimental |
+| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)`, `optimize_circuit_regions(...)`, `lower_circuit_for_backend(...)`, `compile_for_backend(...)` | Run whole-circuit or verified-regional optimization, then optional backend-targeted lowering/export | Experimental |
 | 3 — Internal | low-level IR utilities | Advanced use | Subject to change |
 
 ---

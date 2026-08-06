@@ -6,8 +6,29 @@ Compiler report/result object produced by optimization passes.
 
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass, field
 from typing import Any
+
+
+def _copy_report_value(value: Any) -> Any:
+    """Copy a JSON-shaped report value without dataclass reflection overhead."""
+
+    value_type = type(value)
+    if value is None or value_type in (str, int, float, bool):
+        return value
+    if value_type is dict:
+        return {
+            _copy_report_value(key): _copy_report_value(item)
+            for key, item in value.items()
+        }
+    if value_type is list:
+        return [_copy_report_value(item) for item in value]
+    if value_type is tuple:
+        return tuple(_copy_report_value(item) for item in value)
+    # Preserve the historical ``asdict`` behavior for any future uncommon
+    # value type instead of returning a live reference.
+    return copy.deepcopy(value)
 
 
 @dataclass
@@ -73,3 +94,32 @@ class CompilerReport:
             f"equivalence_status={self.equivalence_status}, "
             f"passes={self.passes_applied})"
         )
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-compatible representation of the compiler report."""
+
+        return {
+            "original_gate_count": self.original_gate_count,
+            "optimized_gate_count": self.optimized_gate_count,
+            "original_depth": self.original_depth,
+            "optimized_depth": self.optimized_depth,
+            "passes_applied": list(self.passes_applied),
+            "equivalence_status": self.equivalence_status,
+            "equivalence_report": _copy_report_value(self.equivalence_report),
+            "equivalence_verified": self.equivalence_verified,
+            "equivalence_guaranteed": self.equivalence_guaranteed,
+            "optimization_applied": self.optimization_applied,
+            "fallback_reason": self.fallback_reason,
+            "su4q_candidates": _copy_report_value(self.su4q_candidates),
+            "nonlocal_fingerprints": list(self.nonlocal_fingerprints),
+            "weyl_classes": list(self.weyl_classes),
+            "candidate_reconstruction_errors": list(
+                self.candidate_reconstruction_errors
+            ),
+            "candidate_original_operation_ranges": _copy_report_value(
+                self.candidate_original_operation_ranges
+            ),
+            "selected_two_qubit_strategy": self.selected_two_qubit_strategy,
+            "adaptive_routing": _copy_report_value(self.adaptive_routing),
+            "stage_timings_ns": dict(self.stage_timings_ns),
+        }

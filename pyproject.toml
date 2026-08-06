@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rqm-compiler"
-version = "0.2.2"
+version = "0.3.0"
 description = "Quaternionic quantum compiler for the RQM ecosystem"
 readme = "README.md"
 requires-python = ">=3.11"
