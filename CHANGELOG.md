@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.2.2...v0.3.0) (2026-08-06)
+
+
+### Features
+
+* add verified regional optimization reports ([#22](https://github.com/RQM-Technologies-dev/rqm-compiler/issues/22)) ([f0eb1f5](https://github.com/RQM-Technologies-dev/rqm-compiler/commit/f0eb1f570db4744215eb391b2f5fcaed2ea8faf5))
+
 ## [0.3.0] — Verified Regional Optimization
 
 - Added `optimize_circuit_regions` for deterministic contiguous regions of at
