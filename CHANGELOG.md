@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 — Unreleased
+## [0.3.0] — Verified Regional Optimization
 
 - Added `optimize_circuit_regions` for deterministic contiguous regions of at
   most three qubits.
