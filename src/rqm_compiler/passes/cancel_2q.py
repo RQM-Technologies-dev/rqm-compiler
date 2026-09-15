@@ -1,179 +1,106 @@
-"""
-rqm_compiler.passes.cancel_2q
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Pass that cancels adjacent self-inverse two-qubit gates on the same qubit pair.
+"""Exact two-qubit cleanup and relational compression.
 
-Several common two-qubit gates are *involutory* (self-inverse):
-
-* ``cx``   — CNOT:     CX² = I
-* ``cy``   — CY:       CY² = I
-* ``cz``   — CZ:       CZ² = I
-* ``swap`` — SWAP:     SWAP² = I
-
-When two identical self-inverse gates appear consecutively on exactly the same
-qubit pair, with no intervening gate touching either qubit, the pair can be
-removed entirely — their combined action is the identity.
-
-This is the two-qubit analogue of the single-qubit ``merge_u1q_pass`` identity
-check: pure algebraic cleanup that reduces gate count and circuit depth without
-any approximation.
-
-Excluded gate
-~~~~~~~~~~~~~
-``iswap`` is *not* self-inverse (ISWAP² = Z⊗Z ≠ I), so it is never cancelled
-by this pass.
-
-Algorithm
-~~~~~~~~~
-The pass makes a single left-to-right sweep.  For each operation it maintains a
-*pending* slot per qubit-pair.  A slot is a self-inverse gate that has been
-emitted but can still be cancelled if the very next gate on both those qubits is
-the same gate.  Any gate that touches either qubit of a pending slot *without*
-cancelling it immediately invalidates the slot (the two gates are no longer
-adjacent from the perspective of those qubits).
-
-The emitted gate is recorded at its position in the output list as a tombstone
-(``None``) if later cancelled, and the final circuit is built by filtering out
-all tombstones.
-
-Key correctness properties
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-* Non-self-inverse gates (``iswap``, single-qubit gates, measurements, …) pass
-  through untouched.
-* Two-qubit self-inverse gates that do *not* form an adjacent identical pair
-  also pass through untouched.
-* The gate signature used for matching is the exact IR representation:
-  ``(gate, tuple(targets), tuple(controls))``.  This means ``cx(0, 1)`` and
-  ``cx(1, 0)`` are treated as distinct operations and are not cancelled against
-  each other, even though both are self-inverse individually.
-* The pass is idempotent: applying it twice yields the same result as applying
-  it once.
-* The pass does not mutate the input circuit.
+Besides cancelling adjacent involutions, this pass keeps canonical XX/YY/ZZ
+interactions in the smallest closed representation: a contiguous run on one
+qubit pair is accumulated as rqm-entanglement AxisHinge/CartanRelation data and
+emitted as at most one RXX, RYY and RZZ operation.  Because XX, YY and ZZ
+commute, this is exact and avoids dense SU(4)/KAK work.
 """
 
 from __future__ import annotations
 
 import math
 
+from rqm_entanglement import AxisHinge, CartanRelation, compose_relations
+
 from ..circuit import Circuit
 from ..ops import Operation
 
-#: Gates that satisfy G² = I (self-inverse / involutory).
 SELF_INVERSE_TWO_QUBIT_GATES: frozenset[str] = frozenset({"cx", "cy", "cz", "swap"})
+_PAIR_ROTATIONS = frozenset({"rxx", "ryy", "rzz"})
+_AXIS = {"rxx": "xx", "ryy": "yy", "rzz": "zz"}
+_GATE = {"xx": "rxx", "yy": "ryy", "zz": "rzz"}
+_TOL = 1e-12
 
 
 def _gate_signature(op: Operation) -> tuple[str, tuple[int, ...], tuple[int, ...]]:
-    """Return a hashable tuple that uniquely identifies the gate and its qubit assignment."""
     return (op.gate, tuple(op.targets), tuple(op.controls))
 
 
-def _are_exact_inverses(left: Operation, right: Operation) -> bool:
-    if _gate_signature(left) != _gate_signature(right):
-        return False
-    if left.gate in SELF_INVERSE_TWO_QUBIT_GATES:
-        return True
-    if left.gate not in {"rxx", "ryy", "rzz"}:
-        return False
-    left_angle = left.params.get("angle")
-    right_angle = right.params.get("angle")
-    if (
-        isinstance(left_angle, bool)
-        or isinstance(right_angle, bool)
-        or not isinstance(left_angle, (int, float))
-        or not isinstance(right_angle, (int, float))
-    ):
-        return False
-    return (
-        math.isfinite(float(left_angle))
-        and math.isfinite(float(right_angle))
-        and float(left_angle) == -float(right_angle)
-    )
+def _finite_angle(op: Operation) -> float | None:
+    value = op.params.get("angle")
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    angle = float(value)
+    return angle if math.isfinite(angle) else None
+
+
+def _flush_relational_run(
+    output: list[Operation], pair: tuple[int, int] | None, relation: AxisHinge | CartanRelation | None
+) -> None:
+    if pair is None or relation is None:
+        return
+    cartan = relation.promote() if isinstance(relation, AxisHinge) else relation
+    for axis, angle in (("xx", cartan.c1), ("yy", cartan.c2), ("zz", cartan.c3)):
+        if abs(angle) > _TOL:
+            output.append(Operation(gate=_GATE[axis], targets=list(pair), params={"angle": angle}))
+
+
+def _compress_relational_runs(operations: list[Operation]) -> list[Operation]:
+    output: list[Operation] = []
+    pair: tuple[int, int] | None = None
+    relation: AxisHinge | CartanRelation | None = None
+
+    for op in operations:
+        qubits = tuple(sorted(set(op.targets) | set(op.controls)))
+        angle = _finite_angle(op) if op.gate in _PAIR_ROTATIONS else None
+        if op.gate in _PAIR_ROTATIONS and len(qubits) == 2 and angle is not None:
+            current = AxisHinge(_AXIS[op.gate], angle)
+            if pair == qubits and relation is not None:
+                relation = compose_relations(relation, current)
+            else:
+                _flush_relational_run(output, pair, relation)
+                pair = qubits
+                relation = current
+            continue
+        _flush_relational_run(output, pair, relation)
+        pair = None
+        relation = None
+        output.append(op)
+
+    _flush_relational_run(output, pair, relation)
+    return output
 
 
 def cancel_2q_pass(circuit: Circuit) -> Circuit:
-    """Return a new circuit with adjacent self-inverse two-qubit gate pairs cancelled.
-
-    Consecutive identical self-inverse two-qubit gates on the same qubit pair
-    (``cx``, ``cy``, ``cz``, ``swap``) with no intervening operation on either
-    qubit are removed entirely.  All other gates are emitted unchanged.
-
-    Args:
-        circuit: Source circuit (not mutated).
-
-    Returns:
-        A new :class:`~rqm_compiler.circuit.Circuit` with cancelled gate pairs
-        removed.
-
-    Example::
-
-        from rqm_compiler import Circuit
-        from rqm_compiler.passes import cancel_2q_pass
-
-        c = Circuit(2)
-        c.cx(0, 1)
-        c.cx(0, 1)   # cancels with the first
-
-        result = cancel_2q_pass(c)
-        assert len(result) == 0
-
-    Example — intervening gate prevents cancellation::
-
-        c = Circuit(2)
-        c.cx(0, 1)
-        c.h(0)       # touches qubit 0 → breaks adjacency
-        c.cx(0, 1)
-
-        result = cancel_2q_pass(c)
-        assert len(result) == 3   # none cancelled
-    """
-    # output_ops[i] is an Operation, or None (tombstone = cancelled).
+    """Cancel exact involutions and compress closed XX/YY/ZZ relational runs."""
     output_ops: list[Operation | None] = []
-
-    # pending_by_pair: frozenset({q1, q2}) -> index in output_ops of the pending
-    # self-inverse gate, or None when no gate is currently pending on that pair.
     pending_by_pair: dict[frozenset[int], int | None] = {}
 
     for op in circuit.operations:
-        qubits: frozenset[int] = frozenset(list(op.targets) + list(op.controls))
-
-        if op.gate in SELF_INVERSE_TWO_QUBIT_GATES | {"rxx", "ryy", "rzz"} and len(qubits) == 2:
+        qubits = frozenset(list(op.targets) + list(op.controls))
+        if op.gate in SELF_INVERSE_TWO_QUBIT_GATES and len(qubits) == 2:
             key = qubits
             pending_idx = pending_by_pair.get(key)
-
             if pending_idx is not None:
                 pending_op = output_ops[pending_idx]
-                if (
-                    pending_op is not None
-                    and _are_exact_inverses(pending_op, op)
-                ):
-                    # Cancel both gates: tombstone the pending one, skip the current.
+                if pending_op is not None and _gate_signature(pending_op) == _gate_signature(op):
                     output_ops[pending_idx] = None
                     pending_by_pair[key] = None
-                    # No other overlapping pending pairs can exist here: any pending
-                    # pair that shared a qubit with this pair was invalidated when
-                    # the first occurrence of this gate was processed.
                     continue
-
-            # Not cancelled.  Invalidate all other pending pairs that share a
-            # qubit with this gate (they are no longer adjacent to their match).
-            for k in list(pending_by_pair):
-                if k is not key and k & qubits:
-                    pending_by_pair[k] = None
-
-            # Record this gate as pending and emit it.
+            for other in list(pending_by_pair):
+                if other != key and other & qubits:
+                    pending_by_pair[other] = None
             pending_by_pair[key] = len(output_ops)
             output_ops.append(op)
-
         else:
-            # Non-self-inverse gate.  Invalidate all pending pairs that share a
-            # qubit with this gate.
-            for k in list(pending_by_pair):
-                if k & qubits:
-                    pending_by_pair[k] = None
+            for other in list(pending_by_pair):
+                if other & qubits:
+                    pending_by_pair[other] = None
             output_ops.append(op)
 
-    out = Circuit(circuit.num_qubits)
-    for op in output_ops:
-        if op is not None:
-            out.add(op)
+    compact = _compress_relational_runs([op for op in output_ops if op is not None])
+    out = Circuit(circuit.num_qubits, metadata=dict(circuit.metadata))
+    for op in compact:
+        out.add(op)
     return out
