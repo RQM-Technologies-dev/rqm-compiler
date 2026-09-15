@@ -1,25 +1,23 @@
 """Exact two-qubit cleanup and relational compression.
 
-Besides cancelling adjacent involutions, this pass keeps canonical XX/YY/ZZ
-interactions in the smallest closed representation: a contiguous run on one
-qubit pair is accumulated as rqm-entanglement AxisHinge/CartanRelation data and
-emitted as at most one RXX, RYY and RZZ operation.  Because XX, YY and ZZ
-commute, this is exact and avoids dense SU(4)/KAK work.
+Canonical XX/YY/ZZ runs are kept in the smallest closed representation.  When
+the adaptive relational API is installed, rqm-entanglement owns composition;
+a coordinate-addition compatibility path preserves identical semantics for the
+currently published 0.2.x package until the next package release lands.
 """
 
 from __future__ import annotations
 
 import math
-
-from rqm_entanglement import AxisHinge, CartanRelation, compose_relations
+from typing import Any
 
 from ..circuit import Circuit
 from ..ops import Operation
 
 SELF_INVERSE_TWO_QUBIT_GATES: frozenset[str] = frozenset({"cx", "cy", "cz", "swap"})
 _PAIR_ROTATIONS = frozenset({"rxx", "ryy", "rzz"})
-_AXIS = {"rxx": "xx", "ryy": "yy", "rzz": "zz"}
-_GATE = {"xx": "rxx", "yy": "ryy", "zz": "rzz"}
+_AXIS_INDEX = {"rxx": 0, "ryy": 1, "rzz": 2}
+_GATE = ("rxx", "ryy", "rzz")
 _TOL = 1e-12
 
 
@@ -35,40 +33,48 @@ def _finite_angle(op: Operation) -> float | None:
     return angle if math.isfinite(angle) else None
 
 
-def _flush_relational_run(
-    output: list[Operation], pair: tuple[int, int] | None, relation: AxisHinge | CartanRelation | None
-) -> None:
-    if pair is None or relation is None:
+def _compose_coordinates(coords: tuple[float, float, float], gate: str, angle: float) -> tuple[float, float, float]:
+    """Compose through rqm-entanglement when its relational API is available."""
+    try:
+        from rqm_entanglement import AxisHinge, CartanRelation, compose_relations
+
+        relation: Any = CartanRelation(*coords)
+        merged = compose_relations(relation, AxisHinge(gate[1:], angle))
+        cartan = merged.promote() if isinstance(merged, AxisHinge) else merged
+        if isinstance(cartan, CartanRelation):
+            return cartan.c1, cartan.c2, cartan.c3
+    except (ImportError, AttributeError):
+        pass
+    values = list(coords)
+    values[_AXIS_INDEX[gate]] += angle
+    return values[0], values[1], values[2]
+
+
+def _flush(output: list[Operation], pair: tuple[int, int] | None, coords: tuple[float, float, float]) -> None:
+    if pair is None:
         return
-    cartan = relation.promote() if isinstance(relation, AxisHinge) else relation
-    for axis, angle in (("xx", cartan.c1), ("yy", cartan.c2), ("zz", cartan.c3)):
+    for gate, angle in zip(_GATE, coords, strict=True):
         if abs(angle) > _TOL:
-            output.append(Operation(gate=_GATE[axis], targets=list(pair), params={"angle": angle}))
+            output.append(Operation(gate=gate, targets=list(pair), params={"angle": angle}))
 
 
 def _compress_relational_runs(operations: list[Operation]) -> list[Operation]:
     output: list[Operation] = []
     pair: tuple[int, int] | None = None
-    relation: AxisHinge | CartanRelation | None = None
-
+    coords = (0.0, 0.0, 0.0)
     for op in operations:
         qubits = tuple(sorted(set(op.targets) | set(op.controls)))
         angle = _finite_angle(op) if op.gate in _PAIR_ROTATIONS else None
         if op.gate in _PAIR_ROTATIONS and len(qubits) == 2 and angle is not None:
-            current = AxisHinge(_AXIS[op.gate], angle)
-            if pair == qubits and relation is not None:
-                relation = compose_relations(relation, current)
-            else:
-                _flush_relational_run(output, pair, relation)
-                pair = qubits
-                relation = current
+            if pair != qubits:
+                _flush(output, pair, coords)
+                pair, coords = qubits, (0.0, 0.0, 0.0)
+            coords = _compose_coordinates(coords, op.gate, angle)
             continue
-        _flush_relational_run(output, pair, relation)
-        pair = None
-        relation = None
+        _flush(output, pair, coords)
+        pair, coords = None, (0.0, 0.0, 0.0)
         output.append(op)
-
-    _flush_relational_run(output, pair, relation)
+    _flush(output, pair, coords)
     return output
 
 
@@ -76,7 +82,6 @@ def cancel_2q_pass(circuit: Circuit) -> Circuit:
     """Cancel exact involutions and compress closed XX/YY/ZZ relational runs."""
     output_ops: list[Operation | None] = []
     pending_by_pair: dict[frozenset[int], int | None] = {}
-
     for op in circuit.operations:
         qubits = frozenset(list(op.targets) + list(op.controls))
         if op.gate in SELF_INVERSE_TWO_QUBIT_GATES and len(qubits) == 2:
