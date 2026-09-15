@@ -2,25 +2,23 @@
 
 Backend-neutral optimization and rewriting engine for the RQM ecosystem.
 
-rqm-compiler owns the internal compiler circuit model and the optimization
-pipeline.  The canonical external/public circuit schema is defined by
-**rqm-circuits**; rqm-compiler is the next layer after that boundary.
-
----
+rqm-compiler owns the internal compiler circuit model and optimization policy. The canonical external/public circuit schema is defined by **rqm-circuits**; two-qubit relational mathematics is owned by **rqm-entanglement**.
 
 ## RQM Technical Canon v2
 
-`u1q` is a compact, backend-neutral, standard-compatible compiler IR. It
-preserves tested quaternion/`SU(2)` semantics; it is not a quantum-mechanically
-richer state representation.
+`u1q` is a compact, backend-neutral, standard-compatible single-qubit compiler IR. It preserves tested quaternion/`SU(2)` semantics; it is not a quantum-mechanically richer state representation.
 
-EXP-009 Track B did not establish a compiler-runtime advantage: the tested
-Python quaternion fusion path lost runtime to the matrix baseline, and its
-serialized-size benefit did not pass the frozen universal gate. Correctness,
-determinism, integration, and future optimization remain valid engineering
-goals. See [RQM_TECHNICAL_CANON_V2.md](RQM_TECHNICAL_CANON_V2.md).
+For two-qubit work, the compiler now uses an exact relational promotion hierarchy:
 
----
+```text
+Bell
+  ⊂ AxisHinge
+  ⊂ CartanRelation
+  ⊂ QuaternionCartanBlock
+  ⊂ U(4)
+```
+
+The subset notation means increasing representational generality, not different physical kinds of entanglement. See [Relational Entanglement](docs/RELATIONAL_ENTANGLEMENT.md) for the compiler methodology.
 
 ## Installation
 
@@ -28,185 +26,142 @@ goals. See [RQM_TECHNICAL_CANON_V2.md](RQM_TECHNICAL_CANON_V2.md).
 pip install rqm-compiler
 ```
 
-Or in development mode from the repository root:
+Development:
 
 ```bash
 pip install -e ".[dev]"
+pytest
 ```
 
----
+## Compiler model
+
+The preferred flow is:
+
+```text
+recognize → compress → propagate relationally → promote if closure breaks → backend materialize
+```
+
+The compiler attempts to retain the smallest exact representation of a two-qubit interaction. A Bell-sector special case need not become a general block; a one-axis interaction can remain an `AxisHinge`; multiple commuting nonlocal axes can remain a `CartanRelation`; and only a general two-qubit window needs the local-quaternion plus nonlocal-Cartan structure of a `QuaternionCartanBlock`. Dense `U(4)` remains the mathematical envelope and verification/interoperability fallback.
+
+This representation policy does not relax semantic verification. Optimization remains proof-gated and fail-closed.
 
 ## Quickstart
 
-> **Note for external integrations:** Callers coming from the RQM API, Studio,
-> or any external integration will typically enter the ecosystem through
-> **rqm-circuits**, which owns the canonical public circuit schema.
-> rqm-compiler is the next layer: it receives a parsed/validated circuit
-> object and runs the optimization pipeline before handing off to a backend
-> adapter.
+External integrations normally enter through `rqm-circuits`, then pass a parsed circuit to this compiler.
 
 ```python
-from rqm_compiler import (
-    Circuit,
-    lower_circuit_for_backend,
-    optimize_circuit,
-    optimize_circuit_regions,
-)
+from rqm_compiler import Circuit, optimize_circuit, lower_circuit_for_backend
 
 c = Circuit(2)
-c.h(0)
-c.cx(0, 1)
-c.measure_all()
+c.rxx(0, 1, 0.25)
+c.ryy(0, 1, 0.50)
 
-# Recommended: optimize and export
 optimized, report = optimize_circuit(c)
-print(report)
+print(report.to_dict())
 
-# Optional backend-targeted lowering stage (example: Braket gate model).
-# Internal optimization IR remains canonical u1q unless this is requested.
-lowered = lower_circuit_for_backend(optimized, backend_family="braket_gate_model")
-descriptors = lowered.to_descriptors()
-
-# Larger circuits: optimize only independently verified <=3-qubit regions.
-regional, regional_report = optimize_circuit_regions(c)
-print(regional_report.to_dict())
+lowered = lower_circuit_for_backend(
+    optimized,
+    backend_family="braket_gate_model",
+)
 ```
 
----
-
-## Public API Hierarchy
-
-rqm-compiler exposes a tiered API. Most users should use Tier 1.
-Lower tiers exist for transformations and advanced workflows.
-
-| Tier | Entrypoint | When to use | Stability |
-|------|-----------|-------------|-----------|
-| 1 — Build | `Circuit`, `Operation` | Construct programs in the compiler's internal model | Stable |
-| 2 — Transform | `compile_circuit(...)`, `optimize_circuit(...)`, `optimize_circuit_regions(...)`, `lower_circuit_for_backend(...)`, `compile_for_backend(...)` | Run whole-circuit or verified-regional optimization, then optional backend-targeted lowering/export | Experimental |
-| 3 — Internal | low-level IR utilities | Advanced use | Subject to change |
-
----
+`RXX`, `RYY`, and `RZZ` are the portable materialization primitives for X-, Y-, and Z-axis hinges. Relational metadata may be carried internally without changing the public `rqm-circuits` wire contract.
 
 ## Architecture
 
-```
-rqm-core
+```text
+rqm-core                 local quaternion / SU(2) mathematics
     ↓
-rqm-circuits   ← canonical external/public circuit IR
+rqm-entanglement         two-qubit relational geometry and Cartan mathematics
     ↓
-rqm-compiler   ← this repo (internal optimization engine)
+rqm-circuits             canonical public circuit schema; RXX/RYY/RZZ materialization
     ↓
-rqm-qiskit / rqm-braket   ← backend lowering and execution bridges
-    ↓ (optional)
-rqm-optimize
+rqm-compiler             recognition, relational propagation, promotion, proof gating
+    ↓
+rqm-qiskit / rqm-braket / rqm-pennylane
+                         backend lowering and execution
 ```
 
 | Layer | Responsibility |
-|-------|---------------|
+|---|---|
 | `rqm-core` | Quaternion algebra, SU(2), Bloch sphere, spinor math |
-| `rqm-entanglement` | Two-qubit tensor structure, arbitrary SU(4) quaternion–Cartan decomposition, Weyl classification, nonlocal fingerprints |
+| `rqm-entanglement` | Bell/axis/Cartan relational coordinates, arbitrary two-qubit quaternion–Cartan decomposition, reconstruction, classification and fingerprints |
 | `rqm-circuits` | Canonical external/public circuit schema, including RXX/RYY/RZZ |
-| `rqm-compiler` | Backend-neutral optimization and opt-in internal `su4q` block IR |
-| `rqm-qiskit` / `rqm-braket` | Backend candidate synthesis, lowering, and execution bridges |
-| `rqm-optimize` | Optional backend-adjacent optimization and compression |
+| `rqm-compiler` | Backend-neutral optimization, relational representation policy, proof-gated promotion/demotion, internal `su4q` materialization |
+| backend bridges | Native gate materialization, synthesis, execution |
 
-`rqm-compiler` does **not** implement decomposition math and does **not** import
-any vendor SDK. Quaternion/SU(2) work is delegated to `rqm-core`; arbitrary
-SU(4) decomposition, reconstruction, Weyl classification, and fingerprints are
-delegated to `rqm-entanglement`.
+`rqm-compiler` does **not** own decomposition math and does not import vendor SDKs. Local quaternion/SU(2) mathematics is delegated to `rqm-core`; relational two-qubit decomposition and reconstruction are delegated to `rqm-entanglement`.
 
----
+## Relational hierarchy
+
+### Bell
+
+The smallest special case. Bell-sector coordinates can preserve parity and relative-phase structure without promoting the interaction to a more general representation.
+
+### AxisHinge
+
+An exact single-axis nonlocal relation, represented by an axis plus angle. X/Y/Z hinges naturally materialize as `rxx`, `ryy`, and `rzz`.
+
+### CartanRelation
+
+The nonlocal Cartan coordinates required when a relation spans multiple commuting two-qubit axes. This preserves nonlocal structure without carrying unnecessary local factors or a dense matrix.
+
+### QuaternionCartanBlock
+
+A structured general two-qubit unitary representation: local quaternion/SU(2) factors around a nonlocal Cartan relation. The internal `su4q` compiler descriptor is a materialization of this structure.
+
+### U(4)
+
+The fully general two-qubit unitary space. Dense matrices remain useful for verification, reconstruction and interoperability, but are not the preferred working IR when a smaller exact relational representation is sufficient.
 
 ## What rqm-compiler owns
 
-- `Circuit` — the internal compiler circuit model used by optimization passes
-- `Operation` — the internal instruction model used by compiler transforms
-- Gate semantics and supported gate set (compiler-internal)
-- Circuit structure and composition rules
-- Pass pipelines: normalization, canonicalization, gate fusion, cancellation
-- Serialization helpers (`circuit_to_dict`, `circuit_from_dict`)
-- Internal backend-neutral descriptor export for translation and debugging
-- Compiler reports and optimization metadata (`CompilerReport`)
-- Opt-in proof-gated extraction of internal `su4q` candidates
+- `Circuit` and `Operation`, the internal compiler model.
+- Validation, normalization, canonicalization and optimization pipelines.
+- Single-qubit `u1q` fusion/canonicalization.
+- Recognition and propagation policy for relational two-qubit structure.
+- Exact promotion/demotion decisions between supported relational levels.
+- Two-qubit cancellation and compatible relational compression.
+- Proof-gated commit/fallback behavior and `CompilerReport` metadata.
+- Backend-neutral descriptor export.
+- Opt-in/internal `su4q` (`QuaternionCartanBlock`) materialization.
 
----
+## What rqm-compiler does not own
 
-## What rqm-compiler does NOT own
+- Public/external circuit schema (`rqm-circuits`).
+- Quaternion/SU(2) mathematics (`rqm-core`).
+- Bell/Cartan decomposition, reconstruction or two-qubit relational mathematics (`rqm-entanglement`).
+- Qiskit, Braket, PennyLane or other vendor/backend objects.
+- Execution or simulation.
 
-- The canonical public/external circuit schema — belongs in `rqm-circuits`
-- API wire format or Studio payload format — belongs in `rqm-circuits`
-- Quaternion algebra — belongs in `rqm-core`
-- Spinor math — belongs in `rqm-core`
-- SU(2) or Bloch sphere math — belongs in `rqm-core`
-- Qiskit objects or imports — belongs in `rqm-qiskit`
-- Amazon Braket objects or imports — belongs in `rqm-braket`
-- Any execution or simulation logic
+## Internal descriptors
 
----
-
-## Internal compiler descriptor format
-
-Every gate operation inside the compiler is represented as a plain dictionary.
-This is the **internal compiler descriptor format** — useful for debugging,
-backend translation, and pass inspection.  It is not the canonical external
-public circuit schema (that lives in rqm-circuits).
+The compiler uses dictionaries such as:
 
 ```python
 {
-    "gate": "rx",       # lowercase gate name
-    "targets": [0],     # list of target qubit indices (always present)
-    "controls": [],     # list of control qubit indices (always present)
-    "params": {"angle": 1.5707963267948966}  # parameter dict (always present)
+    "gate": "rxx",
+    "targets": [0, 1],
+    "controls": [],
+    "params": {"angle": 0.25},
 }
 ```
 
----
+These are compiler descriptors, not the canonical external wire schema.
 
-## Circuit builder API (Tier 1)
+## Two-qubit structured analysis
 
-```python
-from rqm_compiler import Circuit
-
-c = Circuit(3)
-
-# Single-qubit gates
-c.i(0); c.x(0); c.y(1); c.z(2); c.h(0); c.s(1); c.t(2)
-
-# Parameterised single-qubit gates
-c.rx(0, 1.57).ry(1, 0.78).rz(2, 3.14).phaseshift(0, 0.5)
-
-# Two-qubit gates
-c.cx(0, 1).cy(1, 2).cz(0, 2)
-c.swap(0, 1).iswap(1, 2)
-c.rxx(0, 1, 0.25).ryy(1, 2, 0.5).rzz(0, 2, 0.75)
-
-# Measurement
-c.measure(0, key="m0")
-c.measure_all()   # measures all qubits with default keys
-
-# Barrier
-c.barrier()
-
-# Export to internal compiler descriptor list
-descriptors = c.to_descriptors()
-
-# Reconstruct from a descriptor list (inverse of to_descriptors)
-restored = Circuit.from_descriptors(descriptors, num_qubits=3)
-```
-
-### Opt-in internal `su4q` analysis
-
-`su4q` means a universal two-qubit quaternion–Cartan compiler block. It is an
-internal compiler descriptor, not part of the public `rqm-circuits` wire
-format and not a claim of quaternionic composite mechanics.
+`su4q` means an internal universal two-qubit quaternion–Cartan compiler block. It is not part of the public `rqm-circuits` wire format and is not a claim of quaternionic composite mechanics.
 
 ```python
 from rqm_compiler import analyze_two_qubit_blocks, extract_su4q_blocks
 
-report = analyze_two_qubit_blocks(circuit)  # default: no replacement
+report = analyze_two_qubit_blocks(circuit)
 
-candidate_view, report = extract_su4q_blocks(circuit, mode="emit_candidate")
-assert candidate_view.to_descriptors() == circuit.to_descriptors()
+candidate_view, report = extract_su4q_blocks(
+    circuit,
+    mode="emit_candidate",
+)
 
 lowering_input, report = extract_su4q_blocks(
     circuit,
@@ -215,159 +170,36 @@ lowering_input, report = extract_su4q_blocks(
 )
 ```
 
-Only maximal, same-pair, resolved unitary windows below the dense-verification
-limit are considered. Measurement, reset-like unsupported operations, barrier,
-classical conditions, a third qubit, unresolved parameters, ordering failures,
-or reconstruction error cause fail-closed preservation of the original
-operations. The normal `optimize_circuit` pipeline never introduces `su4q`.
+The new relational methodology generalizes the compiler's mental model around this machinery: do not promote a Bell, axis-hinge, or Cartan-relation window into a full quaternion-Cartan block unless exact composition requires it.
 
----
+## Semantic verification
 
-## Transformation API (Tier 2 — Experimental)
+`optimize_circuit` remains proof-gated and fail-closed:
 
-`optimize_circuit` is the **recommended** Tier 2 entry point.  It runs the full
-optimization pipeline (validate → normalize → canonicalize → flatten → to_u1q →
-gate merging → cancellation) and returns an optimized circuit plus a
-:class:`CompilerReport`.  Use this as your default mental model for backend
-integration.
+1. build a candidate optimized circuit;
+2. run mandatory semantic verification;
+3. commit only if verification is `VERIFIED`;
+4. otherwise return the original circuit unchanged.
 
-Important: ``u1q`` is the canonical internal single-qubit optimization IR.
-Named-gate lowering (e.g. ``rz/ry/rz``) is an explicit backend-targeted stage
-via ``lower_circuit_for_backend(...)`` or ``compile_for_backend(...)``.
-The ``u1q`` convention is inherited from ``rqm-core``:
-``q = w + xi + yj + zk`` maps to ``[[w-iz, -y-ix], [y-ix, w+iz]]``.
-With this convention ``Quaternion.from_axis_angle("x", θ)`` agrees with
-``Rx(θ)``, and likewise for ``Ry`` and ``Rz``.  The sign pair ``q``/``-q`` is
-only folded in phase-invariant, uncontrolled ``u1q`` contexts: it is the same
-SO(3)/Bloch rotation, while the SU(2) matrices differ by global phase.
+`CompilerReport` records equivalence status, whether optimization was applied, fallback reason, comparison evidence, and relational/adaptive routing metadata where available.
 
-`compile_circuit` is the lightweight alternative when you only need validation
-and normalization without optimization.
+Current verification includes canonical single-qubit checks, dense numerical unitary comparison for supported small circuits, and exact descriptor identity where applicable.
 
-Both functions are optional — basic circuit construction works without them.
-
-```python
-from rqm_compiler import optimize_circuit, compile_circuit
-
-# Preferred: optimize first, then export to backend
-optimized, report = optimize_circuit(c)
-print(report)
-for op in optimized.to_descriptors():
-    translate_to_backend(op)
-
-# Lightweight alternative: validate + normalize + export (no optimization)
-compiled = compile_circuit(c)
-compiled.descriptors   # list of internal compiler descriptor dicts
-compiled.num_qubits    # int
-compiled.metadata      # dict with compilation metadata
-```
-
-### Semantic verification in `optimize_circuit`
-
-`optimize_circuit` is **proof-gated and fail-closed**. It always follows:
-
-1. build a candidate optimized circuit
-2. run mandatory semantic verification
-3. commit only if verification is `VERIFIED`
-4. otherwise withhold optimization and return the original circuit unchanged
-
-This means no successful optimization output is ever unverified.
-
-`CompilerReport` records:
-
-- `equivalence_status`: always `VERIFIED` for the returned circuit
-- `equivalence_verified`: always `True` for the returned circuit
-- `equivalence_guaranteed`: explicit proof-gated guarantee for the returned circuit
-- `optimization_applied`: `True` only when a verified candidate was committed
-- `fallback_reason`: `"verification_not_established"` when optimization is withheld
-- `equivalence_report`: structured payload for the committed output, plus
-  `internal_candidate_proof_result` for development diagnostics
-- `equivalence_report["comparison"]`: structured comparison metadata covering
-  exact descriptor identity, exact single-qubit matrix equality where known,
-  equality up to global phase, quaternion sign/Bloch equivalence, and whether
-  an optimization candidate was withheld
-
-Current verifier methods used internally:
-
-- `U1Q_CANONICAL`: exact single-qubit canonical-u1q comparison
-- `UNITARY_NUMERICAL`: dense unitary comparison up to global phase for supported small circuits
-- `GATEWISE_IDENTITY`: exact descriptor identity check for fully-resolved circuits
-
-Important semantics:
-
-- Only verified candidates are committed as optimized output.
-- If proof fails, is unsupported, or errors, optimization is not committed.
-- Unsupported proof coverage causes optimization refusal/fallback, not uncertain output.
-
-Backend repos should prefer `optimize_circuit` because it runs gate merging and
-cancellation before translation — circuits with redundant or adjacent single-qubit
-gates will be cheaper to execute after optimization.  Verify the trade-off for
-your specific circuit patterns.
-
----
-
-## Reconstructing a circuit from descriptors
-
-`Circuit.from_descriptors(descriptors, num_qubits)` is the inverse of
-`to_descriptors()`.  It reconstructs a compiler `Circuit` from the internal
-descriptor format — useful for debugging, reproducibility, backend roundtrips,
-and tests.  This is not the canonical external public IR boundary (which is
-owned by rqm-circuits).
-
-```python
-from rqm_compiler import Circuit, optimize_circuit
-
-c = Circuit(2)
-c.h(0).cx(0, 1).measure_all()
-
-# Optimize and capture the internal compiler descriptor IR
-optimized, report = optimize_circuit(c)
-descriptors = optimized.to_descriptors()
-
-# Later: reconstruct a Circuit from those descriptors
-restored = Circuit.from_descriptors(descriptors, num_qubits=optimized.num_qubits)
-assert restored.to_descriptors() == descriptors
-```
-
----
-
-## IO helpers
-
-```python
-from rqm_compiler.io import circuit_to_dict, circuit_from_dict
-
-data = circuit_to_dict(c)          # serialize to JSON-compatible dict
-restored = circuit_from_dict(data)  # reconstruct Circuit from dict
-```
-
----
-
-## Supported gates (v0)
+## Supported gates
 
 | Category | Gates |
 |---|---|
 | Single-qubit | `i x y z h s t` |
-| Parameterised single-qubit | `rx ry rz phaseshift` (param: `angle`) |
+| Parameterized single-qubit | `rx ry rz phaseshift` |
 | Two-qubit | `cx cy cz swap iswap rxx ryy rzz` |
-| Internal structured two-qubit | `su4q` (nested versioned `QuaternionCartanBlock`) |
+| Internal structured two-qubit | `su4q` / `QuaternionCartanBlock` |
 | Other | `measure barrier` |
 
----
+## Documentation
 
-## Development
+- [Relational entanglement methodology](docs/RELATIONAL_ENTANGLEMENT.md)
+- [EXP-012 SU4Q boundary](docs/EXP012_SU4Q_BOUNDARY.md)
+- [RQM Technical Canon v2](RQM_TECHNICAL_CANON_V2.md)
+- [Contributor architecture rules](AGENTS.md)
 
-```bash
-# Install with dev dependencies
-pip install -e ".[dev]"
-
-# Run tests
-pytest
-```
-
----
-
-## Architecture rules
-
-See [AGENTS.md](AGENTS.md) for the full list of contributor boundary rules.
-See [docs/EXP012_SU4Q_BOUNDARY.md](docs/EXP012_SU4Q_BOUNDARY.md) for the
-validated source and claim boundary.
+Performance advantages are workload- and backend-dependent and require measurement. The relational hierarchy defines exact representation and compiler architecture; it does not itself establish a universal speed, fidelity, or compression advantage.
