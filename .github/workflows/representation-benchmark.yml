@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   benchmark:
-    name: Resolve adaptive gate then overlap closure
+    name: Global information extraction frontier
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -21,32 +21,41 @@ jobs:
         run: |
           python -m pip install -e ".[dev]"
           python -m pip install "rqm-entanglement[qiskit]>=0.2,<0.3"
-      - name: Profitable-window gate
+      - name: Adaptive promotion gate
         run: python -m pytest -q tests/test_z_adaptive_cartan.py::test_selective_policy_emits_proof_carried_internal_window
-      - name: Classification tests
-        run: python -m pytest -q tests/test_adaptive_failure_classification.py
-      - name: Focused failure diagnostic
+      - name: Run global extraction experiment
         run: |
           mkdir -p results
-          python benchmarks/adaptive_failure_diagnostic.py --json results/focused_failure_diagnostic.json > results/focused_failure_diagnostic_stdout.json
-      - name: Run overlap topology experiment
-        run: python benchmarks/overlap_closure.py --csv results/overlap_closure.csv --json results/overlap_closure.json > results/overlap_closure_stdout.json
-      - name: Analyze
+          python benchmarks/global_extraction.py --csv results/global_extraction.csv --json results/global_extraction.json > results/global_extraction_stdout.json
+      - name: Analyze extraction frontier
         run: |
           python - <<'PY'
           import csv,json,statistics
-          from collections import defaultdict,Counter
-          rows=list(csv.DictReader(open('results/overlap_closure.csv')));assert len(rows)==300
-          g=defaultdict(list);roots=Counter()
-          for r in rows:
-            g[(r['topology'],int(r['n']),int(r['rounds']))].append(int(r['cr']));roots.update(json.loads(r['root_causes']))
-            if int(r['n'])<=8:
-              assert float(r['parity_z_error'])<1e-9;assert float(r['amplitude_0_error'])<1e-9
-          summary=[{'topology':k[0],'n':k[1],'rounds':k[2],'median_cr':statistics.median(v)} for k,v in sorted(g.items())]
-          json.dump(summary,open('results/overlap_summary.json','w'),indent=2);json.dump(dict(roots),open('results/overlap_root_causes.json','w'),indent=2)
-          print([(x['topology'],x['median_cr']) for x in summary if x['n']==32 and x['rounds']==16]);print(dict(roots))
+          from collections import defaultdict
+          rows=list(csv.DictReader(open('results/global_extraction.csv')))
+          assert len(rows)==3*8*3*2*6
+          # Scientific-integrity gate: no direct compact extractor is claimed yet.
+          assert all(r['compact_direct_extractor_available'].lower()=='false' for r in rows)
+          assert all((int(r['n'])<=8)==(r['reference_available'].lower()=='true') for r in rows)
+          g=defaultdict(list)
+          for r in rows:g[(r['family'],int(r['n']),int(r['rounds']))].append(int(r['cr']))
+          summary=[{'family':k[0],'n':k[1],'rounds':k[2],'median_cr':statistics.median(v)} for k,v in sorted(g.items())]
+          json.dump(summary,open('results/global_extraction_summary.json','w'),indent=2)
+          frontier={
+            'largest_exact_dense_reference_n':8,
+            'largest_compact_compilation_n':max(int(r['n']) for r in rows),
+            'direct_compact_extractor_available':False,
+            'interpretation':'This run establishes the extraction frontier; it does not claim efficient global-state extraction from the compact representation.'
+          }
+          json.dump(frontier,open('results/extraction_frontier.json','w'),indent=2)
+          print(frontier)
+          print([x for x in summary if x['n']==64 and x['rounds']==16])
           PY
       - name: Upload
         if: always()
         uses: actions/upload-artifact@v4
-        with: {name: "overlap-closure-${{ github.run_id }}", path: "results/", if-no-files-found: error, retention-days: 90}
+        with:
+          name: global-extraction-${{ github.run_id }}
+          path: results/
+          if-no-files-found: error
+          retention-days: 90
