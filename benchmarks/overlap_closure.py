@@ -2,10 +2,10 @@
 
 Keeps the two-qubit interaction budget comparable while varying interaction graph:
 disjoint matching -> chain -> star -> random regular-ish -> dense/all-to-all.
-At small n, also forces global observables against an exact statevector reference.
+At small n, also forces global observables against an exact dense-unitary reference.
 """
 from __future__ import annotations
-import argparse,csv,json,math,random,statistics,time,tracemalloc
+import argparse,csv,json,random,time,tracemalloc
 from dataclasses import asdict,dataclass
 from pathlib import Path
 import numpy as np
@@ -13,7 +13,7 @@ from rqm_compiler import Circuit
 from rqm_compiler.adaptive import AdaptiveCartanPolicy
 from rqm_compiler.adaptive_closure import account_closed_representation
 from rqm_compiler.compile import optimize_circuit
-from rqm_compiler.verification import _simulate_statevector
+from rqm_compiler import verification as verification_module
 
 @dataclass
 class Row:
@@ -24,8 +24,7 @@ class Row:
  parity_z_exact:float|None; parity_z_error:float|None; amplitude_0_exact:float|None; amplitude_0_error:float|None
 
 def edges(topology,n,rng,k):
-    if topology=='disjoint':
-        base=[(i,i+1) for i in range(0,n-1,2)]
+    if topology=='disjoint': base=[(i,i+1) for i in range(0,n-1,2)]
     elif topology=='chain': base=[(i,i+1) for i in range(n-1)]
     elif topology=='star': base=[(0,i) for i in range(1,n)]
     elif topology=='random':
@@ -41,17 +40,19 @@ def build(topology,n,rounds,seed):
         es=edges(topology,n,rng,k)
         for idx,(a,b) in enumerate(es):
             theta=.17+.013*r+.007*idx
-            # same local gate budget across topologies; only overlap graph changes
             c.rxx(a,b,theta); c.rzz(a,b,-.7*theta); c.cx(a,b)
             used.add(tuple(sorted((a,b))));deg[a]+=1;deg[b]+=1
         for q in range(n):
-            c.rz(q,.011*(r+1)*(q+1));
+            c.rz(q,.011*(r+1)*(q+1))
             if (q+r)%3==0:c.t(q)
     return c,k,len(used),max(deg,default=0)
 
 def exact_observables(c):
-    t=time.perf_counter_ns(); state=_simulate_statevector(c); elapsed=time.perf_counter_ns()-t
-    probs=np.abs(state)**2; n=c.num_qubits
+    t=time.perf_counter_ns()
+    u=verification_module._circuit_unitary(c)
+    state=np.asarray([row[0] for row in u],dtype=np.complex128)
+    elapsed=time.perf_counter_ns()-t
+    probs=np.abs(state)**2
     signs=np.array([(-1)**(int(i).bit_count()) for i in range(len(state))],dtype=float)
     parity=float(np.dot(probs,signs)); amp0=float(probs[0]); return elapsed,parity,amp0
 
@@ -60,10 +61,9 @@ def run(topology,n,rounds,seed):
     tracemalloc.start();t=time.perf_counter_ns();out,report=optimize_circuit(c,adaptive_policy=policy);runtime=time.perf_counter_ns()-t;_,peak=tracemalloc.get_traced_memory();tracemalloc.stop()
     closure=account_closed_representation(out); ar=report.adaptive_routing
     mode='not_materialized'; ort=None; parity=perr=amp0=aerr=None
-    if n<=16:
-        mode='exact_statevector_reference'; ort,parity,amp0=exact_observables(out)
-        rt,rp,ra=exact_observables(c)[1:]
-        perr=abs(parity-rp);aerr=abs(amp0-ra)
+    if n<=8:
+        mode='exact_dense_unitary_reference'; ort,parity,amp0=exact_observables(out)
+        _,rp,ra=exact_observables(c); perr=abs(parity-rp);aerr=abs(amp0-ra)
     return Row(topology,n,rounds,seed,k,unique,maxdeg,len(c.operations),len(out.operations),closure.minimum_closed_representation_size,closure.maximum_representation_level,int(ar.get('promotion_count',0)),int(ar.get('demotion_count',0)),int(ar.get('retained_count',0)),json.dumps(ar.get('root_cause_histogram',{}),sort_keys=True),runtime,peak,1<<n,mode,ort,parity,perr,amp0,aerr)
 
 def main():
