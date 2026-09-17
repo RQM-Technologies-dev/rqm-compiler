@@ -37,7 +37,7 @@ def test_selective_policy_emits_proof_carried_internal_window() -> None:
     source = _profitable_window()
     optimized, report = optimize_circuit(source, adaptive_policy=policy)
     assert report.adaptive_routing["kak_invocations"] == 1
-    assert len(report.adaptive_routing["selected_windows"]) == 1
+    assert len(report.adaptive_routing["selected_windows"]) == 1, report.adaptive_routing
     block_operation = next(op for op in optimized.operations if op.gate == "su4q")
     assert block_operation.params["fallback_operations"]
     assert block_operation.params["routing"]["predicted_savings"] >= 3
