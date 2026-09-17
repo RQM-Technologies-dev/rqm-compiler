@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   benchmark:
-    name: Global information extraction frontier
+    name: End-to-end simulation speedup gate
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -23,39 +23,39 @@ jobs:
           python -m pip install "rqm-entanglement[qiskit]>=0.2,<0.3"
       - name: Adaptive promotion gate
         run: python -m pytest -q tests/test_z_adaptive_cartan.py::test_selective_policy_emits_proof_carried_internal_window
-      - name: Run global extraction experiment
+      - name: Run simulation speedup gate
         run: |
           mkdir -p results
-          python benchmarks/global_extraction.py --csv results/global_extraction.csv --json results/global_extraction.json > results/global_extraction_stdout.json
-      - name: Analyze extraction frontier
+          python benchmarks/simulation_speedup_gate.py --csv results/simulation_speedup.csv --json results/simulation_speedup.json > results/simulation_speedup_stdout.json
+      - name: Analyze speedup claims
         run: |
           python - <<'PY'
           import csv,json,statistics
-          from collections import defaultdict
-          rows=list(csv.DictReader(open('results/global_extraction.csv')))
-          assert len(rows)==3*8*3*2*6
-          # Scientific-integrity gate: no direct compact extractor is claimed yet.
-          assert all(r['compact_direct_extractor_available'].lower()=='false' for r in rows)
-          assert all((int(r['n'])<=8)==(r['reference_available'].lower()=='true') for r in rows)
-          g=defaultdict(list)
-          for r in rows:g[(r['family'],int(r['n']),int(r['rounds']))].append(int(r['cr']))
-          summary=[{'family':k[0],'n':k[1],'rounds':k[2],'median_cr':statistics.median(v)} for k,v in sorted(g.items())]
-          json.dump(summary,open('results/global_extraction_summary.json','w'),indent=2)
-          frontier={
-            'largest_exact_dense_reference_n':8,
-            'largest_compact_compilation_n':max(int(r['n']) for r in rows),
-            'direct_compact_extractor_available':False,
-            'interpretation':'This run establishes the extraction frontier; it does not claim efficient global-state extraction from the compact representation.'
+          rows=list(csv.DictReader(open('results/simulation_speedup.csv')))
+          assert len(rows)==3*7*3*2
+          valid=[r for r in rows if r['speedup_claim_valid'].lower()=='true']
+          bad=[r for r in rows if r['rqm_query_available'].lower()=='true' and float(r['abs_error'])>1e-9]
+          assert not bad, bad[:3]
+          summary={
+            'conditions':len(rows),
+            'valid_equal-output_conditions':len(valid),
+            'unavailable_conditions':sum(r['rqm_query_available'].lower()!='true' for r in rows),
+            'speedup_gt_1_conditions':sum(r['speedup_claim_valid'].lower()=='true' and float(r['speedup'])>1 for r in rows),
+            'max_speedup':max((float(r['speedup']) for r in valid),default=None),
+            'median_speedup':statistics.median([float(r['speedup']) for r in valid]) if valid else None,
+            'largest_n_with_valid_claim':max((int(r['n']) for r in valid),default=None),
           }
-          json.dump(frontier,open('results/extraction_frontier.json','w'),indent=2)
-          print(frontier)
-          print([x for x in summary if x['n']==64 and x['rounds']==16])
+          json.dump(summary,open('results/simulation_speedup_summary.json','w'),indent=2)
+          print(summary)
+          for n in (4,8,12,16):
+            xs=[r for r in valid if int(r['n'])==n]
+            if xs: print('n',n,'median',statistics.median(float(r['speedup']) for r in xs),'max',max(float(r['speedup']) for r in xs))
           PY
       - name: Upload
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: global-extraction-${{ github.run_id }}
+          name: simulation-speedup-${{ github.run_id }}
           path: results/
           if-no-files-found: error
           retention-days: 90
