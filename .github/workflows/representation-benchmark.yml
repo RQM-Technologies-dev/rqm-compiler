@@ -6,7 +6,7 @@ on:
       repeats:
         description: "Repeated compiler runs per circuit point"
         required: false
-        default: "3"
+        default: "2"
   push:
     branches: [main]
     paths:
@@ -30,9 +30,9 @@ concurrency:
 
 jobs:
   benchmark:
-    name: C_R scaling and adversarial phase transition
+    name: C_R scaling and closure-event phase transition
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -52,24 +52,31 @@ jobs:
       - name: Baseline C_R(n)
         run: |
           python benchmarks/complexity_h1_h3.py --max-qubits 32 --repeats 3 --csv results/h1_h3.csv > results/h1_h3.json
-      - name: Adversarial C_R(n,d,p) sweep
+      - name: Adversarial C_R(n,d,p) sweep with closure events
         env:
-          REPEATS: ${{ github.event.inputs.repeats || '3' }}
+          REPEATS: ${{ github.event.inputs.repeats || '2' }}
         run: |
-          python benchmarks/phase_transition_cr.py --max-qubits 16 --repeats "$REPEATS" --csv results/phase_transition.csv --json results/phase_transition.json > results/phase_transition_stdout.json
-      - name: Verify phase-transition matrix
+          python benchmarks/phase_transition_cr.py --max-qubits 32 --repeats "$REPEATS" --csv results/phase_transition.csv --json results/phase_transition.json > results/phase_transition_stdout.json
+      - name: Verify phase-transition matrix and event integrity
         run: |
           python - <<'PY'
-          import csv
+          import csv, json
           rows=list(csv.DictReader(open('results/phase_transition.csv')))
           assert rows
-          assert {int(r['n']) for r in rows} == {2,4,8,16}
-          assert {int(r['depth']) for r in rows} == {1,2,4,8}
+          assert {int(r['n']) for r in rows} == {2,4,8,16,32}
+          assert {int(r['depth']) for r in rows} == {1,2,4,8,16,32}
           assert {float(r['density']) for r in rows} == {0.1,0.25,0.5,1.0}
+          assert {int(r['seed']) for r in rows} == {1729,2718,31415}
           assert {r['family'] for r in rows} == {'random_clifford_t','all_to_all_random','random_su4_stress','hardware_efficient_random'}
+          assert len(rows) == 5*6*4*3*4
           assert all(r['closure_metric_exact_within_scope'].lower()=='true' for r in rows)
           assert all(r['quantum_state_dimension_claim'].lower()=='false' for r in rows)
-          print('phase-transition rows:',len(rows),'max promotions:',max(int(r['promotion_count']) for r in rows),'max C_R:',max(int(r['minimum_closed_representation_size']) for r in rows))
+          for r in rows:
+              events=json.loads(r['representation_events'])
+              assert int(r['promotion_count']) == sum(e.get('kind')=='promotion' for e in events)
+              assert int(r['demotion_count']) == sum(e.get('kind')=='demotion' for e in events)
+              assert int(r['retained_count']) == sum(e.get('kind')=='retained' for e in events)
+          print('rows:',len(rows),'max promotions:',max(int(r['promotion_count']) for r in rows),'max demotions:',max(int(r['demotion_count']) for r in rows),'max C_R:',max(int(r['minimum_closed_representation_size']) for r in rows))
           PY
       - name: Upload benchmark results
         if: always()
