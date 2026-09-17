@@ -2,110 +2,72 @@ name: Representation scaling benchmark
 
 on:
   workflow_dispatch:
-    inputs:
-      repeats:
-        description: "Repeated compiler runs per circuit point"
-        required: false
-        default: "2"
   push:
     branches: [main]
     paths:
       - "benchmarks/**"
-      - "src/rqm_compiler/adaptive.py"
-      - "src/rqm_compiler/adaptive_closure.py"
-      - "src/rqm_compiler/compile.py"
-      - "src/rqm_compiler/passes/**"
-      - "src/rqm_compiler/verification.py"
+      - "src/rqm_compiler/**"
       - "tests/test_adaptive_failure_classification.py"
-      - "pyproject.toml"
+      - "tests/test_z_adaptive_cartan.py"
       - ".github/workflows/representation-benchmark.yml"
   schedule:
     - cron: "17 6 * * 1"
-
 permissions:
   contents: read
-
 concurrency:
   group: representation-benchmark-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   benchmark:
-    name: C_R scaling and adaptive failure forensics
+    name: Overlap topology and adaptive closure
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
+        with: {python-version: "3.12", cache: pip}
       - name: Install
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
-      - name: Environment
+      - name: Tests
+        run: python -m pytest -q tests/test_adaptive_failure_classification.py tests/test_z_adaptive_cartan.py
+      - name: Focused failure diagnostic
         run: |
           mkdir -p results
-          python --version > results/environment.txt
-          python -m pip freeze >> results/environment.txt
-          printf '\ncommit=%s\nrunner_os=%s\nrunner_arch=%s\n' "$GITHUB_SHA" "$RUNNER_OS" "$RUNNER_ARCH" >> results/environment.txt
-      - name: Test failure classification
-        run: python -m pytest -q tests/test_adaptive_failure_classification.py tests/test_z_adaptive_cartan.py
-      - name: Focused adaptive failure diagnostic
-        run: |
           python benchmarks/adaptive_failure_diagnostic.py --json results/focused_failure_diagnostic.json > results/focused_failure_diagnostic_stdout.json
-      - name: Validate focused diagnostic
+      - name: Run overlap topology experiment
+        run: |
+          python benchmarks/overlap_closure.py --csv results/overlap_closure.csv --json results/overlap_closure.json > results/overlap_closure_stdout.json
+      - name: Analyze overlap topology
         run: |
           python - <<'PY'
-          import json
-          p=json.load(open('results/focused_failure_diagnostic.json'))
-          assert p['conditions'] == 64
-          allowed={'decomposition_failure','numerical_tolerance_failure','equivalence_proof_failure','unsupported_window_structure','implementation_defect'}
-          assert set(p['root_cause_histogram']).issubset(allowed)
-          assert p['classified_failures'] == sum(p['root_cause_histogram'].values())
-          print('focused:',p['root_cause_histogram'],'events:',p['events_seen'])
-          PY
-      - name: Baseline C_R(n)
-        run: |
-          python benchmarks/complexity_h1_h3.py --max-qubits 32 --repeats 3 --csv results/h1_h3.csv > results/h1_h3.json
-      - name: Full adversarial C_R(n,d,p) sweep with staged failure telemetry
-        env:
-          REPEATS: ${{ github.event.inputs.repeats || '2' }}
-        run: |
-          python benchmarks/phase_transition_cr.py --max-qubits 32 --repeats "$REPEATS" --csv results/phase_transition.csv --json results/phase_transition.json > results/phase_transition_stdout.json
-      - name: Verify matrix and aggregate root causes
-        run: |
-          python - <<'PY'
-          import csv,json
-          from collections import Counter,defaultdict
-          rows=list(csv.DictReader(open('results/phase_transition.csv')))
-          assert len(rows)==5*6*4*3*4
-          assert {int(r['n']) for r in rows}=={2,4,8,16,32}
-          assert {int(r['depth']) for r in rows}=={1,2,4,8,16,32}
-          assert {float(r['density']) for r in rows}=={0.1,0.25,0.5,1.0}
-          assert {int(r['seed']) for r in rows}=={1729,2718,31415}
-          hist=Counter(); examples=defaultdict(list)
+          import csv,json,statistics
+          from collections import defaultdict,Counter
+          rows=list(csv.DictReader(open('results/overlap_closure.csv')))
+          assert len(rows)==4*5*3*5
+          assert {r['topology'] for r in rows}=={'disjoint','chain','star','random','dense'}
+          assert {int(r['n']) for r in rows}=={4,8,16,32}
+          assert {int(r['rounds']) for r in rows}=={1,2,4,8,16}
+          grouped=defaultdict(list); roots=Counter()
           for r in rows:
-              events=json.loads(r['representation_events'])
-              assert int(r['promotion_count'])==sum(e.get('kind')=='promotion' for e in events)
-              assert int(r['demotion_count'])==sum(e.get('kind')=='demotion' for e in events)
-              assert int(r['retained_count'])==sum(e.get('kind')=='retained' for e in events)
-              for e in events:
-                  cat=(e.get('details') or {}).get('failure_category')
-                  if cat:
-                      hist[cat]+=1
-                      if len(examples[cat])<10:
-                          examples[cat].append({'family':r['family'],'n':int(r['n']),'depth':int(r['depth']),'density':float(r['density']),'seed':int(r['seed']),'event':e})
-          json.dump(dict(sorted(hist.items())),open('results/root_cause_histogram.json','w'),indent=2)
-          json.dump(dict(sorted(examples.items())),open('results/root_cause_examples.json','w'),indent=2)
-          print('root causes:',dict(hist),'promotions:',sum(int(r['promotion_count']) for r in rows),'demotions:',sum(int(r['demotion_count']) for r in rows))
+            grouped[(r['topology'],int(r['n']),int(r['rounds']))].append(int(r['cr']))
+            roots.update(json.loads(r['root_causes']))
+            if int(r['n'])<=16:
+              assert float(r['parity_z_error']) < 1e-9
+              assert float(r['amplitude_0_error']) < 1e-9
+          summary=[]
+          for (top,n,d),vals in sorted(grouped.items()): summary.append({'topology':top,'n':n,'rounds':d,'median_cr':statistics.median(vals)})
+          json.dump(summary,open('results/overlap_summary.json','w'),indent=2)
+          json.dump(dict(roots),open('results/overlap_root_causes.json','w'),indent=2)
+          print('conditions',len(rows),'root_causes',dict(roots))
+          print('n32-r16',[(x['topology'],x['median_cr']) for x in summary if x['n']==32 and x['rounds']==16])
           PY
-      - name: Upload benchmark results
+      - name: Upload
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: representation-benchmark-${{ github.run_id }}
+          name: overlap-closure-${{ github.run_id }}
           path: results/
           if-no-files-found: error
           retention-days: 90
