@@ -8,11 +8,26 @@ on:
         required: false
         default: "7"
   push:
+    branches:
+      - main
     paths:
+      - "benchmarks/**"
+      - "src/rqm_compiler/adaptive.py"
+      - "src/rqm_compiler/adaptive_closure.py"
+      - "src/rqm_compiler/compile.py"
+      - "src/rqm_compiler/passes/**"
+      - "src/rqm_compiler/verification.py"
+      - "pyproject.toml"
       - ".github/workflows/representation-benchmark.yml"
+  schedule:
+    - cron: "17 6 * * 1"
 
 permissions:
   contents: read
+
+concurrency:
+  group: representation-benchmark-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   benchmark:
