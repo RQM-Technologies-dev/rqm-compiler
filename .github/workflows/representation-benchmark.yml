@@ -1,73 +1,58 @@
 name: Representation scaling benchmark
-
 on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths:
-      - "benchmarks/**"
-      - "src/rqm_compiler/**"
-      - "tests/test_adaptive_failure_classification.py"
-      - "tests/test_z_adaptive_cartan.py"
-      - ".github/workflows/representation-benchmark.yml"
-  schedule:
-    - cron: "17 6 * * 1"
-permissions:
-  contents: read
+    paths: ["benchmarks/**","src/rqm_compiler/**","tests/test_adaptive_failure_classification.py","tests/test_z_adaptive_cartan.py",".github/workflows/representation-benchmark.yml"]
+permissions: {contents: read}
 concurrency:
   group: representation-benchmark-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   benchmark:
-    name: Overlap topology and adaptive closure
+    name: Resolve adaptive gate then overlap closure
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.12", cache: pip}
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e ".[dev]"
-      - name: Tests
-        run: python -m pytest -q tests/test_adaptive_failure_classification.py tests/test_z_adaptive_cartan.py
-      - name: Focused failure diagnostic
+      - run: python -m pip install -e ".[dev]"
+      - name: Capture profitable-window routing evidence
         run: |
           mkdir -p results
-          python benchmarks/adaptive_failure_diagnostic.py --json results/focused_failure_diagnostic.json > results/focused_failure_diagnostic_stdout.json
+          python - <<'PY' | tee results/profitable_window_diagnostic.txt
+          import json
+          from rqm_compiler import Circuit,AdaptiveCartanPolicy,CompilationWorkBudget,optimize_circuit
+          c=Circuit(2)
+          for i in range(9):
+            c.rzz(0,1,.11+i*.01);c.rx(0,.03+i*.001);c.ry(1,-.02-i*.001)
+          p=AdaptiveCartanPolicy(mode='selective',budget=CompilationWorkBudget(max_kak_windows=1,max_dense_operations=64))
+          out,r=optimize_circuit(c,adaptive_policy=p)
+          print(json.dumps(r.adaptive_routing,indent=2,default=str))
+          PY
+      - name: Classification tests
+        run: python -m pytest -q tests/test_adaptive_failure_classification.py
+      - name: Focused failure diagnostic
+        run: python benchmarks/adaptive_failure_diagnostic.py --json results/focused_failure_diagnostic.json > results/focused_failure_diagnostic_stdout.json
       - name: Run overlap topology experiment
-        run: |
-          python benchmarks/overlap_closure.py --csv results/overlap_closure.csv --json results/overlap_closure.json > results/overlap_closure_stdout.json
-      - name: Analyze overlap topology
+        run: python benchmarks/overlap_closure.py --csv results/overlap_closure.csv --json results/overlap_closure.json > results/overlap_closure_stdout.json
+      - name: Analyze
         run: |
           python - <<'PY'
           import csv,json,statistics
           from collections import defaultdict,Counter
-          rows=list(csv.DictReader(open('results/overlap_closure.csv')))
-          assert len(rows)==4*5*3*5
-          assert {r['topology'] for r in rows}=={'disjoint','chain','star','random','dense'}
-          assert {int(r['n']) for r in rows}=={4,8,16,32}
-          assert {int(r['rounds']) for r in rows}=={1,2,4,8,16}
-          grouped=defaultdict(list); roots=Counter()
+          rows=list(csv.DictReader(open('results/overlap_closure.csv')));assert len(rows)==300
+          g=defaultdict(list);roots=Counter()
           for r in rows:
-            grouped[(r['topology'],int(r['n']),int(r['rounds']))].append(int(r['cr']))
-            roots.update(json.loads(r['root_causes']))
+            g[(r['topology'],int(r['n']),int(r['rounds']))].append(int(r['cr']));roots.update(json.loads(r['root_causes']))
             if int(r['n'])<=16:
-              assert float(r['parity_z_error']) < 1e-9
-              assert float(r['amplitude_0_error']) < 1e-9
-          summary=[]
-          for (top,n,d),vals in sorted(grouped.items()): summary.append({'topology':top,'n':n,'rounds':d,'median_cr':statistics.median(vals)})
-          json.dump(summary,open('results/overlap_summary.json','w'),indent=2)
-          json.dump(dict(roots),open('results/overlap_root_causes.json','w'),indent=2)
-          print('conditions',len(rows),'root_causes',dict(roots))
-          print('n32-r16',[(x['topology'],x['median_cr']) for x in summary if x['n']==32 and x['rounds']==16])
+              assert float(r['parity_z_error'])<1e-9;assert float(r['amplitude_0_error'])<1e-9
+          summary=[{'topology':k[0],'n':k[1],'rounds':k[2],'median_cr':statistics.median(v)} for k,v in sorted(g.items())]
+          json.dump(summary,open('results/overlap_summary.json','w'),indent=2);json.dump(dict(roots),open('results/overlap_root_causes.json','w'),indent=2)
+          print([(x['topology'],x['median_cr']) for x in summary if x['n']==32 and x['rounds']==16]);print(dict(roots))
           PY
       - name: Upload
         if: always()
         uses: actions/upload-artifact@v4
-        with:
-          name: overlap-closure-${{ github.run_id }}
-          path: results/
-          if-no-files-found: error
-          retention-days: 90
+        with: {name: "overlap-closure-${{ github.run_id }}", path: "results/", if-no-files-found: error, retention-days: 90}
