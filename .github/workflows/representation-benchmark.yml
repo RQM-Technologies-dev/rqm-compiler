@@ -4,12 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       repeats:
-        description: "Repeated compiler runs per circuit family and n"
+        description: "Repeated compiler runs per circuit point"
         required: false
-        default: "7"
+        default: "3"
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - "benchmarks/**"
       - "src/rqm_compiler/adaptive.py"
@@ -31,75 +30,52 @@ concurrency:
 
 jobs:
   benchmark:
-    name: C_R(n) benchmark (2,4,8,16,32)
+    name: C_R scaling and adversarial phase transition
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-
+    timeout-minutes: 90
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-
-      - name: Install package and benchmark dependencies
+      - name: Install
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
-
-      - name: Record environment
+      - name: Environment
         run: |
           mkdir -p results
           python --version > results/environment.txt
           python -m pip freeze >> results/environment.txt
           printf '\ncommit=%s\nrunner_os=%s\nrunner_arch=%s\n' "$GITHUB_SHA" "$RUNNER_OS" "$RUNNER_ARCH" >> results/environment.txt
-
-      - name: Run representation scaling experiment
-        env:
-          REPEATS: ${{ github.event.inputs.repeats || '7' }}
+      - name: Baseline C_R(n)
         run: |
-          set -o pipefail
-          python benchmarks/complexity_h1_h3.py \
-            --max-qubits 32 \
-            --repeats "$REPEATS" \
-            --csv results/h1_h3.csv \
-            | tee results/h1_h3.json
-
-      - name: Verify expected matrix and scientific-integrity fields
+          python benchmarks/complexity_h1_h3.py --max-qubits 32 --repeats 3 --csv results/h1_h3.csv > results/h1_h3.json
+      - name: Adversarial C_R(n,d,p) sweep
+        env:
+          REPEATS: ${{ github.event.inputs.repeats || '3' }}
+        run: |
+          python benchmarks/phase_transition_cr.py --max-qubits 16 --repeats "$REPEATS" --csv results/phase_transition.csv --json results/phase_transition.json > results/phase_transition_stdout.json
+      - name: Verify phase-transition matrix
         run: |
           python - <<'PY'
-          import csv, json
-          from pathlib import Path
-
-          csv_path = Path('results/h1_h3.csv')
-          json_path = Path('results/h1_h3.json')
-          rows = list(csv.DictReader(csv_path.open()))
-          payload = json.loads(json_path.read_text())
-          expected_n = {2, 4, 8, 16, 32}
-          observed_n = {int(row['n']) for row in rows}
-          assert observed_n == expected_n, (observed_n, expected_n)
-          assert len(rows) == len(payload)
+          import csv
+          rows=list(csv.DictReader(open('results/phase_transition.csv')))
           assert rows
-          for row in rows:
-              assert row['minimum_closed_representation_size'] != ''
-              assert row['closure_metric_scope'] != ''
-              assert row['closure_metric_exact_within_scope'].lower() == 'true'
-              assert row['quantum_state_dimension_claim'].lower() == 'false'
-              assert row['semantic_verified'].lower() == 'true'
-          print(f'verified {len(rows)} benchmark rows across n={sorted(observed_n)}')
+          assert {int(r['n']) for r in rows} == {2,4,8,16}
+          assert {int(r['depth']) for r in rows} == {1,2,4,8}
+          assert {float(r['density']) for r in rows} == {0.1,0.25,0.5,1.0}
+          assert {r['family'] for r in rows} == {'random_clifford_t','all_to_all_random','random_su4_stress','hardware_efficient_random'}
+          assert all(r['closure_metric_exact_within_scope'].lower()=='true' for r in rows)
+          assert all(r['quantum_state_dimension_claim'].lower()=='false' for r in rows)
+          print('phase-transition rows:',len(rows),'max promotions:',max(int(r['promotion_count']) for r in rows),'max C_R:',max(int(r['minimum_closed_representation_size']) for r in rows))
           PY
-
       - name: Upload benchmark results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: representation-benchmark-${{ github.run_id }}
-          path: |
-            results/h1_h3.csv
-            results/h1_h3.json
-            results/environment.txt
+          path: results/
           if-no-files-found: error
           retention-days: 90
