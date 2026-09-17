@@ -1,15 +1,9 @@
 """H1-H3 scaling experiment for rqm-compiler.
 
-This benchmark separates three hypotheses:
-H1 representational compression, H2 operational/computational compression,
-and H3 closure compression.
-
-Important: ``rqm_representation_size`` is a structural compiler-IR measure, not
-an assertion that the compiler stores or simulates a complete n-qubit state in
-that many scalars.  ``minimum_closed_representation_size`` is therefore reported
-as a PROXY until an exact RQM state-evolution representation exposes its own
-closed-state dimension.  This prevents the benchmark from overstating the
-scientific result.
+The central measurement is C_R(n): minimum closed RQM representation size.
+C_R is now supplied by representation-owned accounting rather than serialized
+IR scalar-leaf size. Its scope is deliberately the compiler working
+representation; it is not an n-qubit state dimension claim.
 
 Run:
     python benchmarks/complexity_h1_h3.py --max-qubits 32 --repeats 7
@@ -29,10 +23,10 @@ import time
 import tracemalloc
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Callable
 
 from rqm_compiler import Circuit
 from rqm_compiler.adaptive import AdaptiveCartanPolicy
+from rqm_compiler.adaptive_closure import account_closed_representation
 from rqm_compiler.compile import optimize_circuit
 
 
@@ -41,14 +35,19 @@ class Result:
     family: str
     n: int
     statevector_dimension: int
+    statevector_complex_amplitudes: int
+    statevector_bytes_complex128_theoretical: int
     input_operations: int
     output_operations: int
-    rqm_representation_size: int
-    minimum_closed_representation_size_proxy: int
+    minimum_closed_representation_size: int
+    closure_metric_scope: str
+    closure_metric_exact_within_scope: bool
+    quantum_state_dimension_claim: bool
+    maximum_representation_level: int
+    representation_histogram: str
+    promotion_count: int
     elapsed_ns_median: int
     peak_memory_bytes_median: int
-    promotion_count: int
-    maximum_representation_level: int
     semantic_verified: bool
     output_error: float | None
 
@@ -76,50 +75,26 @@ def _families(n: int) -> dict[str, Circuit]:
     for layer in range(3):
         for q in range(n):
             dense_layers.h(q).t(q).rz(q, math.pi / (8 + layer))
-        # Alternating nearest-neighbour brickwork spreads entanglement without
-        # making circuit construction itself exponential.
         for parity in (0, 1):
             for q in range(parity, n - 1, 2):
                 dense_layers.cx(q, q + 1)
                 dense_layers.t(q + 1)
+
+    axis_hinge = Circuit(n)
+    for q in range(n):
+        axis_hinge.h(q)
+    for q in range(0, n - 1, 2):
+        axis_hinge.rxx(q, q + 1, math.pi / 8)
+    for q in range(1, n - 1, 2):
+        axis_hinge.rzz(q, q + 1, math.pi / 16)
 
     return {
         "local_clifford": local,
         "entangled_clifford": clifford_chain,
         "entangled_nonclifford": nonclifford_chain,
         "deep_nonclifford": dense_layers,
+        "axis_hinge_structured": axis_hinge,
     }
-
-
-def _scalar_count(value: object) -> int:
-    if value is None:
-        return 0
-    if isinstance(value, (bool, int, float, str)):
-        return 1
-    if isinstance(value, dict):
-        return sum(_scalar_count(v) for v in value.values())
-    if isinstance(value, (list, tuple)):
-        return sum(_scalar_count(v) for v in value)
-    return 1
-
-
-def _representation_size(circuit: Circuit) -> int:
-    """Count scalar leaves in canonical operation descriptors."""
-    return sum(_scalar_count(op.to_descriptor()) for op in circuit.operations)
-
-
-def _representation_level(circuit: Circuit) -> int:
-    """Structural hierarchy: local quaternion=1, native relation=2, SU4 block=3."""
-    level = 0
-    for op in circuit.operations:
-        touched = len(set(op.targets) | set(op.controls))
-        if op.gate == "su4q":
-            level = max(level, 3)
-        elif touched >= 2:
-            level = max(level, 2)
-        else:
-            level = max(level, 1)
-    return level
 
 
 def _compile_once(circuit: Circuit) -> tuple[Circuit, object, int, int]:
@@ -134,16 +109,14 @@ def _compile_once(circuit: Circuit) -> tuple[Circuit, object, int, int]:
 
 
 def _adaptive_evidence(report: object) -> dict[str, object]:
-    # CompilerReport is intentionally treated defensively so this benchmark
-    # remains useful across report-schema revisions.
     raw = getattr(report, "__dict__", {})
-    for key in ("adaptive", "adaptive_cartan", "adaptive_evidence"):
+    for key in ("adaptive_routing", "adaptive", "adaptive_cartan", "adaptive_evidence"):
         value = raw.get(key)
         if isinstance(value, dict):
             return value
     metadata = raw.get("metadata")
     if isinstance(metadata, dict):
-        for key in ("adaptive", "adaptive_cartan", "adaptive_evidence"):
+        for key in ("adaptive_routing", "adaptive", "adaptive_cartan", "adaptive_evidence"):
             value = metadata.get(key)
             if isinstance(value, dict):
                 return value
@@ -152,11 +125,11 @@ def _adaptive_evidence(report: object) -> dict[str, object]:
 
 def _verified_and_error(report: object) -> tuple[bool, float | None]:
     raw = getattr(report, "__dict__", {})
-    text = json.dumps(raw, default=str).lower()
-    verified = "verified" in text and "counterexample" not in text and "failedproof" not in text
-    # Exact numerical error is only emitted when the current report exposes it.
-    for key in ("error", "max_error", "reconstruction_error", "verification_error"):
-        value = raw.get(key)
+    status = str(raw.get("equivalence_status", "")).upper()
+    verified = bool(raw.get("equivalence_verified", False)) or status == "VERIFIED"
+    equivalence = raw.get("equivalence_report")
+    if isinstance(equivalence, dict):
+        value = equivalence.get("max_abs_err")
         if isinstance(value, (int, float)):
             return verified, float(value)
     return verified, None
@@ -176,24 +149,32 @@ def run(ns: list[int], repeats: int) -> list[Result]:
                 peaks.append(peak)
                 final_output, final_report = output, report
             assert final_output is not None and final_report is not None
+
             adaptive = _adaptive_evidence(final_report)
             selected = adaptive.get("selected_windows", [])
             promotions = len(selected) if isinstance(selected, list) else 0
             verified, error = _verified_and_error(final_report)
-            size = _representation_size(final_output)
+            closure = account_closed_representation(final_output)
+            dimension = 1 << n
+
             rows.append(
                 Result(
                     family=family,
                     n=n,
-                    statevector_dimension=1 << n,
+                    statevector_dimension=dimension,
+                    statevector_complex_amplitudes=dimension,
+                    statevector_bytes_complex128_theoretical=dimension * 16,
                     input_operations=len(circuit.operations),
                     output_operations=len(final_output.operations),
-                    rqm_representation_size=size,
-                    minimum_closed_representation_size_proxy=size,
+                    minimum_closed_representation_size=closure.minimum_closed_representation_size,
+                    closure_metric_scope=closure.scope,
+                    closure_metric_exact_within_scope=closure.exact_within_scope,
+                    quantum_state_dimension_claim=closure.quantum_state_dimension_claim,
+                    maximum_representation_level=closure.maximum_representation_level,
+                    representation_histogram=json.dumps(closure.representation_histogram, sort_keys=True),
+                    promotion_count=promotions,
                     elapsed_ns_median=int(statistics.median(timings)),
                     peak_memory_bytes_median=int(statistics.median(peaks)),
-                    promotion_count=promotions,
-                    maximum_representation_level=_representation_level(final_output),
                     semantic_verified=verified,
                     output_error=error,
                 )
