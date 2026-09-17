@@ -1,0 +1,90 @@
+name: Representation scaling benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      repeats:
+        description: "Repeated compiler runs per circuit family and n"
+        required: false
+        default: "7"
+  push:
+    paths:
+      - ".github/workflows/representation-benchmark.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    name: C_R(n) benchmark (2,4,8,16,32)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package and benchmark dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Record environment
+        run: |
+          mkdir -p results
+          python --version > results/environment.txt
+          python -m pip freeze >> results/environment.txt
+          printf '\ncommit=%s\nrunner_os=%s\nrunner_arch=%s\n' "$GITHUB_SHA" "$RUNNER_OS" "$RUNNER_ARCH" >> results/environment.txt
+
+      - name: Run representation scaling experiment
+        env:
+          REPEATS: ${{ github.event.inputs.repeats || '7' }}
+        run: |
+          set -o pipefail
+          python benchmarks/complexity_h1_h3.py \
+            --max-qubits 32 \
+            --repeats "$REPEATS" \
+            --csv results/h1_h3.csv \
+            | tee results/h1_h3.json
+
+      - name: Verify expected matrix and scientific-integrity fields
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+
+          csv_path = Path('results/h1_h3.csv')
+          json_path = Path('results/h1_h3.json')
+          rows = list(csv.DictReader(csv_path.open()))
+          payload = json.loads(json_path.read_text())
+          expected_n = {2, 4, 8, 16, 32}
+          observed_n = {int(row['n']) for row in rows}
+          assert observed_n == expected_n, (observed_n, expected_n)
+          assert len(rows) == len(payload)
+          assert rows
+          for row in rows:
+              assert row['minimum_closed_representation_size'] != ''
+              assert row['closure_metric_scope'] != ''
+              assert row['closure_metric_exact_within_scope'].lower() == 'true'
+              assert row['quantum_state_dimension_claim'].lower() == 'false'
+              assert row['semantic_verified'].lower() == 'true'
+          print(f'verified {len(rows)} benchmark rows across n={sorted(observed_n)}')
+          PY
+
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: representation-benchmark-${{ github.run_id }}
+          path: |
+            results/h1_h3.csv
+            results/h1_h3.json
+            results/environment.txt
+          if-no-files-found: error
+          retention-days: 90
