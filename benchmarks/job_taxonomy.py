@@ -1,4 +1,4 @@
-"""Compiler job-taxonomy benchmark: stable RQM vs Qiskit/Aer.\n\nRerun after graduating exact chain boundary-transfer readout.
+"""Compiler job-taxonomy benchmark: stable RQM vs Qiskit/Aer.\n\nRerun after fixing stable chain boundary-transfer selector routing.
 
 Explores representative compiler workloads while preserving an exactness-first
 rubric. Each row records whether stable RQM can answer exactly, which readout
