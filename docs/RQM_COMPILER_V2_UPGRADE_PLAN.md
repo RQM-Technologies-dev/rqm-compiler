@@ -1,7 +1,7 @@
-# RQM Compiler v2 Upgrade Plan
+# RQM Compiler 0.4.0 Upgrade Plan
 
 > **Status:** Working upgrade plan. The current stable prototype is the proving
-> ground for the future main `rqm-compiler` v2. Features described as stable
+> ground for the future main `rqm-compiler` 0.4.0. Features described as stable
 > below have passed the repository's exact-reference gates in their stated
 > scope. Experimental features do not become v2 defaults until independently
 > validated.
@@ -399,3 +399,7 @@ In short:
 > **v1 optimizes quaternionic circuits. v2 plans exact quantum computations
 > using the smallest validated representation appropriate to the circuit,
 > query, topology, and target.**
+
+## Frozen release benchmark
+
+The 0.4 development line has a canonical reproducible Qiskit/Aer comparison defined by [benchmarks/BASELINE.md](../benchmarks/BASELINE.md) and the `Release benchmark baseline` workflow. Its JSON, CSV and Markdown outputs are uploaded as immutable per-run GitHub Actions artifacts. The baseline uses the public representation-aware API rather than importing prototype internals.
