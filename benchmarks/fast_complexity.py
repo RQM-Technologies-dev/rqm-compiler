@@ -6,7 +6,8 @@ from rqm_compiler import Circuit
 from rqm_compiler.adaptive import AdaptiveCartanPolicy
 from rqm_compiler.adaptive_closure import account_closed_representation
 from rqm_compiler.compile import optimize_circuit
-from rqm_compiler.observables import expectation_pauli,ObservableExpansionExceeded
+from rqm_compiler.observables import ObservableExpansionExceeded
+from rqm_compiler.structured_observables import expectation_structured
 from rqm_compiler.verification import _apply_gate_to_state
 
 def build(f,n,d):
@@ -32,7 +33,7 @@ def main():
     cr=account_closed_representation(out).minimum_closed_representation_size
     try:
      for _ in range(3):
-      t=time.perf_counter_ns();r=expectation_pauli(out,"Z"*n,max_terms=250000);qs.append(time.perf_counter_ns()-t);rv=float(r.value.real);peak=r.peak_terms
+      t=time.perf_counter_ns();r=expectation_structured(out,"Z"*n,max_terms=250000);qs.append(time.perf_counter_ns()-t);rv=float(r.value.real);peak=r.peak_terms
     except ObservableExpansionExceeded: avail=False
     for _ in range(3):
      t=time.perf_counter_ns();bv=dense(c);bs.append(time.perf_counter_ns()-t)
