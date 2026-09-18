@@ -49,7 +49,7 @@ def tn_expectation(c):
   else:
    a,b=touched;mp={a:0,b:1}
    loc=Operation(op.gate,[mp[x] for x in op.targets],[mp[x] for x in op.controls],op.params)
-   U=_operation_matrix(loc,(0,1)).reshape(2,2,2,2)
+   U=_operation_matrix(loc,(0,1)).reshape(2,2,2,2).transpose(1,0,3,2)
    ka,kb=label,label+1;label+=2;tensors.append(U);inds.append([ka,kb,ket[a],ket[b]]);ket[a],ket[b]=ka,kb
    ba,bb=label,label+1;label+=2;tensors.append(U.conj());inds.append([ba,bb,bra[a],bra[b]]);bra[a],bra[b]=ba,bb
  for q in range(n):tensors.append(Z);inds.append([bra[q],ket[q]])
