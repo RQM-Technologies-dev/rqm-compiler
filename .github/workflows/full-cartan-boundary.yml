@@ -1,0 +1,20 @@
+name: Full Cartan boundary
+on:
+ push:
+  branches: [main]
+  paths: ["benchmarks/full_cartan_boundary.py",".github/workflows/full-cartan-boundary.yml"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ test:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: python -m pip install -e ".[dev]"
+   - run: python benchmarks/full_cartan_boundary.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with: {name: "full-cartan-boundary-${{ github.run_id }}", path: "results/", if-no-files-found: error}
