@@ -9,7 +9,7 @@ Stable components:
 - representation-owned closure accounting C_R
 - exact structured Pauli observable propagation
 - exact direct star/global-Z relational readout
-- exact one-qubit operator boundary transfer maps\n- recognized chain/global-Z recursive boundary-transfer readout
+- exact one-qubit operator boundary transfer maps\n- recognized chain/global-Z recursive boundary-transfer readout\n- validated fixed-depth 1D hardware-efficient topology-aware readout
 """
 from __future__ import annotations
 from dataclasses import dataclass
@@ -86,6 +86,11 @@ def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:in
   chain=global_z_chain(circuit)
   if chain.available:
    return chain
+  from .topology_readout import global_z_hardware
+  hw=global_z_hardware(circuit)
+  if hw is not None:
+   value,largest,layers=hw
+   return StableReadoutResult(value,"topology_hardware_1d",True,True,largest,f"validated_layers={layers}")
  try:
   r=expectation_structured(circuit,labels,max_terms=max_terms)
   return StableReadoutResult(r.value,r.representation,True,True,r.peak_terms)
