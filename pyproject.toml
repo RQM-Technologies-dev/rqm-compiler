@@ -30,7 +30,6 @@ classifiers = [
 dev = [
   "pytest>=7",
   "pytest-cov",
-  "qiskit>=2,<3",
 ]
 
 [project.urls]
