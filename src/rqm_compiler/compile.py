@@ -350,6 +350,20 @@ def lower_circuit_for_backend(circuit: Circuit, *, backend_family: str) -> Circu
 
 def compile_for_backend(circuit: Circuit, *, backend_family: str) -> tuple[Circuit, CompilerReport]:
     """Optimize then perform explicit backend-targeted lowering."""
+    from .backends import plan_backend_materialization
+
     optimized, report = optimize_circuit(circuit)
+    plan = plan_backend_materialization(optimized, backend_family)
+    report.backend_capability_model = plan.backend
+    report.backend_modality = plan.modality
+    report.backend_framework = plan.framework
+    report.backend_lowering_profile = plan.lowering_profile
+    report.backend_materializations = list(plan.materialize_operations)
+    report.backend_unsupported_operations = list(plan.unsupported_operations)
+    if plan.unsupported_operations:
+        raise ValueError(
+            f"Backend {backend_family!r} does not support operations after planning: "
+            f"{', '.join(plan.unsupported_operations)}"
+        )
     lowered = lower_circuit_for_backend(optimized, backend_family=backend_family)
     return lowered, report
