@@ -429,6 +429,24 @@ In addition to addressing or characterizing the random-sparse/query-complexity
 frontier, **0.3.7 must execute the 0.4 compiler path on at least two distinct
 real quantum-hardware stacks** (not simulator-only backends).
 
+These are no longer standalone compiler-only hardware scripts. Each mandatory
+hardware run must exercise the first RQM Studio execution-orchestrator path:
+
+```text
+workload
+ -> quantum-compiler-api
+ -> rqm-compiler
+ -> BackendCapabilityModel / materialization
+ -> provider adapter
+ -> real QPU
+ -> result retrieval
+ -> reference comparison
+ -> unified RQM execution/provenance record
+```
+
+The purpose is to validate both compiler 0.4 and the future agent-native RQM
+Studio full-stack execution architecture.
+
 Minimum evidence for each stack:
 
 1. provider/device identity and modality;
@@ -440,7 +458,10 @@ Minimum evidence for each stack:
    reference where tractable;
 7. any target-specific materializations, routing, unsupported operations or
    fallback behavior;
-8. reproducibility notes sufficient to rerun the job.
+8. reproducibility notes sufficient to rerun the job;
+9. evidence that submission/retrieval was orchestrated through `quantum-compiler-api`;
+10. provider cost/charge metadata where available and an RQM commercial-accounting
+    slot suitable for a future orchestration/service fee.
 
 The two stacks should preferably represent different hardware modalities when
 access permits.
