@@ -1,0 +1,20 @@
+name: Rotor hinge closure
+on:
+ push:
+  branches: [main]
+  paths: ["benchmarks/rotor_hinge_closure.py",".github/workflows/rotor-hinge-closure.yml"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ closure:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: python -m pip install -e ".[dev]"
+   - run: python benchmarks/rotor_hinge_closure.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with: {name: "rotor-hinge-closure-${{ github.run_id }}", path: "results/", if-no-files-found: error}
