@@ -1,0 +1,23 @@
+name: Stable prototype acceptance
+on:
+ push:
+  branches: [main]
+  paths: ["src/rqm_compiler/stable_prototype.py","benchmarks/stable_prototype_acceptance.py",".github/workflows/stable-prototype.yml"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ accept:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: python -m pip install -e ".[dev]"
+   - run: python benchmarks/stable_prototype_acceptance.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with:
+       name: stable-prototype-${{ github.run_id }}
+       path: results/
+       if-no-files-found: error
