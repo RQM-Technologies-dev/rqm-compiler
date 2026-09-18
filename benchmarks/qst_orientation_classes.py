@@ -39,6 +39,6 @@ for k,stage,T,a,b in maps:
               "det_left":best[5],"det_right":best[6],"angle_xx":a,"angle_zz":b})
 from collections import Counter
 summary={"maps":256,"exact":sum(r["residual"]<=1e-9 for r in rows),"median_residual":float(np.median([r["residual"] for r in rows])),
- "max_residual":max(r["residual"] for r in rows),"classes":dict(Counter((r["left_class"],r["right_class"]) for r in rows)),
+ "max_residual":max(r["residual"] for r in rows),"classes":dict(Counter(r["left_class"]+"|"+r["right_class"] for r in rows)),
  "exact_improper":sum(r["residual"]<=1e-9 and (r["det_left"]<0 or r["det_right"]<0) for r in rows)}
 Path("results").mkdir(exist_ok=True);Path("results/qst_orientation_classes.json").write_text(json.dumps({"summary":summary,"rows":rows},indent=2));print(json.dumps(summary))
