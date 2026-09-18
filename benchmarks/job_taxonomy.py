@@ -7,8 +7,7 @@ path it chose, and side-by-side compiler/runtime metrics.
 from __future__ import annotations
 import json,statistics,time,random
 from pathlib import Path
-from rqm_compiler import Circuit
-from rqm_compiler.stable_prototype import compile_stable,expectation_stable
+from rqm_compiler import Circuit,compile_representation_aware,plan_and_evaluate
 from rqm_compiler.depth import circuit_depth
 
 NS=(4,8,12)
@@ -107,8 +106,8 @@ def main():
    c=builder(n)
    rqmc=[];rqmr=[];rr=None;comp=None
    for _ in range(REPEATS):
-    t=time.perf_counter_ns();comp=compile_stable(c);rqmc.append(time.perf_counter_ns()-t)
-    t=time.perf_counter_ns();rr=expectation_stable(c,"Z"*n);rqmr.append(time.perf_counter_ns()-t)
+    t=time.perf_counter_ns();comp=compile_representation_aware(c);rqmc.append(time.perf_counter_ns()-t)
+    t=time.perf_counter_ns();rr=plan_and_evaluate(comp,"Z"*n);rqmr.append(time.perf_counter_ns()-t)
    qc=to_qiskit(c);qct=[];tqc=None
    for _ in range(REPEATS):
     t=time.perf_counter_ns();tqc=transpile(qc,basis_gates=["rz","sx","x","cx"],optimization_level=3,seed_transpiler=17);qct.append(time.perf_counter_ns()-t)
@@ -142,6 +141,16 @@ def main():
    "methods":sorted(set(r["rqm_method"] for r in fr)),
   }
  Path("results").mkdir(exist_ok=True)
- Path("results/job_taxonomy.json").write_text(json.dumps({"summary":summary,"rows":rows},indent=2))
+ Path("results/job_taxonomy.json").write_text(json.dumps({"baseline":"0.4","summary":summary,"rows":rows},indent=2))
+ import csv
+ with Path("results/job_taxonomy.csv").open("w",newline="") as fh:
+  w=csv.DictWriter(fh,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+ md=["# RQM Compiler 0.4 benchmark baseline","","Exactness gate: abs(error) <= 1e-9.","",
+     "| Family | Coverage | Median end-to-end ratio | Max ratio | Route(s) |",
+     "| --- | ---: | ---: | ---: | --- |"]
+ for fam,s in summary.items():
+  md.append(f'| {fam} | {s["exact_valid"]}/{s["conditions"]} | {s["median_speedup"]:.3f}x | {s["max_speedup"]:.3f}x | {", ".join(s["methods"])} |')
+ Path("results/BASELINE_RESULTS.md").write_text("\n".join(md)+"\n")
  print(json.dumps({"summary":summary,"rows":rows}))
+ assert all(s["exact_valid"]==s["conditions"] for s in summary.values()), "release baseline requires 100% exact coverage"
 if __name__=="__main__":main()
