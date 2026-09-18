@@ -33,6 +33,35 @@ pip install -e ".[dev]"
 pytest
 ```
 
+## Representation-aware public API (0.3.1 milestone)
+
+The validated 0.4.0 planner is now available through the normal `rqm_compiler`
+namespace; callers no longer need to import `stable_prototype` directly.
+
+```python
+from rqm_compiler import Circuit, compile_representation_aware, evaluate_observable
+
+c = Circuit(4)
+c.h(0)
+for i in range(3):
+    c.rxx(i, i + 1, 0.11)
+    c.rzz(i, i + 1, -0.067)
+    c.cx(i, i + 1)
+
+compiled = compile_representation_aware(c)
+result = evaluate_observable(c, "ZZZZ")
+
+print(compiled.closure.minimum_closed_representation_size)
+print(result.method, result.value)
+```
+
+`evaluate_observable` uses strict validated recognizers for specialized exact
+routes (currently star relational, chain boundary transfer, and the validated
+fixed-depth 1D hardware-efficient topology path) and otherwise falls back to
+the general exact evaluator.
+
+The legacy `optimize_circuit` API remains supported during the 0.3.x migration.
+
 ## Compiler model
 
 The preferred flow is:
