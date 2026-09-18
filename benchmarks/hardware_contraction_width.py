@@ -67,7 +67,7 @@ def exact_width(adj,upper):
  return best[0]
 
 rows=[]
-for n in (2,3,4,6,8,12,16,24,32):
+for n in (4,8,16,32,64,128):
  g=hardware_graph(n);t=time.perf_counter()
  mf=greedy(g,"minfill");md=greedy(g,"mindegree");ub=min(mf,md)
  exact=None
