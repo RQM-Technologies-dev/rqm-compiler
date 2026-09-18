@@ -1,0 +1,46 @@
+name: 0.3.6 Documentation contract
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "README.md"
+      - "docs/**"
+      - "examples/**"
+      - ".github/workflows/documentation-contract.yml"
+      - "src/rqm_compiler/**"
+
+permissions:
+  contents: read
+
+jobs:
+  public-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m pip install -e .
+      - name: Run documented public example
+        run: python examples/representation_aware.py
+      - name: Verify documented public symbols
+        run: |
+          python - <<'PY'
+          import rqm_compiler as r
+          for name in (
+              "compile_representation_aware","plan_and_evaluate",
+              "BackendCapabilityModel","get_backend_capability_model",
+              "plan_backend_materialization",
+          ):
+              assert hasattr(r,name), name
+          PY
+      - name: Guard claim-boundary documents
+        run: |
+          test -f docs/MIGRATING_0_3_TO_0_4.md
+          test -f docs/REPRESENTATION_AWARE_API.md
+          test -f docs/COMPILER_REPORT_0_4.md
+          test -f docs/CLAIMS_AND_LIMITATIONS.md
+          grep -q "21/21 exact-valid" docs/CLAIMS_AND_LIMITATIONS.md
+          grep -q "does \*\*not\*\* establish" docs/CLAIMS_AND_LIMITATIONS.md
