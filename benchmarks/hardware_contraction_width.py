@@ -49,33 +49,13 @@ def greedy(adj,mode):
   v=min(a,key=score);a,d=eliminate(a,v);width=max(width,d)
  return width
 
-def exact_width(adj,upper):
- # exact branch-and-bound treewidth, practical only for small graph sizes.
- best=[upper]
- def rec(a,w):
-  if not a:best[0]=min(best[0],w);return
-  mind=min(len(ns) for ns in a.values())
-  if max(w,mind)>=best[0]:return
-  # explore low-fill candidates first
-  cand=[]
-  for v,ns0 in a.items():
-   ns=list(ns0);fill=sum(1 for i,x in enumerate(ns) for y in ns[i+1:] if y not in a[x])
-   cand.append((fill,len(ns),v))
-  for _,_,v in sorted(cand)[:8]:
-   b,d=eliminate(a,v);rec(b,max(w,d))
- rec({x:set(ns) for x,ns in adj.items()},0)
- return best[0]
-
 rows=[]
 for n in (4,8,16,32,64,128):
  g=hardware_graph(n);t=time.perf_counter()
  mf=greedy(g,"minfill");md=greedy(g,"mindegree");ub=min(mf,md)
- exact=None
- if n<=4:exact=exact_width(g,ub)
  rows.append({"n":n,"tensor_vertices":len(g),"minfill_width":mf,"mindegree_width":md,
-              "best_width":exact if exact is not None else ub,"exact":exact is not None,
-              "search_ms":(time.perf_counter()-t)*1000})
-summary={"rows":len(rows),"exact_through_n":4,
+              "best_width":ub,"exact":False,"search_ms":(time.perf_counter()-t)*1000})
+summary={"rows":len(rows),"exact_through_n":None,
  "best_widths":[[r["n"],r["best_width"]] for r in rows],
  "bounded_by_3_all":all(r["best_width"]<=3 for r in rows)}
 Path("results").mkdir(exist_ok=True)
