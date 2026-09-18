@@ -1,0 +1,22 @@
+name: Hardware width2 readout
+on:
+ push:
+  branches: [main]
+  paths: ["benchmarks/hardware_width2_readout.py",".github/workflows/hardware-width2-readout.yml"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ validate:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: |
+       python -m pip install -e ".[dev]"
+       python -m pip install "opt_einsum>=3.4,<4"
+   - run: python benchmarks/hardware_width2_readout.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with: {name: "hardware-width2-readout-${{ github.run_id }}", path: "results/", if-no-files-found: error}
