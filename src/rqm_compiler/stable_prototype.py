@@ -9,7 +9,7 @@ Stable components:
 - representation-owned closure accounting C_R
 - exact structured Pauli observable propagation
 - exact direct star/global-Z relational readout
-- exact one-qubit operator boundary transfer maps for recursive research
+- exact one-qubit operator boundary transfer maps\n- recognized chain/global-Z recursive boundary-transfer readout
 """
 from __future__ import annotations
 from dataclasses import dataclass
@@ -48,6 +48,34 @@ class StableReadoutResult:
 def compile_stable(circuit:Circuit, *, adaptive_policy:AdaptiveCartanPolicy|None=None)->StableCompileResult:
  out,report=optimize_circuit(circuit,adaptive_policy=adaptive_policy)
  return StableCompileResult(out,report,account_closed_representation(out))
+
+
+def global_z_chain(circuit:Circuit)->StableReadoutResult:
+ from .su4_blocks import _single_qubit_matrix
+ from .ops import Operation
+ n=circuit.num_qubits;ops=circuit.operations
+ if n<2:return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"n<2")
+ idx=0;psi=np.array([1,0],complex)
+ while idx<len(ops) and len(set(ops[idx].targets)|set(ops[idx].controls))==1:
+  if ops[idx].targets[0]!=0:return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"unsupported preparation")
+  psi=_single_qubit_matrix(ops[idx])@psi;idx+=1
+ blocks=[]
+ for edge in range(n-1):
+  if idx+3>len(ops):return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"incomplete chain")
+  b=ops[idx:idx+3];idx+=3;touched=[set(x.targets)|set(x.controls) for x in b]
+  if [x.gate for x in b]!=["rxx","rzz","cx"] or any(t!={edge,edge+1} for t in touched):
+   return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"not validated chain form")
+  blocks.append(b)
+ if idx!=len(ops):return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"extra operations")
+ O=_Z.copy()
+ for edge in range(n-2,-1,-1):
+  U=np.eye(4,dtype=complex);mp={edge:0,edge+1:1}
+  for op in blocks[edge]:
+   loc=Operation(op.gate,[mp[x] for x in op.targets],[mp[x] for x in op.controls],op.params)
+   U=_operation_matrix(loc,(0,1))@U
+  O=apply_boundary_transfer(boundary_transfer(U,np.array([[1,0],[0,0]],complex),O),_Z)
+ rho=np.outer(psi,psi.conj())
+ return StableReadoutResult(complex(np.trace(rho@O)),"chain_boundary_transfer",True,True,n-1)
 
 def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:int=250_000)->StableReadoutResult:
  labels="".join(pauli) if not isinstance(pauli,str) else pauli
@@ -92,5 +120,5 @@ def apply_boundary_transfer(T:np.ndarray, observable:np.ndarray)->np.ndarray:
 
 __all__=[
  "StableCompileResult","StableReadoutResult","compile_stable","expectation_stable",
- "boundary_transfer","apply_boundary_transfer","ObservableExpansionExceeded"
+ "boundary_transfer","apply_boundary_transfer","global_z_chain","ObservableExpansionExceeded"
 ]
