@@ -17,9 +17,9 @@ TOL=1e-9
 Z=np.array([[1,0],[0,-1]],complex)
 ZERO=np.array([1,0],complex)
 
-def build(n):
+def build(n,layers=2):
  c=Circuit(n)
- for layer in range(2):
+ for layer in range(layers):
   for q in range(n):
    c.rz(q,.021*(q+1)*(layer+1));c.rx(q,.017*(q+2)*(layer+1))
   for i in range(n-1):c.cx(i,i+1)
@@ -61,12 +61,14 @@ def tn_expectation(c):
  return complex(v),dt,int(info.largest_intermediate),float(info.opt_cost)
 
 rows=[]
-for n in (4,8,12):
- c=build(n);v,dt,largest,cost=tn_expectation(c);t=time.perf_counter_ns();ref=dense(c);refdt=time.perf_counter_ns()-t
- rows.append({"n":n,"value":v.real,"reference":ref,"error":abs(v.real-ref),"exact_valid":abs(v.real-ref)<=TOL,
-              "tn_ns":dt,"reference_ns":refdt,"largest_intermediate":largest,"opt_cost":cost})
-summary={"cases":3,"exact_valid":sum(r["exact_valid"] for r in rows),
+conditions=[(4,2),(8,2),(12,2),(16,2),(20,2),(8,3),(12,3),(16,3),(8,4),(12,4),(16,4)]
+for n,layers in conditions:
+ c=build(n,layers);v,dt,largest,cost=tn_expectation(c);t=time.perf_counter_ns();ref=dense(c);refdt=time.perf_counter_ns()-t
+ rows.append({"n":n,"layers":layers,"value":v.real,"reference":ref,"error":abs(v.real-ref),"exact_valid":abs(v.real-ref)<=TOL,
+              "tn_ns":dt,"reference_ns":refdt,"largest_intermediate":largest,"opt_cost":cost,
+              "speedup_vs_reference":refdt/dt})
+summary={"cases":len(rows),"exact_valid":sum(r["exact_valid"] for r in rows),
          "largest_intermediates":[r["largest_intermediate"] for r in rows],
          "max_error":max(r["error"] for r in rows)}
 Path("results").mkdir(exist_ok=True);Path("results/hardware_width2_readout.json").write_text(json.dumps({"summary":summary,"rows":rows},indent=2));print(json.dumps({"summary":summary,"rows":rows}))
-assert summary["exact_valid"]==3
+assert summary["exact_valid"]==len(rows)
