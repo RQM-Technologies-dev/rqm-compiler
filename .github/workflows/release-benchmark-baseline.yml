@@ -1,0 +1,33 @@
+name: Release benchmark baseline
+on:
+ workflow_dispatch:
+ push:
+  branches: [main]
+  paths:
+   - "benchmarks/job_taxonomy.py"
+   - "benchmarks/BASELINE.md"
+   - ".github/workflows/release-benchmark-baseline.yml"
+   - "src/rqm_compiler/planner.py"
+   - "src/rqm_compiler/stable_prototype.py"
+permissions: {contents: read}
+jobs:
+ baseline:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: |
+       python -m pip install -e ".[dev]"
+       python -m pip install "qiskit>=2,<3" "qiskit-aer>=0.17,<0.18"
+   - run: python benchmarks/job_taxonomy.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with:
+      name: rqm-0.4-benchmark-baseline-${{ github.run_id }}
+      path: |
+       results/job_taxonomy.json
+       results/job_taxonomy.csv
+       results/BASELINE_RESULTS.md
+      if-no-files-found: error
