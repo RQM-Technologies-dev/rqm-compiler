@@ -83,6 +83,9 @@ def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:in
   direct=global_z_star(circuit)
   if direct.available:
    return StableReadoutResult(direct.value,"direct_star_relational",True,True,direct.invariant_count)
+  chain=global_z_chain(circuit)
+  if chain.available:
+   return chain
  try:
   r=expectation_structured(circuit,labels,max_terms=max_terms)
   return StableReadoutResult(r.value,r.representation,True,True,r.peak_terms)
