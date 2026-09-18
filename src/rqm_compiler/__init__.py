@@ -52,6 +52,12 @@ from .compile import (
     optimize_circuit,
 )
 from .ops import Operation
+from .planner import (
+    QueryResult,
+    RepresentationCompileResult,
+    compile_representation_aware,
+    evaluate_observable,
+)
 from .passes.cancel_2q import cancel_2q_pass
 from .report import CompilerReport
 from .regional import (
@@ -79,6 +85,10 @@ __all__ = [
     "Operation",
     "CompiledCircuit",
     "CompilerReport",
+    "RepresentationCompileResult",
+    "QueryResult",
+    "compile_representation_aware",
+    "evaluate_observable",
     "RegionalCompilerReport",
     "RegionalOptimizationRecord",
     "OPTIMIZATION_PIPELINE",
