@@ -322,16 +322,21 @@ def lower_circuit_for_backend(circuit: Circuit, *, backend_family: str) -> Circu
 
     * ``\"braket_gate_model\"``: lower ``u1q`` to named 1Q gates (``rz/ry/rz``).
     """
+    from .backends import get_backend_capability_model
+    capability = get_backend_capability_model(backend_family)
     working = Circuit(circuit.num_qubits, metadata=dict(circuit.metadata))
     for op in circuit.operations:
         working.add(op)
 
-    if backend_family == _BACKEND_FAMILY_BRAKET_GATE_MODEL:
+    # 0.3.4 capability-driven dispatch. Only the pre-existing Braket lowering
+    # profile is activated in this milestone; Qiskit/PennyLane are described
+    # without changing their behavior.
+    if capability.lowering_profile == "named_1q":
         working = lower_u1q_named_1q_pass(working)
-    else:
+    elif backend_family != _BACKEND_FAMILY_BRAKET_GATE_MODEL:
         raise ValueError(
-            f"Unsupported backend_family={backend_family!r}. "
-            f"Supported values: {_BACKEND_FAMILY_BRAKET_GATE_MODEL!r}."
+            f"Backend {backend_family!r} is described by the capability model "
+            "but has no lower_circuit_for_backend behavior in 0.3.4."
         )
 
     for op in working.operations:
