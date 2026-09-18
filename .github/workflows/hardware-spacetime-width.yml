@@ -1,0 +1,20 @@
+name: Hardware space-time width
+on:
+ push:
+  branches: [main]
+  paths: ["benchmarks/hardware_spacetime_width.py",".github/workflows/hardware-spacetime-width.yml"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ width:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: python -m pip install -e ".[dev]"
+   - run: python benchmarks/hardware_spacetime_width.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with: {name: "hardware-spacetime-width-${{ github.run_id }}", path: "results/", if-no-files-found: error}
