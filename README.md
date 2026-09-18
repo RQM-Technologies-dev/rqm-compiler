@@ -1,10 +1,12 @@
 # rqm-compiler
 
-Backend-neutral optimization and rewriting engine for the RQM ecosystem.
+**RQM Compiler 0.4 is a representation-aware quantum computation planner.** It analyzes the circuit, requested observable, interaction structure, and target capabilities, then uses the least-general validated exact representation and readout/lowering strategy available. When specialized structure is not proven, it falls back conservatively to general exact machinery.
+
+It remains backend-neutral: RQM plans the computation; backend bridges materialize and execute it.
 
 rqm-compiler owns the internal compiler circuit model and optimization policy. The canonical external/public circuit schema is defined by **rqm-circuits**; two-qubit relational mathematics is owned by **rqm-entanglement**.
 
-## RQM Technical Canon v2
+## Representation model
 
 `u1q` is a compact, backend-neutral, standard-compatible single-qubit compiler IR. It preserves tested quaternion/`SU(2)` semantics; it is not a quantum-mechanically richer state representation.
 
@@ -33,13 +35,13 @@ pip install -e ".[dev]"
 pytest
 ```
 
-## Representation-aware public API (0.3.1 milestone)
+## Representation-aware public API
 
 The validated 0.4.0 planner is now available through the normal `rqm_compiler`
 namespace; callers no longer need to import `stable_prototype` directly.
 
 ```python
-from rqm_compiler import Circuit, compile_representation_aware, evaluate_observable
+from rqm_compiler import Circuit, compile_representation_aware, plan_and_evaluate
 
 c = Circuit(4)
 c.h(0)
@@ -49,13 +51,16 @@ for i in range(3):
     c.cx(i, i + 1)
 
 compiled = compile_representation_aware(c)
-result = evaluate_observable(c, "ZZZZ")
+result = plan_and_evaluate(compiled, "ZZZZ")
 
-print(compiled.closure.minimum_closed_representation_size)
-print(result.method, result.value)
+print(compiled.report.representation_complexity)  # C_R
+print(compiled.report.query_complexity)           # C_Q
+print(compiled.report.recognized_topology)
+print(compiled.report.selected_query_route)
+print(result.value)
 ```
 
-`evaluate_observable` uses strict validated recognizers for specialized exact
+`plan_and_evaluate` uses strict validated recognizers for specialized exact
 routes (currently star relational, chain boundary transfer, and the validated
 fixed-depth 1D hardware-efficient topology path) and otherwise falls back to
 the general exact evaluator.
@@ -230,5 +235,11 @@ Current verification includes canonical single-qubit checks, dense numerical uni
 - [EXP-012 SU4Q boundary](docs/EXP012_SU4Q_BOUNDARY.md)
 - [RQM Technical Canon v2](RQM_TECHNICAL_CANON_V2.md)
 - [Contributor architecture rules](AGENTS.md)
+- [Migrating from 0.3 to 0.4](docs/MIGRATING_0_3_TO_0_4.md)
+- [Representation-aware API](docs/REPRESENTATION_AWARE_API.md)
+- [CompilerReport 0.4 fields](docs/COMPILER_REPORT_0_4.md)
+- [Claims and limitations](docs/CLAIMS_AND_LIMITATIONS.md)
+- [Frozen benchmark contract](benchmarks/BASELINE.md)
+- [Backend capability model](docs/BACKEND_CAPABILITY_MODEL.md)
 
 Performance advantages are workload- and backend-dependent and require measurement. The relational hierarchy defines exact representation and compiler architecture; it does not itself establish a universal speed, fidelity, or compression advantage.
