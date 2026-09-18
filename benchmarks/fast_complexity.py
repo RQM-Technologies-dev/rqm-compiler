@@ -1,4 +1,7 @@
-"""Fast exact-observable complexity smoke benchmark (<10 minute design target)."""
+"""Fast exact-observable complexity smoke benchmark (<10 minute design target).
+
+Trigger note: rerun unchanged 16-condition grid after AxisHinge/Cartan observable closure.
+"""
 from __future__ import annotations
 import csv,json,statistics,time
 from pathlib import Path
