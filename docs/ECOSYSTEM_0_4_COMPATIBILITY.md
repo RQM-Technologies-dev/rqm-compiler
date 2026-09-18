@@ -14,11 +14,11 @@ Status values:
 | Repository | Role | Current 0.4 status | Required action | Launch gate |
 | --- | --- | --- | --- | --- |
 | `rqm-compiler` | representation-aware compiler/planner | in progress | complete 0.3.x milestones, release 0.4.0 | mandatory |
-| `rqm-qiskit` | Qiskit lowering/execution bridge | **blocking** | allow `rqm-compiler>=0.3,<0.5`; validate current 0.4 planner candidate and wheel matrix | mandatory |
+| `rqm-qiskit` | Qiskit lowering/execution bridge | **in validation** | dependency range now accepts `rqm-compiler>=0.3,<0.5`; CI is qualifying against current 0.4 candidate | mandatory |
 | `rqm-braket` | Braket lowering/execution bridge | validate | run compiler 0.4 descriptor/lowering compatibility suite | mandatory |
 | `rqm-pennylane` | PennyLane descriptor bridge | validate | run compiler 0.4 descriptor/export compatibility suite | mandatory |
 | `rqm-circuits` | canonical public circuit schema | compatible-by-design | verify 0.4 changes remain internal and require no wire-schema break | mandatory |
-| `rqm-core` | canonical local quaternion/SU(2)/shared operator math | update-required | centralize shared operator/Pauli-basis primitives used by 0.4; retain compiler/topology policy outside core | mandatory |
+| `rqm-core` | canonical local quaternion/SU(2)/shared operator math | **in validation** | candidate now centralizes Pauli-basis projection/reconstruction, basis projectors, and two-qubit partial traces; compiler migration waits on a released core version | mandatory |
 | `rqm-entanglement` | nonlocal/Cartan math | validate | verify no duplicated two-qubit math moved into compiler/core | mandatory |
 | `quantum-compiler-api` | production compiler API / Studio backend | update-required | move off old compiler commit/version assumptions; expose 0.4 planner/report fields | mandatory |
 | `openqse-rqm-adapter` | OpenQSE interoperability | update-required | consume public planner/report API; refresh conformance provenance | mandatory |
@@ -60,3 +60,11 @@ through `CompilerReport` rather than vendor-specific IR.
 
 The first blocking downstream package is `rqm-qiskit`, whose pre-0.4
 dependency range was `rqm-compiler>=0.3,<0.4`.
+
+## Current candidate provenance
+
+- rqm-compiler compatibility matrix: `6604ccf437378093272d107d7c0de70a55fec43a`
+- rqm-qiskit 0.4 compatibility range/test work: `03e0459ed0450855e56a5cf889bb0170e9c34545`
+- rqm-core shared operator math candidate: `b3dc98f81480c769fa0359f76f67ad32a0a4d36e`
+
+The new core primitives intentionally stop at backend-independent operator mathematics. Query planning, topology recognition, contraction ordering, and boundary-transfer policy remain compiler responsibilities; canonical nonlocal/Cartan mathematics remains in `rqm-entanglement`.
