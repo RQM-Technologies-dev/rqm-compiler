@@ -403,3 +403,57 @@ In short:
 ## Frozen release benchmark
 
 The 0.4 development line has a canonical reproducible Qiskit/Aer comparison defined by [benchmarks/BASELINE.md](../benchmarks/BASELINE.md) and the `Release benchmark baseline` workflow. Its JSON, CSV and Markdown outputs are uploaded as immutable per-run GitHub Actions artifacts. The baseline uses the public representation-aware API rather than importing prototype internals.
+
+
+## 0.3.x -> 0.4.0 release milestones
+
+### 0.3.4 — Backend/modality capability boundary
+
+Acceptance requires a public `BackendCapabilityModel`, capability-driven
+materialization planning, backend telemetry in `CompilerReport`, and
+regression evidence that existing backend lowering semantics are unchanged.
+
+### 0.3.5 — Cross-stack release qualification
+
+Qualify the compiler against the required RQM ecosystem bridges, API, Studio,
+OpenQSE adapter, packaging and clean-install paths.
+
+### 0.3.6 — Public documentation and claim freeze
+
+Publish migration guidance, examples, benchmark methodology, architecture and
+scientific claim boundaries.
+
+### 0.3.7 — Performance frontier + real-hardware validation
+
+In addition to addressing or characterizing the random-sparse/query-complexity
+frontier, **0.3.7 must execute the 0.4 compiler path on at least two distinct
+real quantum-hardware stacks** (not simulator-only backends).
+
+Minimum evidence for each stack:
+
+1. provider/device identity and modality;
+2. compiler/backend capability model selected;
+3. exact submitted circuit artifact and compiler report;
+4. backend-lowered artifact;
+5. hardware job identifier/provenance;
+6. measured execution result and comparison against an exact/simulator
+   reference where tractable;
+7. any target-specific materializations, routing, unsupported operations or
+   fallback behavior;
+8. reproducibility notes sufficient to rerun the job.
+
+The two stacks should preferably represent different hardware modalities when
+access permits.
+
+**Bonus / preferred validation target:** one of the two real-hardware
+demonstrations should use an ORNL quantum-system/QSE/OpenQSE-connected stack if
+RQM has authorized access to such a target at validation time. Lack of access
+does not block 0.3.7 provided two other real hardware stacks satisfy the
+mandatory evidence gate; the ORNL target is an additional preferred result,
+not a reason to weaken provenance or access controls.
+
+### 0.3.8 — Final release acceptance
+
+Repeat frozen benchmarks and cross-stack tests from clean release-candidate
+artifacts, verify documentation/provenance and remove candidate-only dependency
+pins before promoting `rqm-compiler 0.4.0`.
