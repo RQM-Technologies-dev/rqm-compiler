@@ -15,11 +15,11 @@ Status values:
 | --- | --- | --- | --- | --- |
 | `rqm-compiler` | representation-aware compiler/planner | in progress | complete 0.3.x milestones, release 0.4.0 | mandatory |
 | `rqm-qiskit` | Qiskit lowering/execution bridge | **in validation** | dependency range now accepts `rqm-compiler>=0.3,<0.5`; CI is qualifying against current 0.4 candidate | mandatory |
-| `rqm-braket` | Braket lowering/execution bridge | validate | run compiler 0.4 descriptor/lowering compatibility suite | mandatory |
-| `rqm-pennylane` | PennyLane descriptor bridge | validate | run compiler 0.4 descriptor/export compatibility suite | mandatory |
+| `rqm-braket` | Braket lowering/execution bridge | **in validation** | compiler 0.4 installed in dev qualification; direct representation-aware lowering test added | mandatory |
+| `rqm-pennylane` | PennyLane descriptor bridge | **in validation** | compiler 0.4 installed in dev qualification; direct representation-aware export test added | mandatory |
 | `rqm-circuits` | canonical public circuit schema | compatible-by-design | verify 0.4 changes remain internal and require no wire-schema break | mandatory |
 | `rqm-core` | canonical local quaternion/SU(2)/shared operator math | **in validation** | candidate now centralizes Pauli-basis projection/reconstruction, basis projectors, and two-qubit partial traces; compiler migration waits on a released core version | mandatory |
-| `rqm-entanglement` | nonlocal/Cartan math | validate | verify no duplicated two-qubit math moved into compiler/core | mandatory |
+| `rqm-entanglement` | nonlocal/Cartan math | **compatible** | ownership boundary frozen; compiler delegates canonical pair rotations; CI passed | mandatory |
 | `quantum-compiler-api` | production compiler API / Studio backend | update-required | move off old compiler commit/version assumptions; expose 0.4 planner/report fields | mandatory |
 | `openqse-rqm-adapter` | OpenQSE interoperability | update-required | consume public planner/report API; refresh conformance provenance | mandatory |
 | `rqm-studio` | product UI | update-required | surface new report fields where useful after API integration | product launch |
