@@ -331,7 +331,7 @@ def lower_circuit_for_backend(circuit: Circuit, *, backend_family: str) -> Circu
     # 0.3.4 capability-driven dispatch. Only the pre-existing Braket lowering
     # profile is activated in this milestone; Qiskit/PennyLane are described
     # without changing their behavior.
-    if capability.lowering_profile == "named_1q":
+    if backend_family == _BACKEND_FAMILY_BRAKET_GATE_MODEL and capability.lowering_profile == "named_1q":
         working = lower_u1q_named_1q_pass(working)
     elif backend_family != _BACKEND_FAMILY_BRAKET_GATE_MODEL:
         raise ValueError(
