@@ -1,0 +1,20 @@
+name: QST discrete classification
+on:
+ push:
+  branches: [main]
+  paths: ["benchmarks/qst_discrete_classification.py",".github/workflows/qst-discrete-classification.yml"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ classify:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: python -m pip install -e ".[dev]"
+   - run: python benchmarks/qst_discrete_classification.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with: {name: "qst-discrete-${{ github.run_id }}", path: "results/", if-no-files-found: error}
