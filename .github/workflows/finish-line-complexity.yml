@@ -1,0 +1,37 @@
+name: Finish-line complexity benchmark
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "benchmarks/finish_line_complexity.py"
+      - "docs/FINISH_LINE_COMPLEXITY_EXPERIMENT.md"
+      - ".github/workflows/finish-line-complexity.yml"
+permissions: {contents: read}
+concurrency:
+  group: finish-line-complexity-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - name: Install
+        run: |
+          python -m pip install -e ".[dev]"
+          python -m pip install "rqm-entanglement[qiskit]>=0.2,<0.3" "qiskit-aer>=0.17,<0.18"
+      - name: Run finish-line experiment
+        run: |
+          mkdir -p results
+          python benchmarks/finish_line_complexity.py --out results
+      - name: Upload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: finish-line-complexity-${{ github.run_id }}
+          path: results/
+          if-no-files-found: error
+          retention-days: 90
