@@ -35,6 +35,7 @@ Public API::
 from importlib.metadata import PackageNotFoundError, version
 
 from .circuit import Circuit
+from .backends import BackendCapabilityModel, BACKEND_CAPABILITIES, get_backend_capability_model
 from .adaptive import (
     AdaptiveCartanPolicy,
     CandidateWindow,
@@ -77,6 +78,9 @@ from .verification import (
 
 __all__ = [
     "Circuit",
+    "BackendCapabilityModel",
+    "BACKEND_CAPABILITIES",
+    "get_backend_capability_model",
     "AdaptiveCartanPolicy",
     "CandidateWindow",
     "CompilationWorkBudget",
