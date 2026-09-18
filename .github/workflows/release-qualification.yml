@@ -1,0 +1,75 @@
+name: 0.3.5 Release qualification
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/release-qualification.yml"
+      - "src/rqm_compiler/**"
+      - "pyproject.toml"
+
+permissions:
+  contents: read
+
+jobs:
+  clean-wheel:
+    name: Clean wheel Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "${{ matrix.python-version }}"}
+      - name: Build wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --wheel
+      - name: Install wheel into isolated venv
+        run: |
+          python -m venv /tmp/rqm-clean
+          /tmp/rqm-clean/bin/python -m pip install --upgrade pip
+          /tmp/rqm-clean/bin/python -m pip install dist/*.whl
+      - name: Public API smoke from installed wheel
+        run: |
+          cd /tmp
+          /tmp/rqm-clean/bin/python - <<'PY'
+          import rqm_compiler as r
+          c=r.Circuit(2); c.h(0); c.cx(0,1)
+          planned=r.compile_representation_aware(c)
+          assert planned.report.representation_complexity is not None
+          assert r.get_backend_capability_model("qiskit").framework=="qiskit"
+          assert r.get_backend_capability_model("braket_gate_model").framework=="amazon_braket"
+          assert r.get_backend_capability_model("pennylane").framework=="pennylane"
+          print(r.__version__, planned.report.representation_complexity)
+          PY
+
+  sdist:
+    name: Clean sdist
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m pip install --upgrade pip build
+      - run: python -m build --sdist
+      - run: |
+          python -m venv /tmp/rqm-sdist
+          /tmp/rqm-sdist/bin/python -m pip install dist/*.tar.gz
+          cd /tmp
+          /tmp/rqm-sdist/bin/python -c "import rqm_compiler; from rqm_compiler import compile_representation_aware, BackendCapabilityModel"
+
+  source-regression:
+    name: Source regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest -q
