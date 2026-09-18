@@ -1,4 +1,5 @@
 name: Hardware contraction width
+# exact graph-order diagnostic
 on:
  push:
   branches: [main]
