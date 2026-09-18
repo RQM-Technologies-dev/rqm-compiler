@@ -47,7 +47,15 @@ class StableReadoutResult:
 
 def compile_stable(circuit:Circuit, *, adaptive_policy:AdaptiveCartanPolicy|None=None)->StableCompileResult:
  out,report=optimize_circuit(circuit,adaptive_policy=adaptive_policy)
- return StableCompileResult(out,report,account_closed_representation(out))
+ closure=account_closed_representation(out)
+ report.representation_complexity=closure.minimum_closed_representation_size
+ report.maximum_representation_level=closure.maximum_representation_level
+ report.representation_histogram=dict(closure.representation_histogram)
+ # Count upward transitions in the owned representation trajectory.
+ from .adaptive_closure import REPRESENTATION_LEVEL
+ levels=[REPRESENTATION_LEVEL[x] for x in closure.representation_trajectory]
+ report.promotion_count=sum(1 for a,b in zip(levels,levels[1:]) if b>a)
+ return StableCompileResult(out,report,closure)
 
 
 def global_z_chain(circuit:Circuit)->StableReadoutResult:
