@@ -15,14 +15,14 @@ Status values:
 | --- | --- | --- | --- | --- |
 | `rqm-compiler` | representation-aware compiler/planner | in progress | complete 0.3.x milestones, release 0.4.0 | mandatory |
 | `rqm-qiskit` | Qiskit lowering/execution bridge | **in validation** | dependency range now accepts `rqm-compiler>=0.3,<0.5`; CI is qualifying against current 0.4 candidate | mandatory |
-| `rqm-braket` | Braket lowering/execution bridge | **in validation** | compiler 0.4 installed in dev qualification; direct representation-aware lowering test added | mandatory |
-| `rqm-pennylane` | PennyLane descriptor bridge | **in validation** | compiler 0.4 installed in dev qualification; direct representation-aware export test added | mandatory |
+| `rqm-braket` | Braket lowering/execution bridge | **in validation** | 0.4 exposed missing RXX/RYY/RZZ bridge support; native Braket pair-rotation lowering added and rerunning | mandatory |
+| `rqm-pennylane` | PennyLane descriptor bridge | **compatible** | compiler 0.4 qualified on Python 3.11/3.12; bridge retains independent Python 3.10 support | mandatory |
 | `rqm-circuits` | canonical public circuit schema | compatible-by-design | verify 0.4 changes remain internal and require no wire-schema break | mandatory |
 | `rqm-core` | canonical local quaternion/SU(2)/shared operator math | **in validation** | candidate now centralizes Pauli-basis projection/reconstruction, basis projectors, and two-qubit partial traces; compiler migration waits on a released core version | mandatory |
 | `rqm-entanglement` | nonlocal/Cartan math | **compatible** | ownership boundary frozen; compiler delegates canonical pair rotations; CI passed | mandatory |
-| `quantum-compiler-api` | production compiler API / Studio backend | update-required | move off old compiler commit/version assumptions; expose 0.4 planner/report fields | mandatory |
-| `openqse-rqm-adapter` | OpenQSE interoperability | update-required | consume public planner/report API; refresh conformance provenance | mandatory |
-| `rqm-studio` | product UI | update-required | surface new report fields where useful after API integration | product launch |
+| `quantum-compiler-api` | production compiler API / Studio backend | **in validation** | service adopts public 0.4 planner/report API; CI overlays candidates while production lock remains stable | mandatory |
+| `openqse-rqm-adapter` | OpenQSE interoperability | **compatible** | clean ecosystem evidence exercises public 0.4 compile and query planner APIs | mandatory |
+| `rqm-studio` | product UI | **compatible candidate** | report types/UI and explanation canon understand 0.4 planner telemetry; CI and hosted explanation validation pass | product launch |
 | `rqm-optimize` | downstream Qiskit-native optimizer | validate | confirm downstream role and no duplicated 0.4 planner responsibility | product launch |
 | `RQM-Jobs-MCP` | service/catalog surface | docs/evidence | update compiler capability provenance after 0.4 freeze | product launch |
 | `RQM-Storefront` | public product docs | docs/evidence | update compiler positioning and benchmark evidence | product launch |
