@@ -1,0 +1,25 @@
+name: High-n crossover probe
+on:
+  push:
+    branches: [main]
+    paths: ["benchmarks/high_n_crossover.py",".github/workflows/high-n-crossover.yml"]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ probe:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: |
+       python -m pip install -e ".[dev]"
+       python -m pip install "rqm-entanglement[qiskit]>=0.2,<0.3"
+   - run: python benchmarks/high_n_crossover.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with:
+       name: high-n-crossover-${{ github.run_id }}
+       path: results/
+       if-no-files-found: error
