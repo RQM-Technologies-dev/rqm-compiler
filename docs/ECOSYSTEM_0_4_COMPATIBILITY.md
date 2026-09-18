@@ -15,12 +15,12 @@ Status values:
 | --- | --- | --- | --- | --- |
 | `rqm-compiler` | representation-aware compiler/planner | in progress | complete 0.3.x milestones, release 0.4.0 | mandatory |
 | `rqm-qiskit` | Qiskit lowering/execution bridge | **in validation** | dependency range now accepts `rqm-compiler>=0.3,<0.5`; CI is qualifying against current 0.4 candidate | mandatory |
-| `rqm-braket` | Braket lowering/execution bridge | **in validation** | 0.4 exposed missing RXX/RYY/RZZ bridge support; native Braket pair-rotation lowering added and rerunning | mandatory |
+| `rqm-braket` | Braket lowering/execution bridge | **compatible** | RXX/RYY/RZZ descriptor validation/lowering added; Python 3.10/3.11/3.12 CI and distribution build pass | mandatory |
 | `rqm-pennylane` | PennyLane descriptor bridge | **compatible** | compiler 0.4 qualified on Python 3.11/3.12; bridge retains independent Python 3.10 support | mandatory |
 | `rqm-circuits` | canonical public circuit schema | compatible-by-design | verify 0.4 changes remain internal and require no wire-schema break | mandatory |
 | `rqm-core` | canonical local quaternion/SU(2)/shared operator math | **in validation** | candidate now centralizes Pauli-basis projection/reconstruction, basis projectors, and two-qubit partial traces; compiler migration waits on a released core version | mandatory |
 | `rqm-entanglement` | nonlocal/Cartan math | **compatible** | ownership boundary frozen; compiler delegates canonical pair rotations; CI passed | mandatory |
-| `quantum-compiler-api` | production compiler API / Studio backend | **in validation** | service adopts public 0.4 planner/report API; CI overlays candidates while production lock remains stable | mandatory |
+| `quantum-compiler-api` | production compiler API / Studio backend | **in validation** | service adopts public 0.4 planner/report API; CI now overlays the current 0.4 candidate and asserts planner symbols before full tests | mandatory |
 | `openqse-rqm-adapter` | OpenQSE interoperability | **compatible** | clean ecosystem evidence exercises public 0.4 compile and query planner APIs | mandatory |
 | `rqm-studio` | product UI | **compatible candidate** | report types/UI and explanation canon understand 0.4 planner telemetry; CI and hosted explanation validation pass | product launch |
 | `rqm-optimize` | downstream Qiskit-native optimizer | validate | confirm downstream role and no duplicated 0.4 planner responsibility | product launch |
