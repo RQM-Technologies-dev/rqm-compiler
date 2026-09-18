@@ -1,4 +1,4 @@
-"""Compiler job-taxonomy benchmark: stable RQM vs Qiskit/Aer.\n\nRerun after graduating validated hardware topology-aware readout.
+"""Compiler job-taxonomy benchmark: stable RQM vs Qiskit/Aer.\n\nRerun after adding stable topology readout runtime dependency.
 
 Explores representative compiler workloads while preserving an exactness-first
 rubric. Each row records whether stable RQM can answer exactly, which readout
