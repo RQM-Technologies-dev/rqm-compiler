@@ -17,6 +17,9 @@ from rqm_entanglement import (
     YY,
     Z,
     ZZ,
+    xx_rotation,
+    yy_rotation,
+    zz_rotation,
     QuaternionCartanBlock,
     classify_su4,
     phase_aligned_operator_error,
@@ -147,12 +150,11 @@ def _operation_matrix(op: Operation, pair: tuple[int, int]) -> NDArray[np.comple
         )
     if op.gate in {"rxx", "ryy", "rzz"}:
         angle = _finite_angle(op)
-        generator = {"rxx": XX, "ryy": YY, "rzz": ZZ}[op.gate]
-        return np.asarray(
-            math.cos(angle / 2.0) * np.eye(4)
-            - 1j * math.sin(angle / 2.0) * generator,
-            dtype=np.complex128,
-        )
+        return {
+            "rxx": xx_rotation,
+            "ryy": yy_rotation,
+            "rzz": zz_rotation,
+        }[op.gate](angle)
     if op.gate == "su4q":
         block = QuaternionCartanBlock.from_dict(op.params["block"])
         matrix = block.to_unitary()
