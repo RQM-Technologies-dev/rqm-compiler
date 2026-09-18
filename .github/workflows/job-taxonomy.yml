@@ -1,0 +1,25 @@
+name: Compiler job taxonomy
+on:
+ push:
+  branches: [main]
+  paths: ["benchmarks/job_taxonomy.py",".github/workflows/job-taxonomy.yml","src/rqm_compiler/stable_prototype.py"]
+ workflow_dispatch:
+permissions: {contents: read}
+jobs:
+ taxonomy:
+  runs-on: ubuntu-latest
+  timeout-minutes: 10
+  steps:
+   - uses: actions/checkout@v4
+   - uses: actions/setup-python@v5
+     with: {python-version: "3.12", cache: pip}
+   - run: |
+       python -m pip install -e ".[dev]"
+       python -m pip install "qiskit>=2,<3" "qiskit-aer>=0.17,<0.18"
+   - run: python benchmarks/job_taxonomy.py
+   - if: always()
+     uses: actions/upload-artifact@v4
+     with:
+       name: compiler-job-taxonomy-${{ github.run_id }}
+       path: results/
+       if-no-files-found: error
