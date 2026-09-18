@@ -75,6 +75,17 @@ class CompilerReport:
     selected_two_qubit_strategy: str = "original_operations"
     adaptive_routing: dict[str, Any] = field(default_factory=dict)
     stage_timings_ns: dict[str, int] = field(default_factory=dict)
+    representation_complexity: int | None = None
+    query_complexity: int | None = None
+    maximum_representation_level: int | None = None
+    representation_histogram: dict[str, int] = field(default_factory=dict)
+    recognized_topology: str | None = None
+    selected_query_route: str | None = None
+    contraction_width: int | None = None
+    largest_intermediate: int | None = None
+    promotion_count: int = 0
+    query_fallback_used: bool = False
+    query_fallback_reason: str | None = None
 
     @property
     def gate_count_delta(self) -> int:
@@ -122,4 +133,15 @@ class CompilerReport:
             "selected_two_qubit_strategy": self.selected_two_qubit_strategy,
             "adaptive_routing": _copy_report_value(self.adaptive_routing),
             "stage_timings_ns": dict(self.stage_timings_ns),
+            "representation_complexity": self.representation_complexity,
+            "query_complexity": self.query_complexity,
+            "maximum_representation_level": self.maximum_representation_level,
+            "representation_histogram": dict(self.representation_histogram),
+            "recognized_topology": self.recognized_topology,
+            "selected_query_route": self.selected_query_route,
+            "contraction_width": self.contraction_width,
+            "largest_intermediate": self.largest_intermediate,
+            "promotion_count": self.promotion_count,
+            "query_fallback_used": self.query_fallback_used,
+            "query_fallback_reason": self.query_fallback_reason,
         }
