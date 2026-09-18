@@ -86,6 +86,12 @@ class CompilerReport:
     promotion_count: int = 0
     query_fallback_used: bool = False
     query_fallback_reason: str | None = None
+    backend_capability_model: str | None = None
+    backend_modality: str | None = None
+    backend_framework: str | None = None
+    backend_lowering_profile: str | None = None
+    backend_materializations: list[str] = field(default_factory=list)
+    backend_unsupported_operations: list[str] = field(default_factory=list)
 
     @property
     def gate_count_delta(self) -> int:
@@ -144,4 +150,10 @@ class CompilerReport:
             "promotion_count": self.promotion_count,
             "query_fallback_used": self.query_fallback_used,
             "query_fallback_reason": self.query_fallback_reason,
+            "backend_capability_model": self.backend_capability_model,
+            "backend_modality": self.backend_modality,
+            "backend_framework": self.backend_framework,
+            "backend_lowering_profile": self.backend_lowering_profile,
+            "backend_materializations": list(self.backend_materializations),
+            "backend_unsupported_operations": list(self.backend_unsupported_operations),
         }
