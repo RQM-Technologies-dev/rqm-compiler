@@ -77,12 +77,18 @@ class CompilerReport:
     stage_timings_ns: dict[str, int] = field(default_factory=dict)
     representation_complexity: int | None = None
     query_complexity: int | None = None
+    query_complexity_unit: str | None = None
+    query_evaluation_basis: str | None = None
     maximum_representation_level: int | None = None
     representation_histogram: dict[str, int] = field(default_factory=dict)
     recognized_topology: str | None = None
     selected_query_route: str | None = None
     contraction_width: int | None = None
     largest_intermediate: int | None = None
+    largest_intermediate_unit: str | None = None
+    query_promotion_count: int = 0
+    query_plan_reused: bool = False
+    frontier_rejection: str | None = None
     promotion_count: int = 0
     query_fallback_used: bool = False
     query_fallback_reason: str | None = None
@@ -141,12 +147,18 @@ class CompilerReport:
             "stage_timings_ns": dict(self.stage_timings_ns),
             "representation_complexity": self.representation_complexity,
             "query_complexity": self.query_complexity,
+            "query_complexity_unit": self.query_complexity_unit,
+            "query_evaluation_basis": self.query_evaluation_basis,
             "maximum_representation_level": self.maximum_representation_level,
             "representation_histogram": dict(self.representation_histogram),
             "recognized_topology": self.recognized_topology,
             "selected_query_route": self.selected_query_route,
             "contraction_width": self.contraction_width,
             "largest_intermediate": self.largest_intermediate,
+            "largest_intermediate_unit": self.largest_intermediate_unit,
+            "query_promotion_count": self.query_promotion_count,
+            "query_plan_reused": self.query_plan_reused,
+            "frontier_rejection": self.frontier_rejection,
             "promotion_count": self.promotion_count,
             "query_fallback_used": self.query_fallback_used,
             "query_fallback_reason": self.query_fallback_reason,

@@ -1,3 +1,10 @@
+> Scientific release clarification (2026-09-19): `rqm-compiler` owns computation
+> and scientific certification; `rqm-api` owns orchestration. `rqm-qiskit` and
+> `rqm-braket` provide backend execution routes. The two-hardware milestones below
+> remain API/bridge integration deliverables, and do not gate the compiler's
+> software-only 0.4.0 scientific release. This supersedes language below treating
+> hardware execution as a prerequisite for compiler scientific acceptance.
+
 # RQM Compiler 0.3.7 Execution Program
 
 0.3.7 is the first RQM Studio full-stack execution proof as well as the final
