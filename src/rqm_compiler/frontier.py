@@ -1,6 +1,7 @@
 """Query-support frontier planning with a pre-allocation active-qubit cap.
 
-The bound applies to one dense frontier tensor (4**width complex entries), not
+The bound applies to one frontier tensor (4**width real coefficients for the
+closed hinge/CX path; complex entries for generic gates), not
 process memory. A rejected chronological schedule is not an optimal-width proof.
 """
 from dataclasses import dataclass
@@ -22,6 +23,8 @@ class FrontierPlan:
     reason: str
     matrices: list | None = None
     states: dict | None = None
+    structured: bool = False
+    coefficient_actions: list | None = None
 
 
 def plan_frontier(circuit, labels, cap):
@@ -46,8 +49,10 @@ def plan_frontier(circuit, labels, cap):
         active.difference_update(q for q in qs if last[q]==i)
     width=max(width,1 if support else 0)
     accepted=width<=cap and all(1<=len(qs)<=2 for _,qs in operations)
-    return FrontierPlan(operations,preparations,last,support,width,accepted,
+    plan=FrontierPlan(operations,preparations,last,support,width,accepted,
         "" if accepted else f"frontier width {width} exceeds cap {cap} or unsupported locality")
+    plan.structured=all(len(qs)==1 or op.gate in {"rxx","ryy","rzz","cx"} for op,qs in operations)
+    return plan
 
 
 def _apply(tensor, matrix, axes):
@@ -59,6 +64,7 @@ def _apply(tensor, matrix, axes):
 
 def evaluate_frontier(plan, labels):
     if not plan.accepted:raise ValueError("Rejected frontier plan: no numeric allocation permitted")
+    if plan.structured:return _evaluate_coefficients(plan,labels)
     if plan.matrices is None:
         plan.states={}
         for q in plan.support:
@@ -91,3 +97,34 @@ def evaluate_frontier(plan, labels):
     for q in plan.support-initialized:
         v=plan.states[q];value*=np.vdot(v,P[labels[q]]@v)
     return value
+
+
+def _evaluate_coefficients(plan,labels):
+    from .local_observable import prepared_coefficients, operation_quaternion
+    from rqm_entanglement.pauli_transfer import apply_pair_coefficients
+    if plan.coefficient_actions is None:
+        plan.states={q:np.asarray(prepared_coefficients(plan.preparations.get(q,[]))) for q in plan.support}
+        plan.coefficient_actions=[]
+        for op,qs in plan.operations:
+            if len(qs)==1:
+                q=operation_quaternion(op)
+                action=np.zeros((4,4));action[0,0]=1.
+                for i,axis in enumerate(((1,0,0),(0,1,0),(0,0,1))):action[1:,i+1]=q.rotate_vector(axis)
+            else:action=None
+            plan.coefficient_actions.append(action)
+    coefficients=np.array(1.);active=[];initialized=set()
+    for i,((op,qs),action) in enumerate(zip(plan.operations,plan.coefficient_actions)):
+        for q in qs:
+            if q not in initialized:
+                coefficients=np.multiply.outer(coefficients,plan.states[q]);active.append(q);initialized.add(q)
+        if len(qs)==1:
+            axis=active.index(qs[0]);coefficients=np.moveaxis(np.tensordot(action,coefficients,axes=(1,axis)),0,axis)
+        else:
+            wires=(op.controls[0],op.targets[0]) if op.gate=='cx' else qs
+            coefficients=apply_pair_coefficients(coefficients,[active.index(q) for q in wires],op.gate,float(op.params.get('angle',0.)))
+        for q in qs:
+            if plan.last_use[q]==i:
+                axis=active.index(q);coefficients=np.take(coefficients,'IXYZ'.index(labels[q]),axis=axis);active.remove(q)
+    value=float(coefficients)
+    for q in plan.support-initialized:value*=plan.states[q]['IXYZ'.index(labels[q])]
+    return complex(value)

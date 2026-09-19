@@ -28,6 +28,7 @@ class DirectReadout:
  invariant_count:int
  representation:str
  reason:str=""
+ intermediate_unit:str="complex_array_entries"
 
 def _apply_1q_state(v,u): return u@v
 
@@ -94,6 +95,21 @@ def product_star(circuit:Circuit, labels:str, hub:int|None=None)->DirectReadout:
    seen.add(leaf);current=[leaf,[]];blocks.append(current)
   current[1].append(op)
  if seen!=set(range(n))-{hub}:return DirectReadout(0j,False,0,"star_transfer","not all leaves represented")
+ # Closed analytic hinge/CX path: real Pauli coefficients, no gate matrices.
+ if all(op.gate in {"rxx","ryy","rzz","cx"} for _,gates in blocks for op in gates):
+  from .local_observable import prepared_coefficients, observable_coefficients
+  from rqm_entanglement.pauli_transfer import apply_pair_coefficients
+  states={q:prepared_coefficients(pre[q]) for q in range(n)}
+  obs={q:observable_coefficients(labels[q],post[q]) for q in range(n)}
+  rho=np.asarray(states[hub])
+  for leaf,gates in blocks:
+   joint=np.outer(rho,states[leaf])
+   for op in gates:
+    axes=(0,1) if op.gate!="cx" or op.controls[0]==hub else (1,0)
+    joint=apply_pair_coefficients(joint,axes,op.gate,float(op.params.get("angle",0.)))
+   rho=joint@obs[leaf]
+  return DirectReadout(complex(np.dot(obs[hub],rho)),True,len(blocks),
+                       "analytic_hinge_star_transfer",intermediate_unit="real_pauli_coefficients")
  # Prepare product inputs under pre-1Q gates.
  states={}
  for q in range(n):

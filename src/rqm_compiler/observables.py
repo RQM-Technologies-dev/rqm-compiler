@@ -107,15 +107,11 @@ def expectation_pauli(
         updated: dict[tuple[str, ...], complex] = {}
         if len(touched) == 1:
             q = touched[0]
-            u = _single_qubit_matrix(op)
-            cache: dict[str, list[tuple[str, complex]]] = {}
+            from .local_observable import local_pauli_expansions
+            cache = local_pauli_expansions(op, cutoff)
             for key, coeff in terms.items():
                 local = key[q]
                 expansion = cache.get(local)
-                if expansion is None:
-                    transformed = u.conj().T @ _PAULI[local] @ u
-                    expansion = _decompose_1q(transformed, cutoff=cutoff)
-                    cache[local] = expansion
                 for replacement, factor in expansion:
                     new_key = list(key); new_key[q] = replacement; nk = tuple(new_key)
                     updated[nk] = updated.get(nk, 0j) + coeff * factor

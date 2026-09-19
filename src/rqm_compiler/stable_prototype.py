@@ -109,14 +109,13 @@ def compile_stable(circuit:Circuit, *, adaptive_policy:AdaptiveCartanPolicy|None
 
 
 def global_z_chain(circuit:Circuit)->StableReadoutResult:
- from .su4_blocks import _single_qubit_matrix
- from .ops import Operation
  n=circuit.num_qubits;ops=circuit.operations
  if n<2:return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"n<2")
- idx=0;psi=np.array([1,0],complex)
+ idx=0
  while idx<len(ops) and len(set(ops[idx].targets)|set(ops[idx].controls))==1:
   if ops[idx].targets[0]!=0:return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"unsupported preparation")
-  psi=_single_qubit_matrix(ops[idx])@psi;idx+=1
+  idx+=1
+ preparation=ops[:idx]
  blocks=[]
  for edge in range(n-1):
   if idx+3>len(ops):return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"incomplete chain")
@@ -125,15 +124,20 @@ def global_z_chain(circuit:Circuit)->StableReadoutResult:
    return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"not validated chain form")
   blocks.append(b)
  if idx!=len(ops):return StableReadoutResult(0j,"chain_boundary_transfer",True,False,None,"extra operations")
- O=_Z.copy()
- for edge in range(n-2,-1,-1):
-  U=np.eye(4,dtype=complex);mp={edge:0,edge+1:1}
-  for op in blocks[edge]:
-   loc=Operation(op.gate,[mp[x] for x in op.targets],[mp[x] for x in op.controls],op.params)
-   U=_operation_matrix(loc,(0,1))@U
-  O=apply_boundary_transfer(boundary_transfer(U,np.array([[1,0],[0,0]],complex),O),_Z)
- rho=np.outer(psi,psi.conj())
- return StableReadoutResult(complex(np.trace(rho@O)),"chain_boundary_transfer",True,True,n-1,largest_intermediate=16,intermediate_unit="complex_array_entries")
+ from .local_observable import prepared_coefficients
+ from rqm_entanglement.pauli_transfer import apply_pair_coefficients
+ coefficients=np.asarray(prepared_coefficients(preparation))
+ zero=np.array([1.,0.,0.,1.])
+ for edge,block in enumerate(blocks):
+  joint=np.outer(coefficients,zero)
+  for op in block:
+   axes=(1,0) if op.gate=="cx" and op.controls[0]!=edge else (0,1)
+   joint=apply_pair_coefficients(joint,axes,op.gate,float(op.params.get("angle",0.)))
+  coefficients=joint[3,:]
+ value=complex(coefficients[3])
+ return StableReadoutResult(value,"chain_boundary_transfer",True,True,n-1,
+  largest_intermediate=16,intermediate_unit="real_pauli_coefficients")
+
 
 def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:int=250_000, max_frontier_qubits:int=4, _plan_cache:dict|None=None)->StableReadoutResult:
  from .validate import validate_circuit
@@ -148,7 +152,7 @@ def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:in
  direct=product_star(circuit,labels)
  if direct.available:
   method="direct_star_relational" if labels=="Z"*circuit.num_qubits else "star_product_transfer"
-  return StableReadoutResult(direct.value,method,True,True,direct.invariant_count,largest_intermediate=16,intermediate_unit="complex_array_entries")
+  return StableReadoutResult(direct.value,method,True,True,direct.invariant_count,largest_intermediate=16,intermediate_unit=direct.intermediate_unit)
  if labels=="Z"*circuit.num_qubits:
   chain=global_z_chain(circuit)
   if chain.available:
@@ -170,7 +174,7 @@ def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:in
   if plan.accepted:
    value=evaluate_frontier(plan,labels)
    return StableReadoutResult(value,"bounded_frontier_transfer",True,True,len(plan.operations),
-    largest_intermediate=4**plan.width,intermediate_unit="complex_tensor_entries",
+    largest_intermediate=4**plan.width,intermediate_unit="real_pauli_coefficients" if plan.structured else "complex_tensor_entries",
     frontier_width=plan.width,plan_reused=reused)
   rejection=plan.reason
  try:
