@@ -27,7 +27,17 @@ _LABELS = ("I", "X", "Y", "Z")
 
 
 class ObservableExpansionExceeded(RuntimeError):
-    """Raised when exact Pauli expansion exceeds a caller-supplied work cap."""
+    """Raised when exact Pauli expansion exceeds a caller-supplied work cap.
+
+    The cap is checked after a gate expansion; peak_terms records the observed
+    overshoot, not a claim that the allocation was bounded by max_terms.
+    """
+
+    def __init__(self, message: str, *, peak_terms: int | None = None,
+                 operations_processed: int | None = None):
+        super().__init__(message)
+        self.peak_terms = peak_terms
+        self.operations_processed = operations_processed
 
 
 @dataclass(frozen=True)
@@ -131,7 +141,8 @@ def expectation_pauli(
         peak = max(peak, len(terms))
         if len(terms) > max_terms:
             raise ObservableExpansionExceeded(
-                f"Pauli expansion exceeded max_terms={max_terms} after {processed} operations"
+                f"Pauli expansion exceeded max_terms={max_terms} after {processed} operations",
+                peak_terms=peak, operations_processed=processed
             )
 
     value = sum(

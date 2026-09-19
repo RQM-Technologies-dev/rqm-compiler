@@ -79,6 +79,7 @@ def _cx_label(p,c,t):
 def expectation_structured(circuit:Circuit,pauli:str|Iterable[str],*,cutoff:float=1e-13,max_terms:int=250000):
  labels=tuple(pauli)
  if len(labels)!=circuit.num_qubits:raise ValueError("Pauli string length must equal circuit.num_qubits")
+ if any(x not in "IXYZ" for x in labels):raise ValueError("Pauli string may contain only I, X, Y, Z")
  terms={labels:1+0j};peak=1;processed=0;promotions=0;closed2q=0
  for op in reversed(circuit.operations):
   if op.gate=="barrier":continue
@@ -97,9 +98,13 @@ def expectation_structured(circuit:Circuit,pauli:str|Iterable[str],*,cutoff:floa
    # One-qubit and uncommon 2Q gates retain the proven general evaluator for
    # now. If any such gate exists, delegate whole query to preserve exactness.
    promotions+=1
-   r=expectation_pauli(circuit,labels,cutoff=cutoff,max_terms=max_terms)
+   try:
+    r=expectation_pauli(circuit,labels,cutoff=cutoff,max_terms=max_terms)
+   except ObservableExpansionExceeded as exc:
+    exc.query_promotion_count=promotions
+    raise
    return StructuredObservableResult(r.value,r.final_terms,r.peak_terms,r.operations_processed,0,promotions,"general_pauli_promoted")
   processed+=1;peak=max(peak,len(terms))
-  if len(terms)>max_terms:raise ObservableExpansionExceeded(f"structured expansion exceeded max_terms={max_terms}")
+  if len(terms)>max_terms:raise ObservableExpansionExceeded(f"structured expansion exceeded max_terms={max_terms}", peak_terms=peak, operations_processed=processed)
  value=sum(a for p,a in terms.items() if all(x in ("I","Z") for x in p))
  return StructuredObservableResult(complex(value),len(terms),peak,processed,0,promotions,"axis_hinge_cartan_pauli_sparse")

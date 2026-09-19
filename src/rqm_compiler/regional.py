@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from typing import Any
 
+from .adaptive import AdaptiveCartanPolicy, CompilationWorkBudget
 from .circuit import Circuit
 from .compile import optimize_circuit
 from .ops import Operation
@@ -50,6 +51,7 @@ class RegionalCompilerReport:
     committed: bool = False
     equivalence_status: str = EquivalenceStatus.VERIFIED.value
     fallback_reason: str | None = None
+    adaptive_regions: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-safe representation."""
@@ -64,6 +66,7 @@ class RegionalCompilerReport:
             "committed": self.committed,
             "equivalence_status": self.equivalence_status,
             "fallback_reason": self.fallback_reason,
+            "adaptive_regions": self.adaptive_regions,
         }
 
 
@@ -122,37 +125,41 @@ def _partition_regions(circuit: Circuit, max_region_qubits: int) -> list[_Region
     return regions
 
 
+def _remap_operation(operation: Operation, mapping: dict[int, int]) -> Operation:
+    params = dict(operation.params)
+    if operation.gate == "su4q" and "fallback_operations" in params:
+        params["fallback_operations"] = [
+            _remap_operation(Operation.from_descriptor(item), mapping).to_descriptor()
+            for item in params["fallback_operations"]
+        ]
+        # Hashes identify the original proof window. Record each coordinate
+        # change instead of relabeling those hashes as global descriptors.
+        routing = dict(params.get("routing", {}))
+        routing["wire_remappings"] = [*routing.get("wire_remappings", []),
+                                      {str(k): v for k, v in mapping.items()}]
+        params["routing"] = routing
+    return Operation(operation.gate, [mapping[q] for q in operation.targets],
+                     [mapping[q] for q in operation.controls], params)
+
+
 def _localize(region: _Region) -> tuple[Circuit, dict[int, int]]:
     global_to_local = {qubit: index for index, qubit in enumerate(region.qubits)}
     local = Circuit(len(region.qubits))
     for operation in region.operations:
-        local.add(
-            Operation(
-                gate=operation.gate,
-                targets=[global_to_local[qubit] for qubit in operation.targets],
-                controls=[global_to_local[qubit] for qubit in operation.controls],
-                params=dict(operation.params),
-            )
-        )
+        local.add(_remap_operation(operation, global_to_local))
     return local, global_to_local
 
 
 def _globalize(circuit: Circuit, qubits: list[int]) -> list[Operation]:
-    return [
-        Operation(
-            gate=operation.gate,
-            targets=[qubits[index] for index in operation.targets],
-            controls=[qubits[index] for index in operation.controls],
-            params=dict(operation.params),
-        )
-        for operation in circuit.operations
-    ]
+    return [_remap_operation(operation, dict(enumerate(qubits)))
+            for operation in circuit.operations]
 
 
 def optimize_circuit_regions(
     circuit: Circuit,
     *,
     max_region_qubits: int = 3,
+    adaptive_policy: AdaptiveCartanPolicy | None = None,
 ) -> tuple[Circuit, RegionalCompilerReport]:
     """Optimize contiguous small regions and commit only if every change is verified.
 
@@ -180,9 +187,19 @@ def optimize_circuit_regions(
 
     replacements: dict[int, tuple[int, list[Operation]]] = {}
     proof_failed = False
+    policy = adaptive_policy or AdaptiveCartanPolicy.safe()
+    remaining_kak = policy.budget.max_kak_windows
+    remaining_dense = policy.budget.max_dense_operations
     for region_index, region in enumerate(regions):
         local, _ = _localize(region)
-        optimized, compiler_report = optimize_circuit(local)
+        local_policy = replace(policy, budget=CompilationWorkBudget(remaining_kak, remaining_dense))
+        optimized, compiler_report = optimize_circuit(local, adaptive_policy=local_policy)
+        routing = {k: v for k, v in compiler_report.adaptive_routing.items() if k != "elapsed_ns"}
+        remaining_kak -= int(routing.get("kak_invocations", 0))
+        remaining_dense -= int(routing.get("dense_operations", 0))
+        report.adaptive_regions.append({"region_index": region_index, "qubits": list(region.qubits),
+            "source_start": region.source_start, "routing": routing,
+            "optimization_applied": compiler_report.optimization_applied})
         changed = optimized.to_descriptors() != local.to_descriptors()
         proof = verify_equivalence(local, optimized)
         verified = proof.status is EquivalenceStatus.VERIFIED and proof.verified is True

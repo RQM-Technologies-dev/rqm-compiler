@@ -64,6 +64,7 @@ from .planner import (
     RepresentationCompileResult,
     compile_representation_aware,
     evaluate_observable,
+    evaluate_observables,
     plan_and_evaluate,
 )
 from .passes.cancel_2q import cancel_2q_pass
@@ -102,6 +103,7 @@ __all__ = [
     "QueryResult",
     "compile_representation_aware",
     "evaluate_observable",
+    "evaluate_observables",
     "plan_and_evaluate",
     "RegionalCompilerReport",
     "RegionalOptimizationRecord",
