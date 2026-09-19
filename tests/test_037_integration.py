@@ -64,13 +64,13 @@ def test_query_reset_source_equivalence_and_mutation():
     assert q.method=='topology_hardware_1d'
     assert abs(q.value-dense_expectation(r.circuit,'ZZZZ'))<1e-9
     assert r.report.query_evaluation_basis=='verified_equivalent_input'
-    plan_and_evaluate(r,'ZIII')
+    plan_and_evaluate(r,'ZIII',max_frontier_qubits=0)
     assert r.report.largest_intermediate >= 1
     assert r.report.largest_intermediate_unit == "pauli_terms"
     assert r.report.contraction_width is None
     assert r.report.query_complexity_unit=='pauli_terms'
     r.circuit.x(0)
-    q=plan_and_evaluate(r,'ZIII')
+    q=plan_and_evaluate(r,'ZIII',max_frontier_qubits=0)
     assert r.report.query_evaluation_basis=='compiled_output'
     assert abs(q.value-dense_expectation(r.circuit,'ZIII'))<1e-9
 

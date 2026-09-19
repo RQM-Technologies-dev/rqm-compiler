@@ -23,7 +23,7 @@ from .adaptive import AdaptiveCartanPolicy
 from .adaptive_closure import account_closed_representation, ClosureAccounting
 from .circuit import Circuit
 from .compile import optimize_circuit
-from .direct_readout import global_z_star
+from .direct_readout import global_z_star, product_star
 from .structured_observables import expectation_structured, ObservableExpansionExceeded
 from .su4_blocks import _operation_matrix
 
@@ -53,6 +53,9 @@ class StableReadoutResult:
  largest_intermediate:int|None=None
  intermediate_unit:str|None=None
  query_promotion_count:int=0
+ frontier_width:int|None=None
+ frontier_rejection:str|None=None
+ plan_reused:bool=False
 
 def circuit_digest(circuit:Circuit)->str:
  payload={"num_qubits":circuit.num_qubits,"operations":circuit.to_descriptors()}
@@ -132,7 +135,7 @@ def global_z_chain(circuit:Circuit)->StableReadoutResult:
  rho=np.outer(psi,psi.conj())
  return StableReadoutResult(complex(np.trace(rho@O)),"chain_boundary_transfer",True,True,n-1,largest_intermediate=16,intermediate_unit="complex_array_entries")
 
-def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:int=250_000)->StableReadoutResult:
+def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:int=250_000, max_frontier_qubits:int=4, _plan_cache:dict|None=None)->StableReadoutResult:
  from .validate import validate_circuit
  validate_circuit(circuit)
  labels="".join(pauli) if not isinstance(pauli,str) else pauli
@@ -140,10 +143,13 @@ def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:in
   raise ValueError("Expected one I/X/Y/Z Pauli label per qubit")
  if isinstance(max_terms,bool) or not isinstance(max_terms,int) or max_terms<1:raise ValueError("max_terms must be a positive integer")
  if any(op.gate=="measure" for op in circuit.operations):raise ValueError("unitary circuit required")
+ if isinstance(max_frontier_qubits,bool) or not isinstance(max_frontier_qubits,int) or max_frontier_qubits<0:
+  raise ValueError("max_frontier_qubits must be a non-negative integer")
+ direct=product_star(circuit,labels)
+ if direct.available:
+  method="direct_star_relational" if labels=="Z"*circuit.num_qubits else "star_product_transfer"
+  return StableReadoutResult(direct.value,method,True,True,direct.invariant_count,largest_intermediate=16,intermediate_unit="complex_array_entries")
  if labels=="Z"*circuit.num_qubits:
-  direct=global_z_star(circuit)
-  if direct.available:
-   return StableReadoutResult(direct.value,"direct_star_relational",True,True,direct.invariant_count,largest_intermediate=16,intermediate_unit="complex_array_entries")
   chain=global_z_chain(circuit)
   if chain.available:
    return chain
@@ -152,11 +158,26 @@ def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:in
   if hw is not None:
    value,largest,layers=hw
    return StableReadoutResult(value,"topology_hardware_1d",True,True,largest,f"validated_layers={layers}",largest_intermediate=largest,intermediate_unit="complex_tensor_entries")
+ rejection=None
+ if max_frontier_qubits:
+  from .frontier import plan_frontier, evaluate_frontier
+  key=(circuit_digest(circuit),tuple(q for q,p in enumerate(labels) if p!="I"),max_frontier_qubits)
+  reused=_plan_cache is not None and key in _plan_cache
+  plan=_plan_cache[key] if reused else plan_frontier(circuit,labels,max_frontier_qubits)
+  if _plan_cache is not None and not reused:
+   if len(_plan_cache)>=16:_plan_cache.clear()
+   _plan_cache[key]=plan
+  if plan.accepted:
+   value=evaluate_frontier(plan,labels)
+   return StableReadoutResult(value,"bounded_frontier_transfer",True,True,len(plan.operations),
+    largest_intermediate=4**plan.width,intermediate_unit="complex_tensor_entries",
+    frontier_width=plan.width,plan_reused=reused)
+  rejection=plan.reason
  try:
   r=expectation_structured(circuit,labels,max_terms=max_terms)
-  return StableReadoutResult(r.value,r.representation,True,True,r.peak_terms,largest_intermediate=r.peak_terms,intermediate_unit="pauli_terms",query_promotion_count=r.promotion_count)
+  return StableReadoutResult(r.value,r.representation,True,True,r.peak_terms,largest_intermediate=r.peak_terms,intermediate_unit="pauli_terms",query_promotion_count=r.promotion_count,frontier_rejection=rejection)
  except ObservableExpansionExceeded as exc:
-  return StableReadoutResult(0j,"structured_exact",True,False,exc.peak_terms,str(exc),largest_intermediate=exc.peak_terms,intermediate_unit="pauli_terms",query_promotion_count=getattr(exc,"query_promotion_count",0))
+  return StableReadoutResult(0j,"structured_exact",True,False,exc.peak_terms,str(exc),largest_intermediate=exc.peak_terms,intermediate_unit="pauli_terms",query_promotion_count=getattr(exc,"query_promotion_count",0),frontier_rejection=rejection)
 
 def boundary_transfer(pair_unitary:np.ndarray, rho_leaf:np.ndarray, observable_leaf:np.ndarray)->np.ndarray:
  """Exact map O_parent -> O'_parent in the {I,X,Y,Z} basis.
