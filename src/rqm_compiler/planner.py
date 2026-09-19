@@ -62,9 +62,14 @@ def plan_and_evaluate(
     report.recognized_topology=None
     report.contraction_width=None
     report.largest_intermediate=None
+    report.largest_intermediate_unit=None
+    report.query_promotion_count=0
     report.query_fallback_used=False
     report.query_fallback_reason=None
     result=expectation_stable(query_circuit,pauli,max_terms=max_terms)
+    report.largest_intermediate=result.largest_intermediate
+    report.largest_intermediate_unit=result.intermediate_unit
+    report.query_promotion_count=result.query_promotion_count
     report.query_complexity=result.work_units
     report.query_complexity_unit="pauli_terms" if result.work_units is not None else None
     report.selected_query_route=result.method

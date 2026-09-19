@@ -85,6 +85,8 @@ class CompilerReport:
     selected_query_route: str | None = None
     contraction_width: int | None = None
     largest_intermediate: int | None = None
+    largest_intermediate_unit: str | None = None
+    query_promotion_count: int = 0
     promotion_count: int = 0
     query_fallback_used: bool = False
     query_fallback_reason: str | None = None
@@ -151,6 +153,8 @@ class CompilerReport:
             "selected_query_route": self.selected_query_route,
             "contraction_width": self.contraction_width,
             "largest_intermediate": self.largest_intermediate,
+            "largest_intermediate_unit": self.largest_intermediate_unit,
+            "query_promotion_count": self.query_promotion_count,
             "promotion_count": self.promotion_count,
             "query_fallback_used": self.query_fallback_used,
             "query_fallback_reason": self.query_fallback_reason,
