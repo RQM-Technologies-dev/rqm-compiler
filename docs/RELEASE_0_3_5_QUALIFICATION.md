@@ -14,7 +14,7 @@ to 0.4.0.
 | rqm-braket | compiler-0.4 candidate + RXX/RYY/RZZ lowering | qualified |
 | rqm-pennylane | compiler-0.4 candidate qualification | qualified |
 | openqse-rqm-adapter | clean source ecosystem demonstration using public planner | qualified |
-| quantum-compiler-api | locked production install + candidate overlay | validating final overlay-order fix |
+| rqm-api | locked production install + candidate overlay | validating final overlay-order fix |
 | rqm-studio | UI CI + hosted explanation validation | qualified |
 
 ## Package acceptance
