@@ -20,7 +20,7 @@ Status values:
 | `rqm-circuits` | canonical public circuit schema | compatible-by-design | verify 0.4 changes remain internal and require no wire-schema break | mandatory |
 | `rqm-core` | canonical local quaternion/SU(2)/shared operator math | **in validation** | candidate now centralizes Pauli-basis projection/reconstruction, basis projectors, and two-qubit partial traces; compiler migration waits on a released core version | mandatory |
 | `rqm-entanglement` | nonlocal/Cartan math | **compatible** | ownership boundary frozen; compiler delegates canonical pair rotations; CI passed | mandatory |
-| `quantum-compiler-api` | production compiler API / Studio backend | **in validation** | service adopts public 0.4 planner/report API; CI now overlays the current 0.4 candidate and asserts planner symbols before full tests | mandatory |
+| `rqm-api` | production compiler API / Studio backend | **in validation** | service adopts public 0.4 planner/report API; CI now overlays the current 0.4 candidate and asserts planner symbols before full tests | mandatory |
 | `openqse-rqm-adapter` | OpenQSE interoperability | **compatible** | clean ecosystem evidence exercises public 0.4 compile and query planner APIs | mandatory |
 | `rqm-studio` | product UI | **compatible candidate** | report types/UI and explanation canon understand 0.4 planner telemetry; CI and hosted explanation validation pass | product launch |
 | `rqm-optimize` | downstream Qiskit-native optimizer | validate | confirm downstream role and no duplicated 0.4 planner responsibility | product launch |
@@ -44,7 +44,7 @@ rqm-core / rqm-entanglement / rqm-circuits
       |                     |
       +----------+----------+
                  v
-       quantum-compiler-api
+       rqm-api
                  |
           +------+------+
           v             v
