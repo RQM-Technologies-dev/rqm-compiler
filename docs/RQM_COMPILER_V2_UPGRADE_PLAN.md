@@ -434,7 +434,7 @@ hardware run must exercise the first RQM Studio execution-orchestrator path:
 
 ```text
 workload
- -> quantum-compiler-api
+ -> rqm-api
  -> rqm-compiler
  -> BackendCapabilityModel / materialization
  -> provider adapter
@@ -459,7 +459,7 @@ Minimum evidence for each stack:
 7. any target-specific materializations, routing, unsupported operations or
    fallback behavior;
 8. reproducibility notes sufficient to rerun the job;
-9. evidence that submission/retrieval was orchestrated through `quantum-compiler-api`;
+9. evidence that submission/retrieval was orchestrated through `rqm-api`;
 10. provider cost/charge metadata where available and an RQM commercial-accounting
     slot suitable for a future orchestration/service fee.
 
