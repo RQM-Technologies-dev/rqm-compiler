@@ -77,6 +77,8 @@ class CompilerReport:
     stage_timings_ns: dict[str, int] = field(default_factory=dict)
     representation_complexity: int | None = None
     query_complexity: int | None = None
+    query_complexity_unit: str | None = None
+    query_evaluation_basis: str | None = None
     maximum_representation_level: int | None = None
     representation_histogram: dict[str, int] = field(default_factory=dict)
     recognized_topology: str | None = None
@@ -141,6 +143,8 @@ class CompilerReport:
             "stage_timings_ns": dict(self.stage_timings_ns),
             "representation_complexity": self.representation_complexity,
             "query_complexity": self.query_complexity,
+            "query_complexity_unit": self.query_complexity_unit,
+            "query_evaluation_basis": self.query_evaluation_basis,
             "maximum_representation_level": self.maximum_representation_level,
             "representation_histogram": dict(self.representation_histogram),
             "recognized_topology": self.recognized_topology,

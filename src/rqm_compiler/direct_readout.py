@@ -61,12 +61,15 @@ def global_z_star(circuit:Circuit, hub:int=0)->DirectReadout:
  # For the benchmark family, collect all 1Q gates separately and 2Q episodes
  # per leaf.  Reject leaf-leaf interactions and repeated noncontiguous leaves.
  pre={q:[] for q in range(n)};post={q:[] for q in range(n)};blocks=[];seen=set();current=None
- started=False
+ started=False;post_started=False
  for op in circuit.operations:
   touched=sorted(set(op.targets)|set(op.controls))
   if len(touched)==1:
+   if started:post_started=True
    (post if started else pre)[touched[0]].append(op);continue
   if len(touched)!=2 or hub not in touched:return DirectReadout(0j,False,0,"star_transfer","non-star interaction")
+  if post_started:
+   return DirectReadout(0j,False,len(blocks),"star_transfer","interleaved local gates not validated")
   leaf=touched[0] if touched[1]==hub else touched[1];started=True
   if current is None or current[0]!=leaf:
    if leaf in seen:return DirectReadout(0j,False,0,"star_transfer","revisited leaf")

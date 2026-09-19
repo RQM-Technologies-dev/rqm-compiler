@@ -79,6 +79,7 @@ def _cx_label(p,c,t):
 def expectation_structured(circuit:Circuit,pauli:str|Iterable[str],*,cutoff:float=1e-13,max_terms:int=250000):
  labels=tuple(pauli)
  if len(labels)!=circuit.num_qubits:raise ValueError("Pauli string length must equal circuit.num_qubits")
+ if any(x not in "IXYZ" for x in labels):raise ValueError("Pauli string may contain only I, X, Y, Z")
  terms={labels:1+0j};peak=1;processed=0;promotions=0;closed2q=0
  for op in reversed(circuit.operations):
   if op.gate=="barrier":continue

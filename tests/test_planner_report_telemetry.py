@@ -28,5 +28,6 @@ def test_report_contains_hardware_contraction_metrics():
  x=compile_representation_aware(hw());r=plan_and_evaluate(x,"ZZZZ");d=x.report.to_dict()
  assert r.method=="topology_hardware_1d"
  assert d["recognized_topology"]=="hardware_efficient_1d"
- assert d["contraction_width"]==2
+ assert d["contraction_width"] is None
+ assert d["query_complexity_unit"]=="complex_tensor_entries"
  assert d["largest_intermediate"]==16

@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from typing import Any
 
+from .adaptive import AdaptiveCartanPolicy, CompilationWorkBudget
 from .circuit import Circuit
 from .compile import optimize_circuit
 from .ops import Operation
@@ -50,6 +51,7 @@ class RegionalCompilerReport:
     committed: bool = False
     equivalence_status: str = EquivalenceStatus.VERIFIED.value
     fallback_reason: str | None = None
+    adaptive_regions: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-safe representation."""
@@ -64,6 +66,7 @@ class RegionalCompilerReport:
             "committed": self.committed,
             "equivalence_status": self.equivalence_status,
             "fallback_reason": self.fallback_reason,
+            "adaptive_regions": self.adaptive_regions,
         }
 
 
@@ -153,6 +156,7 @@ def optimize_circuit_regions(
     circuit: Circuit,
     *,
     max_region_qubits: int = 3,
+    adaptive_policy: AdaptiveCartanPolicy | None = None,
 ) -> tuple[Circuit, RegionalCompilerReport]:
     """Optimize contiguous small regions and commit only if every change is verified.
 
@@ -180,9 +184,19 @@ def optimize_circuit_regions(
 
     replacements: dict[int, tuple[int, list[Operation]]] = {}
     proof_failed = False
+    policy = adaptive_policy or AdaptiveCartanPolicy.safe()
+    remaining_kak = policy.budget.max_kak_windows
+    remaining_dense = policy.budget.max_dense_operations
     for region_index, region in enumerate(regions):
         local, _ = _localize(region)
-        optimized, compiler_report = optimize_circuit(local)
+        local_policy = replace(policy, budget=CompilationWorkBudget(remaining_kak, remaining_dense))
+        optimized, compiler_report = optimize_circuit(local, adaptive_policy=local_policy)
+        routing = {k: v for k, v in compiler_report.adaptive_routing.items() if k != "elapsed_ns"}
+        remaining_kak -= int(routing.get("kak_invocations", 0))
+        remaining_dense -= int(routing.get("dense_operations", 0))
+        report.adaptive_regions.append({"region_index": region_index, "qubits": list(region.qubits),
+            "source_start": region.source_start, "routing": routing,
+            "optimization_applied": compiler_report.optimization_applied})
         changed = optimized.to_descriptors() != local.to_descriptors()
         proof = verify_equivalence(local, optimized)
         verified = proof.status is EquivalenceStatus.VERIFIED and proof.verified is True

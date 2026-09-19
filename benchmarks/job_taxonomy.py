@@ -5,7 +5,8 @@ rubric. Each row records whether stable RQM can answer exactly, which readout
 path it chose, and side-by-side compiler/runtime metrics.
 """
 from __future__ import annotations
-import json,statistics,time,random
+import json,statistics,time,random,os,hashlib,importlib.metadata
+import rqm_compiler
 from pathlib import Path
 from rqm_compiler import Circuit,compile_representation_aware,plan_and_evaluate
 from rqm_compiler.depth import circuit_depth
@@ -121,6 +122,13 @@ def main():
    rqm_e2e=med(rqmc)+med(rqmr) if rr.available else None
    q_e2e=med(qct)+med(at)
    rows.append({
+    "optimization_applied":comp.report.optimization_applied,
+    "fallback_reason":comp.report.fallback_reason,
+    "verification_method":comp.report.equivalence_report.get("method"),
+    "query_evaluation_basis":comp.report.query_evaluation_basis,
+    "query_complexity_unit":comp.report.query_complexity_unit,
+    "largest_intermediate":comp.report.largest_intermediate,
+    "promotion_count":comp.report.promotion_count,
     "family":family,"n":n,"rqm_available":rr.available,"rqm_method":rr.method,
     "exact_valid":valid,"abs_error":err,"C_R":comp.closure.minimum_closed_representation_size,
     "rqm_work_units":rr.work_units,"rqm_ops":len(comp.circuit.operations),"rqm_depth":circuit_depth(comp.circuit),
@@ -140,15 +148,24 @@ def main():
    "max_speedup":max([r["end_to_end_speedup"] for r in val]) if val else None,
    "methods":sorted(set(r["rqm_method"] for r in fr)),
   }
+ artifact=Path(os.environ["RQM_CANDIDATE_WHEEL"])
+ provenance={"wheel":artifact.name,"wheel_sha256":hashlib.sha256(artifact.read_bytes()).hexdigest(),
+  "compiler_module":rqm_compiler.__file__,"source_commit":os.environ["RQM_CANDIDATE_COMMIT"],
+  "versions":{name:importlib.metadata.version(name) for name in
+   ("rqm-compiler","rqm-core","rqm-entanglement","numpy","opt_einsum","qiskit","qiskit-aer")},
+  "repeats":REPEATS,"hardware_gate":"pending_real_provider_execution"}
  Path("results").mkdir(exist_ok=True)
- Path("results/job_taxonomy.json").write_text(json.dumps({"baseline":"0.4","summary":summary,"rows":rows},indent=2))
+ Path("results/job_taxonomy.json").write_text(json.dumps({"baseline":"0.3.7 candidate","provenance":provenance,"summary":summary,"rows":rows},indent=2))
  import csv
  with Path("results/job_taxonomy.csv").open("w",newline="") as fh:
   w=csv.DictWriter(fh,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
- md=["# RQM Compiler 0.4 benchmark baseline","","Exactness gate: abs(error) <= 1e-9.","",
+ md=["# RQM Compiler 0.3.7 candidate benchmark","","Exactness gate: abs(error) <= 1e-9.","",
      "| Family | Coverage | Median end-to-end ratio | Max ratio | Route(s) |",
      "| --- | ---: | ---: | ---: | --- |"]
  for fam,s in summary.items():
+  s=dict(s)
+  s["median_speedup"]=s["median_speedup"] or 0.0
+  s["max_speedup"]=s["max_speedup"] or 0.0
   md.append(f'| {fam} | {s["exact_valid"]}/{s["conditions"]} | {s["median_speedup"]:.3f}x | {s["max_speedup"]:.3f}x | {", ".join(s["methods"])} |')
  Path("results/BASELINE_RESULTS.md").write_text("\n".join(md)+"\n")
  print(json.dumps({"summary":summary,"rows":rows}))

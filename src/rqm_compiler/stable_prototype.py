@@ -14,6 +14,9 @@ Stable components:
 from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable
+import hashlib
+import json
+import time
 import numpy as np
 
 from .adaptive import AdaptiveCartanPolicy
@@ -35,6 +38,9 @@ class StableCompileResult:
  circuit:Circuit
  report:object
  closure:ClosureAccounting
+ query_source:Circuit|None=None
+ source_digest:str|None=None
+ output_digest:str|None=None
 
 @dataclass(frozen=True)
 class StableReadoutResult:
@@ -45,17 +51,55 @@ class StableReadoutResult:
  work_units:int|None=None
  reason:str=""
 
+def circuit_digest(circuit:Circuit)->str:
+ payload={"num_qubits":circuit.num_qubits,"operations":circuit.to_descriptors()}
+ return hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(",",":"),allow_nan=False).encode()).hexdigest()
+
+
 def compile_stable(circuit:Circuit, *, adaptive_policy:AdaptiveCartanPolicy|None=None)->StableCompileResult:
- out,report=optimize_circuit(circuit,adaptive_policy=adaptive_policy)
+ from .depth import circuit_depth
+ from .report import CompilerReport
+ from .regional import optimize_circuit_regions
+ if circuit.num_qubits<=3:
+  out,report=optimize_circuit(circuit,adaptive_policy=adaptive_policy)
+ else:
+  start=time.perf_counter_ns()
+  out,regional=optimize_circuit_regions(circuit,adaptive_policy=adaptive_policy)
+  changed=out.to_descriptors()!=circuit.to_descriptors()
+  passes=list(dict.fromkeys(p for r in regional.regions for p in r.passes_applied)) if changed else []
+  events=[]
+  for region in regional.adaptive_regions:
+   if not (regional.committed and region["optimization_applied"]):continue
+   for event in region["routing"].get("representation_events",[]):
+    if event.get("reason")!="verified_su4_replacement":continue
+    if event.get("window_id") not in {w["window_id"] for w in region["routing"].get("selected_windows",[])}:continue
+    # Preserve the local event and its localization map; do not mislabel local
+    # window coordinates as global ones.
+    events.append({**event,"region_index":region["region_index"],
+                   "region_qubits":region["qubits"],"region_source_start":region["source_start"]})
+  report=CompilerReport(
+   original_gate_count=len(circuit),optimized_gate_count=len(out),
+   original_depth=circuit_depth(circuit),optimized_depth=circuit_depth(out),
+   passes_applied=passes,optimization_applied=changed,fallback_reason=regional.fallback_reason,
+   equivalence_report={"status":"VERIFIED","verified":True,
+     "method":"REGIONAL_COMPOSITION" if changed else "GATEWISE_IDENTITY",
+     "phase_invariant":True,"regional":regional.to_dict()},
+   adaptive_routing={"mode":(adaptive_policy or AdaptiveCartanPolicy.safe()).mode,
+     "representation_events":events,"regions":regional.adaptive_regions,
+     "kak_invocations":sum(r["routing"].get("kak_invocations",0) for r in regional.adaptive_regions)},
+   stage_timings_ns={"regional_compilation":time.perf_counter_ns()-start})
  closure=account_closed_representation(out)
  report.representation_complexity=closure.minimum_closed_representation_size
  report.maximum_representation_level=closure.maximum_representation_level
  report.representation_histogram=dict(closure.representation_histogram)
- # Count upward transitions in the owned representation trajectory.
- from .adaptive_closure import REPRESENTATION_LEVEL
- levels=[REPRESENTATION_LEVEL[x] for x in closure.representation_trajectory]
- report.promotion_count=sum(1 for a,b in zip(levels,levels[1:]) if b>a)
- return StableCompileResult(out,report,closure)
+ selected={w["window_id"] for w in report.adaptive_routing.get("selected_windows",[])}
+ report.promotion_count=sum(e.get("kind")=="promotion" and e.get("reason")=="verified_su4_replacement"
+  and ("region_index" in e or e.get("window_id") in selected)
+  for e in report.adaptive_routing.get("representation_events",[])) if report.optimization_applied else 0
+ # A verified equivalent input preserves specialized query structure that
+ # optimization may materialize differently. Digests guard against mutation.
+ source=Circuit.from_descriptors(circuit.to_descriptors(),num_qubits=circuit.num_qubits)
+ return StableCompileResult(out,report,closure,source,circuit_digest(source),circuit_digest(out))
 
 
 def global_z_chain(circuit:Circuit)->StableReadoutResult:
@@ -86,7 +130,13 @@ def global_z_chain(circuit:Circuit)->StableReadoutResult:
  return StableReadoutResult(complex(np.trace(rho@O)),"chain_boundary_transfer",True,True,n-1)
 
 def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:int=250_000)->StableReadoutResult:
+ from .validate import validate_circuit
+ validate_circuit(circuit)
  labels="".join(pauli) if not isinstance(pauli,str) else pauli
+ if len(labels)!=circuit.num_qubits or any(x not in "IXYZ" for x in labels):
+  raise ValueError("Expected one I/X/Y/Z Pauli label per qubit")
+ if isinstance(max_terms,bool) or not isinstance(max_terms,int) or max_terms<1:raise ValueError("max_terms must be a positive integer")
+ if any(op.gate=="measure" for op in circuit.operations):raise ValueError("unitary circuit required")
  if labels=="Z"*circuit.num_qubits:
   direct=global_z_star(circuit)
   if direct.available:
