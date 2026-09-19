@@ -103,3 +103,17 @@ policy=AdaptiveCartanPolicy(mode='selective',budget=CompilationWorkBudget(1,64))
 r=compile_representation_aware(c,adaptive_policy=policy)
 assert r.report.adaptive_routing['kak_invocations']<=1
 """],check=True)
+
+
+def test_regional_fallback_descriptors_follow_global_wires():
+    from rqm_compiler.regional import _remap_operation
+    from rqm_compiler import Operation
+    original = Operation('su4q', [3, 5], params={
+        'fallback_operations': [Operation('cx', [5], [3]).to_descriptor()],
+        'routing': {'source_hash': 'original-proof-window'}})
+    local = _remap_operation(original, {3: 0, 5: 1})
+    restored = _remap_operation(local, {0: 3, 1: 5})
+    assert local.params['fallback_operations'][0]['targets'] == [1]
+    assert restored.params['fallback_operations'] == original.params['fallback_operations']
+    assert restored.params['routing']['source_hash'] == 'original-proof-window'
+    assert original.params['fallback_operations'][0]['controls'] == [3]

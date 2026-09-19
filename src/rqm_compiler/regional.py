@@ -125,31 +125,34 @@ def _partition_regions(circuit: Circuit, max_region_qubits: int) -> list[_Region
     return regions
 
 
+def _remap_operation(operation: Operation, mapping: dict[int, int]) -> Operation:
+    params = dict(operation.params)
+    if operation.gate == "su4q" and "fallback_operations" in params:
+        params["fallback_operations"] = [
+            _remap_operation(Operation.from_descriptor(item), mapping).to_descriptor()
+            for item in params["fallback_operations"]
+        ]
+        # Hashes identify the original proof window. Record each coordinate
+        # change instead of relabeling those hashes as global descriptors.
+        routing = dict(params.get("routing", {}))
+        routing["wire_remappings"] = [*routing.get("wire_remappings", []),
+                                      {str(k): v for k, v in mapping.items()}]
+        params["routing"] = routing
+    return Operation(operation.gate, [mapping[q] for q in operation.targets],
+                     [mapping[q] for q in operation.controls], params)
+
+
 def _localize(region: _Region) -> tuple[Circuit, dict[int, int]]:
     global_to_local = {qubit: index for index, qubit in enumerate(region.qubits)}
     local = Circuit(len(region.qubits))
     for operation in region.operations:
-        local.add(
-            Operation(
-                gate=operation.gate,
-                targets=[global_to_local[qubit] for qubit in operation.targets],
-                controls=[global_to_local[qubit] for qubit in operation.controls],
-                params=dict(operation.params),
-            )
-        )
+        local.add(_remap_operation(operation, global_to_local))
     return local, global_to_local
 
 
 def _globalize(circuit: Circuit, qubits: list[int]) -> list[Operation]:
-    return [
-        Operation(
-            gate=operation.gate,
-            targets=[qubits[index] for index in operation.targets],
-            controls=[qubits[index] for index in operation.controls],
-            params=dict(operation.params),
-        )
-        for operation in circuit.operations
-    ]
+    return [_remap_operation(operation, dict(enumerate(qubits)))
+            for operation in circuit.operations]
 
 
 def optimize_circuit_regions(
