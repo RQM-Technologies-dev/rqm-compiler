@@ -7,7 +7,7 @@ research/performance milestone before release acceptance.
 
 Acceptance:
 
-- `QuantumExecutionProvider` contract is stable in `quantum-compiler-api`;
+- `QuantumExecutionProvider` contract is stable in `rqm-api`;
 - canonical `RQMExecutionRecord` is stable;
 - target selection and spending authorization are separate;
 - provider observations are not embedded in `rqm-compiler`;
@@ -17,7 +17,7 @@ Acceptance:
 
 Execute one bounded workload through:
 
-`quantum-compiler-api -> rqm-compiler -> provider adapter -> real QPU`.
+`rqm-api -> rqm-compiler -> provider adapter -> real QPU`.
 
 Retain the complete execution record and independent reference comparison.
 
