@@ -52,3 +52,10 @@ After RQM Compiler 0.4.0 is released and its benchmark evidence is frozen, prepa
 The post should compare RQM Compiler 0.4.0 against a conventional/reference quantum compiler on the same reproducible benchmark workloads and environment. Report measured wall-clock compile time, scaling with circuit size/depth, output-circuit metrics where relevant, and resulting speedup ratios. Include methodology, hardware/software versions, repeated-run statistics, raw benchmark artifacts, and links to reproducible code.
 
 Only claim speedups actually demonstrated by the benchmark evidence. Separate compile-time improvements from circuit-quality, execution-time, or asymptotic-complexity claims, and include workloads where RQM does not outperform the reference. The goal is a reproducible technical Show and Tell demonstrating where 0.4.0's representation-aware compiler architecture produces measured advantages.
+
+
+## Provider-boundary implementation rule
+
+Do not pre-build a broad speculative provider framework before 0.3.7B/0.3.7C. The two real hardware integrations must force the smallest provider abstraction that satisfies both stacks. Stabilize that observed common contract in `rqm-api` only after the evidence exists.
+
+`rqm-compiler` ends at validated target-appropriate computational artifacts and associated compiler evidence. Authentication, account state, cost authorization, provider submission, polling/retrieval, remote execution state, and provider lifecycle belong outside the compiler in `rqm-api` and provider adapters.
