@@ -231,6 +231,8 @@ Current verification includes canonical single-qubit checks, dense numerical uni
 
 ## Documentation
 
+- [0.3.8 acceptance: published packages, benchmarks and completed hardware evidence](docs/RELEASE_0_3_8_ACCEPTANCE.md)
+- [Compiler release / OpenQSE–ORNL integration boundary](docs/RELEASE_0_3_7_EXECUTION_PROGRAM.md)
 - [Relational entanglement methodology](docs/RELATIONAL_ENTANGLEMENT.md)
 - [EXP-012 SU4Q boundary](docs/EXP012_SU4Q_BOUNDARY.md)
 - [RQM Technical Canon v2](RQM_TECHNICAL_CANON_V2.md)

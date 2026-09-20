@@ -153,7 +153,7 @@ def main():
   "compiler_module":rqm_compiler.__file__,"source_commit":os.environ["RQM_CANDIDATE_COMMIT"],
   "versions":{name:importlib.metadata.version(name) for name in
    ("rqm-compiler","rqm-core","rqm-entanglement","numpy","opt_einsum","qiskit","qiskit-aer")},
-  "repeats":REPEATS,"hardware_gate":"pending_real_provider_execution"}
+  "repeats":REPEATS,"hardware_gate":"not_evaluated_by_this_offline_benchmark"}
  Path("results").mkdir(exist_ok=True)
  Path("results/job_taxonomy.json").write_text(json.dumps({"baseline":"0.3.7 candidate","provenance":provenance,"summary":summary,"rows":rows},indent=2))
  import csv

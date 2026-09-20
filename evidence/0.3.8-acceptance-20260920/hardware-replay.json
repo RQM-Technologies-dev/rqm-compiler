@@ -1,0 +1,506 @@
+{
+  "kind": "offline_replay_of_completed_hardware_workloads",
+  "new_hardware_jobs": 0,
+  "network_attempts": [],
+  "api_revision": "72c57aef880e262654c1c2c761efd7bf028e4b74",
+  "fixture_sha256": "ababc16d8edd7d1e6b28635836812fabcf2da544ed5cb239804c34f4bdf4f227",
+  "packages": {
+    "rqm-compiler": "0.3.7",
+    "rqm-core": "0.2.2",
+    "rqm-entanglement": "0.2.2",
+    "rqm-qiskit": "0.4.0",
+    "rqm-braket": "0.2.2",
+    "qiskit": "2.5.2",
+    "amazon-braket-sdk": "1.127.1"
+  },
+  "rows": [
+    {
+      "provider": "ibm",
+      "index": 0,
+      "phase": 3.141592653589793,
+      "basis": "Z",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 1,
+      "phase": 3.141592653589793,
+      "basis": "Z",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 2,
+      "phase": 0,
+      "basis": "X",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 9.682320048931735e-38,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 3,
+      "phase": 0,
+      "basis": "X",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 9.682320048931735e-38,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 4,
+      "phase": 0,
+      "basis": "Y",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 8.326672684688674e-17,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 5,
+      "phase": 0,
+      "basis": "Y",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 8.326672684688674e-17,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 6,
+      "phase": 1.5707963267948966,
+      "basis": "X",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 7,
+      "phase": 1.5707963267948966,
+      "basis": "X",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 8,
+      "phase": 3.141592653589793,
+      "basis": "Y",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 1.1102230246251565e-16,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 9,
+      "phase": 3.141592653589793,
+      "basis": "Y",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 1.1102230246251565e-16,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 10,
+      "phase": 1.5707963267948966,
+      "basis": "Y",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 4.622328689729855e-33,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 11,
+      "phase": 1.5707963267948966,
+      "basis": "Y",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 4.622328689729855e-33,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 12,
+      "phase": 0,
+      "basis": "Z",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 13,
+      "phase": 0,
+      "basis": "Z",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 14,
+      "phase": 1.5707963267948966,
+      "basis": "Z",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 15,
+      "phase": 1.5707963267948966,
+      "basis": "Z",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 0.0,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 16,
+      "phase": 3.141592653589793,
+      "basis": "X",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 9.682320048897141e-38,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "ibm",
+      "index": 17,
+      "phase": 3.141592653589793,
+      "basis": "X",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "max_probability_error": 9.682320048897141e-38,
+      "measurement_order": [
+        2,
+        0,
+        1
+      ],
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 0,
+      "phase": 0,
+      "basis": "Z",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 1,
+      "phase": 0,
+      "basis": "Z",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 2,
+      "phase": 0,
+      "basis": "X",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 3,
+      "phase": 0,
+      "basis": "X",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 4,
+      "phase": 0,
+      "basis": "Y",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 5,
+      "phase": 0,
+      "basis": "Y",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 6,
+      "phase": 1.5707963267948966,
+      "basis": "Z",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 7,
+      "phase": 1.5707963267948966,
+      "basis": "Z",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 8,
+      "phase": 1.5707963267948966,
+      "basis": "X",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 9,
+      "phase": 1.5707963267948966,
+      "basis": "X",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 10,
+      "phase": 1.5707963267948966,
+      "basis": "Y",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 11,
+      "phase": 1.5707963267948966,
+      "basis": "Y",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 12,
+      "phase": 3.141592653589793,
+      "basis": "Z",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 13,
+      "phase": 3.141592653589793,
+      "basis": "Z",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 14,
+      "phase": 3.141592653589793,
+      "basis": "X",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 15,
+      "phase": 3.141592653589793,
+      "basis": "X",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 16,
+      "phase": 3.141592653589793,
+      "basis": "Y",
+      "level": 1,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    },
+    {
+      "provider": "braket",
+      "index": 17,
+      "phase": 3.141592653589793,
+      "basis": "Y",
+      "level": 3,
+      "compiled_operations_match_hardware_snapshot": true,
+      "api_helper_compatible": false,
+      "api_helper_error": "ProviderSubmissionError: BraketTranslator.translate_descriptors() got an unexpected keyword argument 'circuit_factory'",
+      "submitted_program_matches_hardware_snapshot": true,
+      "passed": true
+    }
+  ],
+  "passed": 36,
+  "total": 36
+}

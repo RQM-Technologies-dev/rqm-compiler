@@ -1,0 +1,1079 @@
+{
+  "api_revision": "72c57aef880e262654c1c2c761efd7bf028e4b74",
+  "hardware_requirement": "completed_bounded_validation_on_two_distinct_stacks",
+  "new_hardware_jobs_in_acceptance": 0,
+  "ibm": {
+    "device": "ibm_marrakesh",
+    "modality": "superconducting",
+    "job_id": "danj7dg2fm4c73f49n9g",
+    "completed_at": "2026-09-20T01:15:44.486411Z",
+    "circuits": 18,
+    "shots": 9216,
+    "results_sha256": "243a867ebc5785372153caa56473f7b5f0484d6c34dfc566bd7e8c9dbe619fd8",
+    "source": "https://github.com/RQM-Technologies-dev/rqm-api/blob/72c57aef880e262654c1c2c761efd7bf028e4b74/artifacts/ibm-phase-coherence-20260919/results.json",
+    "readme": "https://github.com/RQM-Technologies-dev/rqm-api/blob/72c57aef880e262654c1c2c761efd7bf028e4b74/artifacts/ibm-phase-coherence-20260919/README.md",
+    "observations": [
+      {
+        "phase": 3.141592653589793,
+        "basis": "Z",
+        "level": 1,
+        "counts": {
+          "000": 259,
+          "111": 231,
+          "010": 3,
+          "011": 2,
+          "110": 5,
+          "101": 9,
+          "001": 3
+        },
+        "expected_parity": 0.0,
+        "parity": 0.07421875,
+        "parity_familywise_ci95": [
+          -0.05983498874292381,
+          0.20641969815350825
+        ],
+        "z_leakage": 0.04296875
+      },
+      {
+        "phase": 3.141592653589793,
+        "basis": "Z",
+        "level": 3,
+        "counts": {
+          "000": 270,
+          "111": 229,
+          "001": 2,
+          "011": 2,
+          "110": 3,
+          "010": 2,
+          "101": 3,
+          "100": 1
+        },
+        "expected_parity": 0.0,
+        "parity": 0.0859375,
+        "parity_familywise_ci95": [
+          -0.04813926393944579,
+          0.21786888952637806
+        ],
+        "z_leakage": 0.025390625
+      },
+      {
+        "phase": 0.0,
+        "basis": "X",
+        "level": 3,
+        "counts": {
+          "011": 108,
+          "110": 123,
+          "000": 118,
+          "101": 145,
+          "111": 5,
+          "001": 7,
+          "010": 3,
+          "100": 3
+        },
+        "expected_parity": 0.9999999999999993,
+        "parity": 0.9296875,
+        "parity_familywise_ci95": [
+          0.8666256935539929,
+          0.9688717317480071
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 0.0,
+        "basis": "X",
+        "level": 1,
+        "counts": {
+          "110": 131,
+          "000": 133,
+          "101": 134,
+          "011": 99,
+          "111": 5,
+          "010": 6,
+          "001": 2,
+          "100": 2
+        },
+        "expected_parity": 0.9999999999999993,
+        "parity": 0.94140625,
+        "parity_familywise_ci95": [
+          0.8821508974825771,
+          0.9763972556763665
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 0.0,
+        "basis": "Y",
+        "level": 3,
+        "counts": {
+          "101": 57,
+          "100": 69,
+          "001": 53,
+          "000": 75,
+          "011": 58,
+          "110": 82,
+          "111": 56,
+          "010": 62
+        },
+        "expected_parity": 0.0,
+        "parity": 0.0625,
+        "parity_familywise_ci95": [
+          -0.07151259018077871,
+          0.19495236896984003
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 0.0,
+        "basis": "Y",
+        "level": 1,
+        "counts": {
+          "100": 63,
+          "111": 51,
+          "101": 63,
+          "000": 64,
+          "001": 75,
+          "010": 57,
+          "110": 76,
+          "011": 63
+        },
+        "expected_parity": 0.0,
+        "parity": 0.0390625,
+        "parity_familywise_ci95": [
+          -0.09481358481250923,
+          0.17196346831036102
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 1.5707963267948966,
+        "basis": "X",
+        "level": 3,
+        "counts": {
+          "101": 74,
+          "110": 71,
+          "100": 50,
+          "001": 57,
+          "000": 60,
+          "011": 78,
+          "111": 68,
+          "010": 54
+        },
+        "expected_parity": 1.5265566588595902e-16,
+        "parity": 0.10546875,
+        "parity_familywise_ci95": [
+          -0.028605975729603217,
+          0.23691042309254562
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 1.5707963267948966,
+        "basis": "X",
+        "level": 1,
+        "counts": {
+          "100": 61,
+          "010": 61,
+          "011": 79,
+          "000": 66,
+          "110": 63,
+          "111": 64,
+          "001": 59,
+          "101": 59
+        },
+        "expected_parity": 1.5265566588595902e-16,
+        "parity": 0.04296875,
+        "parity_familywise_ci95": [
+          -0.09093509671162436,
+          0.17579996534270248
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 3.141592653589793,
+        "basis": "Y",
+        "level": 1,
+        "counts": {
+          "010": 86,
+          "101": 57,
+          "111": 62,
+          "100": 58,
+          "000": 70,
+          "001": 62,
+          "110": 50,
+          "011": 67
+        },
+        "expected_parity": -2.7755575615628914e-16,
+        "parity": -0.046875,
+        "parity_familywise_ci95": [
+          -0.1796344584912427,
+          0.08705460564782519
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 3.141592653589793,
+        "basis": "Y",
+        "level": 3,
+        "counts": {
+          "011": 64,
+          "100": 74,
+          "101": 51,
+          "000": 53,
+          "010": 70,
+          "001": 71,
+          "110": 59,
+          "111": 70
+        },
+        "expected_parity": -2.7755575615628914e-16,
+        "parity": -0.11328125,
+        "parity_familywise_ci95": [
+          -0.24451282457278178,
+          0.02077846405562145
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 1.5707963267948966,
+        "basis": "Y",
+        "level": 1,
+        "counts": {
+          "010": 130,
+          "111": 110,
+          "001": 118,
+          "100": 128,
+          "110": 6,
+          "011": 7,
+          "000": 8,
+          "101": 5
+        },
+        "expected_parity": -0.9999999999999993,
+        "parity": -0.8984375,
+        "parity_familywise_ci95": [
+          -0.947247478183955,
+          -0.8267037524491339
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 1.5707963267948966,
+        "basis": "Y",
+        "level": 3,
+        "counts": {
+          "010": 120,
+          "001": 133,
+          "100": 127,
+          "111": 112,
+          "101": 2,
+          "000": 8,
+          "110": 8,
+          "011": 2
+        },
+        "expected_parity": -0.9999999999999993,
+        "parity": -0.921875,
+        "parity_familywise_ci95": [
+          -0.9636525351018669,
+          -0.8564669983553617
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 0.0,
+        "basis": "Z",
+        "level": 3,
+        "counts": {
+          "111": 260,
+          "000": 237,
+          "101": 7,
+          "011": 4,
+          "010": 2,
+          "110": 2
+        },
+        "expected_parity": 0.0,
+        "parity": -0.0234375,
+        "parity_familywise_ci95": [
+          -0.15659746000045305,
+          0.11030752455975468
+        ],
+        "z_leakage": 0.029296875
+      },
+      {
+        "phase": 0.0,
+        "basis": "Z",
+        "level": 1,
+        "counts": {
+          "000": 262,
+          "111": 226,
+          "010": 5,
+          "101": 6,
+          "011": 7,
+          "110": 5,
+          "001": 1
+        },
+        "expected_parity": 0.0,
+        "parity": 0.09375,
+        "parity_familywise_ci95": [
+          -0.04033202114787893,
+          0.22549158166459793
+        ],
+        "z_leakage": 0.046875
+      },
+      {
+        "phase": 1.5707963267948966,
+        "basis": "Z",
+        "level": 3,
+        "counts": {
+          "000": 261,
+          "111": 227,
+          "010": 7,
+          "110": 5,
+          "011": 6,
+          "001": 1,
+          "101": 5
+        },
+        "expected_parity": 0.0,
+        "parity": 0.08203125,
+        "parity_familywise_ci95": [
+          -0.05203985551045254,
+          0.21405451078847015
+        ],
+        "z_leakage": 0.046875
+      },
+      {
+        "phase": 1.5707963267948966,
+        "basis": "Z",
+        "level": 1,
+        "counts": {
+          "000": 270,
+          "111": 223,
+          "011": 4,
+          "001": 2,
+          "101": 4,
+          "110": 6,
+          "010": 3
+        },
+        "expected_parity": 0.0,
+        "parity": 0.109375,
+        "parity_familywise_ci95": [
+          -0.024693236353433123,
+          0.24071264149465876
+        ],
+        "z_leakage": 0.037109375
+      },
+      {
+        "phase": 3.141592653589793,
+        "basis": "X",
+        "level": 1,
+        "counts": {
+          "001": 119,
+          "010": 123,
+          "111": 121,
+          "000": 5,
+          "100": 127,
+          "101": 7,
+          "110": 5,
+          "011": 5
+        },
+        "expected_parity": -0.9999999999999993,
+        "parity": -0.9140625,
+        "parity_familywise_ci95": [
+          -0.9582979541047918,
+          -0.846437144601054
+        ],
+        "z_leakage": null
+      },
+      {
+        "phase": 3.141592653589793,
+        "basis": "X",
+        "level": 3,
+        "counts": {
+          "001": 124,
+          "011": 6,
+          "111": 125,
+          "010": 113,
+          "100": 128,
+          "000": 8,
+          "101": 5,
+          "110": 3
+        },
+        "expected_parity": -0.9999999999999993,
+        "parity": -0.9140625,
+        "parity_familywise_ci95": [
+          -0.9582979541047918,
+          -0.846437144601054
+        ],
+        "z_leakage": null
+      }
+    ]
+  },
+  "braket": {
+    "device": "Rigetti Cepheus-1-108Q",
+    "modality": "superconducting",
+    "circuits": 18,
+    "shots": 9216,
+    "hardware_signal_passed": true,
+    "analysis_sha256": "eb1b01d2e01a910ebc4704e568a1ab22fa48bb29c8e83886de9d0a6dca58937c",
+    "archive_sha256": "c5de68815706cc5db0ec7cd859628ea5e5a53b3bfece719b6b4d0009e251b523",
+    "source": "https://github.com/RQM-Technologies-dev/rqm-api/blob/72c57aef880e262654c1c2c761efd7bf028e4b74/artifacts/braket-closeout/hardware-20260920/analysis.json",
+    "readme": "https://github.com/RQM-Technologies-dev/rqm-api/blob/72c57aef880e262654c1c2c761efd7bf028e4b74/artifacts/braket-closeout/hardware-20260920/README.md",
+    "raw_verification": [
+      {
+        "index": 0,
+        "raw_sha256": "88ab9a7f3caf15320ec4d5a00a9e16c7e1fbe874ff3493d62f65fe8aaad1fb26",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "d6e5f2b4-57c9-46e5-a82c-4e54e15fff96"
+      },
+      {
+        "index": 1,
+        "raw_sha256": "36c7161bc9f597fb8541daa0e7124da350784aca12e9dcad096ff0266d5b8719",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "23159870-7741-40f6-8c61-bc8971b3c5cc"
+      },
+      {
+        "index": 2,
+        "raw_sha256": "7ad901ce73aa25f611b0d594f3f0e46ec5aff5c690717960540fa38ef53649f2",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "1bb4c5d6-a089-4a8d-9734-3b1c91ac22d6"
+      },
+      {
+        "index": 3,
+        "raw_sha256": "47c6bb1b36c8d1247e42e441029be85b365d4466376b591439d9f937475fd550",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "cf3d8971-5700-46de-85c0-5d96e1cc4613"
+      },
+      {
+        "index": 4,
+        "raw_sha256": "defc7c51916061c94a45fe994bd722fcaddd24246e503b2446db21ee442d1ad0",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "0d45c361-a45d-4d0e-af58-09e9c132d188"
+      },
+      {
+        "index": 5,
+        "raw_sha256": "75cbf70be5ce760a44948669ece69b42e68be864d6871d4f5b04307a802f41f8",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "e526dfb4-977a-4a07-a9c8-206bc13ebac1"
+      },
+      {
+        "index": 6,
+        "raw_sha256": "299c470b87186c288793dda2bca9048257d9e7d54306e6dc6b73cf9a7c32e1c6",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "dbbd4ba6-3d3f-4345-a52f-f7644e2dcce4"
+      },
+      {
+        "index": 7,
+        "raw_sha256": "0368b2423689c4f4d50d14b60cd173fc365cbde5e5aeb43c95a4e37a0f1574ec",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "5bf79e4a-d473-45c7-9fef-731b17dad736"
+      },
+      {
+        "index": 8,
+        "raw_sha256": "f9c3fefeb28f0cf53bb9cd92f6a237c9044ef78da5afa0a08913b10d063e0a79",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "ac270344-ed32-4b1e-803e-3963c40e11de"
+      },
+      {
+        "index": 9,
+        "raw_sha256": "8ad8873d9e2395e1e4fd36592407cd30fa2130026b0d9f9a5c701d91d77cdfdd",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "c2ca3d9d-eaf1-4557-bb19-4f8109e99b15"
+      },
+      {
+        "index": 10,
+        "raw_sha256": "e45ce4ded4c4a6e236c92ef935e18a1528cb6a43a181bfe209576b4d1d6620bf",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "6820c90c-33cd-463b-809a-6a70c60df785"
+      },
+      {
+        "index": 11,
+        "raw_sha256": "f31fa331f89d237630f2b10cebcedce7e2ec4eac2b70c3c5a7ea24c7d72cbbec",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "342e42de-8a7a-4084-93c9-797b118df4e0"
+      },
+      {
+        "index": 12,
+        "raw_sha256": "80a97d28c1a29be384052147a97e85a8d93ed09c65809fc2f0cf7512e1da5b10",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "ab1f3ce0-61c4-4047-a3f5-e4ef88ddf413"
+      },
+      {
+        "index": 13,
+        "raw_sha256": "e6d8be6996823a03323d762cd640e3ea48ebad4976df52781365fb6267a9fb0f",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "17c387bf-26cd-4faa-bcac-fd51f9f23775"
+      },
+      {
+        "index": 14,
+        "raw_sha256": "847bb9101024b5dbbea5bbf9ec62bbedd0554c80d8b309c84012f24a2f8fe297",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "d1354a2e-2aec-496a-9da5-2215e6536caa"
+      },
+      {
+        "index": 15,
+        "raw_sha256": "49466ff15d80f821cc8a39378dbbfd75d33ce5c0bb2a1d61988bc61180e67383",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "ab8f3bf1-45fb-4971-a00a-2bcdc872590a"
+      },
+      {
+        "index": 16,
+        "raw_sha256": "8f24a37c2e0d43eccc14449afd0ab200889019f1a3a1a445fe102a35157438c8",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "387dbfd6-b738-4cc7-a36f-fbf06c4a6fd2"
+      },
+      {
+        "index": 17,
+        "raw_sha256": "8b23b28cde8bec91f094f62011bda88a75dc2ee8ff44f360be73ca63fff8e063",
+        "shots": 512,
+        "counts_match_analysis": true,
+        "task_id": "c1c798b5-e51a-44bd-b185-fa31500ac6ee"
+      }
+    ],
+    "observations": [
+      {
+        "index": 0,
+        "phase": 0.0,
+        "basis": "Z",
+        "level": 1,
+        "counts": {
+          "000": 215,
+          "001": 15,
+          "010": 14,
+          "011": 17,
+          "100": 14,
+          "101": 12,
+          "110": 13,
+          "111": 212
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.12962996551458394,
+          0.13734495524106838
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.00390625,
+        "z_leakage": 0.166015625
+      },
+      {
+        "index": 1,
+        "phase": 0.0,
+        "basis": "Z",
+        "level": 3,
+        "counts": {
+          "000": 227,
+          "001": 13,
+          "010": 14,
+          "011": 16,
+          "100": 13,
+          "101": 14,
+          "110": 15,
+          "111": 200
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.07151259018077871,
+          0.19495236896984003
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.0625,
+        "z_leakage": 0.166015625
+      },
+      {
+        "index": 2,
+        "phase": 0.0,
+        "basis": "X",
+        "level": 1,
+        "counts": {
+          "000": 112,
+          "001": 24,
+          "010": 25,
+          "011": 108,
+          "100": 40,
+          "101": 95,
+          "110": 90,
+          "111": 18
+        },
+        "expected_parity": 0.9999999999999993,
+        "familywise_95_interval": [
+          0.46569697517889996,
+          0.6837749414589045
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": true,
+        "parity": 0.58203125,
+        "z_leakage": null
+      },
+      {
+        "index": 3,
+        "phase": 0.0,
+        "basis": "X",
+        "level": 3,
+        "counts": {
+          "000": 114,
+          "001": 22,
+          "010": 23,
+          "011": 101,
+          "100": 27,
+          "101": 95,
+          "110": 107,
+          "111": 23
+        },
+        "expected_parity": 0.9999999999999993,
+        "familywise_95_interval": [
+          0.5166423264639781,
+          0.7253884290175172
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": true,
+        "parity": 0.62890625,
+        "z_leakage": null
+      },
+      {
+        "index": 4,
+        "phase": 0.0,
+        "basis": "Y",
+        "level": 1,
+        "counts": {
+          "000": 73,
+          "001": 52,
+          "010": 66,
+          "011": 60,
+          "100": 56,
+          "101": 76,
+          "110": 67,
+          "111": 62
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.05593842982746999,
+          0.21023811301761097
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.078125,
+        "z_leakage": null
+      },
+      {
+        "index": 5,
+        "phase": 0.0,
+        "basis": "Y",
+        "level": 3,
+        "counts": {
+          "000": 74,
+          "001": 51,
+          "010": 70,
+          "011": 75,
+          "100": 58,
+          "101": 56,
+          "110": 68,
+          "111": 60
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.06762206730398324,
+          0.1987768244276571
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.06640625,
+        "z_leakage": null
+      },
+      {
+        "index": 6,
+        "phase": 1.5707963267948966,
+        "basis": "Z",
+        "level": 1,
+        "counts": {
+          "000": 227,
+          "001": 8,
+          "010": 27,
+          "011": 15,
+          "100": 12,
+          "101": 12,
+          "110": 9,
+          "111": 202
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.10643704005366472,
+          0.16044196346925288
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.02734375,
+        "z_leakage": 0.162109375
+      },
+      {
+        "index": 7,
+        "phase": 1.5707963267948966,
+        "basis": "Z",
+        "level": 3,
+        "counts": {
+          "000": 203,
+          "001": 13,
+          "010": 20,
+          "011": 12,
+          "100": 13,
+          "101": 16,
+          "110": 16,
+          "111": 219
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.16812496839614877,
+          0.09869007086804582
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": -0.03515625,
+        "z_leakage": 0.17578125
+      },
+      {
+        "index": 8,
+        "phase": 1.5707963267948966,
+        "basis": "X",
+        "level": 1,
+        "counts": {
+          "000": 70,
+          "001": 64,
+          "010": 60,
+          "011": 71,
+          "100": 62,
+          "101": 59,
+          "110": 75,
+          "111": 51
+        },
+        "expected_parity": 1.5265566588595902e-16,
+        "familywise_95_interval": [
+          -0.05983498874292381,
+          0.20641969815350825
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.07421875,
+        "z_leakage": null
+      },
+      {
+        "index": 9,
+        "phase": 1.5707963267948966,
+        "basis": "X",
+        "level": 3,
+        "counts": {
+          "000": 66,
+          "001": 66,
+          "010": 50,
+          "011": 79,
+          "100": 58,
+          "101": 61,
+          "110": 75,
+          "111": 57
+        },
+        "expected_parity": 1.5265566588595902e-16,
+        "familywise_95_interval": [
+          -0.03642536574320088,
+          0.2292998907041388
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.09765625,
+        "z_leakage": null
+      },
+      {
+        "index": 10,
+        "phase": 1.5707963267948966,
+        "basis": "Y",
+        "level": 1,
+        "counts": {
+          "000": 27,
+          "001": 107,
+          "010": 109,
+          "011": 19,
+          "100": 98,
+          "101": 34,
+          "110": 20,
+          "111": 98
+        },
+        "expected_parity": -0.9999999999999993,
+        "familywise_95_interval": [
+          -0.7081192019479253,
+          -0.49534605403606546
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": true,
+        "parity": -0.609375,
+        "z_leakage": null
+      },
+      {
+        "index": 11,
+        "phase": 1.5707963267948966,
+        "basis": "Y",
+        "level": 3,
+        "counts": {
+          "000": 23,
+          "001": 106,
+          "010": 102,
+          "011": 28,
+          "100": 106,
+          "101": 18,
+          "110": 22,
+          "111": 107
+        },
+        "expected_parity": -0.9999999999999993,
+        "familywise_95_interval": [
+          -0.7391275132555055,
+          -0.5337548398085608
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": true,
+        "parity": -0.64453125,
+        "z_leakage": null
+      },
+      {
+        "index": 12,
+        "phase": 3.141592653589793,
+        "basis": "Z",
+        "level": 1,
+        "counts": {
+          "000": 215,
+          "001": 15,
+          "010": 21,
+          "011": 24,
+          "100": 19,
+          "101": 8,
+          "110": 6,
+          "111": 204
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.14505195291226158,
+          0.1219069840662188
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": -0.01171875,
+        "z_leakage": 0.181640625
+      },
+      {
+        "index": 13,
+        "phase": 3.141592653589793,
+        "basis": "Z",
+        "level": 3,
+        "counts": {
+          "000": 224,
+          "001": 6,
+          "010": 22,
+          "011": 18,
+          "100": 17,
+          "101": 8,
+          "110": 14,
+          "111": 203
+        },
+        "expected_parity": 0.0,
+        "familywise_95_interval": [
+          -0.1025645557038275,
+          0.1642844665098382
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": 0.03125,
+        "z_leakage": 0.166015625
+      },
+      {
+        "index": 14,
+        "phase": 3.141592653589793,
+        "basis": "X",
+        "level": 1,
+        "counts": {
+          "000": 25,
+          "001": 96,
+          "010": 109,
+          "011": 25,
+          "100": 110,
+          "101": 23,
+          "110": 26,
+          "111": 98
+        },
+        "expected_parity": -0.9999999999999993,
+        "familywise_95_interval": [
+          -0.7115812574507331,
+          -0.4995971816704492
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": true,
+        "parity": -0.61328125,
+        "z_leakage": null
+      },
+      {
+        "index": 15,
+        "phase": 3.141592653589793,
+        "basis": "X",
+        "level": 3,
+        "counts": {
+          "000": 20,
+          "001": 103,
+          "010": 97,
+          "011": 25,
+          "100": 108,
+          "101": 21,
+          "110": 30,
+          "111": 108
+        },
+        "expected_parity": -0.9999999999999993,
+        "familywise_95_interval": [
+          -0.7219428906836034,
+          -0.5123748502445917
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": true,
+        "parity": -0.625,
+        "z_leakage": null
+      },
+      {
+        "index": 16,
+        "phase": 3.141592653589793,
+        "basis": "Y",
+        "level": 1,
+        "counts": {
+          "000": 60,
+          "001": 67,
+          "010": 73,
+          "011": 51,
+          "100": 68,
+          "101": 49,
+          "110": 59,
+          "111": 85
+        },
+        "expected_parity": -2.7755575615628914e-16,
+        "familywise_95_interval": [
+          -0.27484066971038323,
+          -0.010613236273177118
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": -0.14453125,
+        "z_leakage": null
+      },
+      {
+        "index": 17,
+        "phase": 3.141592653589793,
+        "basis": "Y",
+        "level": 3,
+        "counts": {
+          "000": 85,
+          "001": 62,
+          "010": 69,
+          "011": 56,
+          "100": 59,
+          "101": 57,
+          "110": 55,
+          "111": 69
+        },
+        "expected_parity": -2.7755575615628914e-16,
+        "familywise_95_interval": [
+          -0.14505195291226158,
+          0.1219069840662188
+        ],
+        "measured_qubits": [
+          2,
+          0,
+          1
+        ],
+        "nonzero_signal_passed": null,
+        "parity": -0.01171875,
+        "z_leakage": null
+      }
+    ]
+  },
+  "limits": [
+    "Both devices are superconducting; not two modalities.",
+    "Historical hardware runs used the recorded compiler snapshot, not the later published wheel.",
+    "Nine level-1/level-3 native circuit pairs matched on each stack; no hardware speedup is established.",
+    "Rigetti index 16 ideal-zero parity interval excludes zero; retained diagnostic, not a changed acceptance threshold.",
+    "Hardware counts do not establish noiseless or universal correctness.",
+    "Private raw provider/account metadata remains in the original repository."
+  ]
+}

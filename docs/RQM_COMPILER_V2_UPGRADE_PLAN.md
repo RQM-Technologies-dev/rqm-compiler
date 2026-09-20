@@ -423,61 +423,47 @@ OpenQSE adapter, packaging and clean-install paths.
 Publish migration guidance, examples, benchmark methodology, architecture and
 scientific claim boundaries.
 
-### 0.3.7 — Performance frontier + real-hardware validation
+### 0.3.7 — Frozen compiler and coordinated package certification
 
-In addition to addressing or characterizing the random-sparse/query-complexity
-frontier, **0.3.7 must execute the 0.4 compiler path on at least two distinct
-real quantum-hardware stacks** (not simulator-only backends).
+The published prototype freezes the compiler runtime and qualifies its wheels,
+source distributions, released dependency floors, numerical boundaries and
+cross-stack interfaces. See [the feature freeze](RELEASE_0_3_7_FREEZE.md) and
+[retained certification](../evidence/0.3.7-release-20260920/README.md).
 
-These are no longer standalone compiler-only hardware scripts. Each mandatory
-hardware run must exercise the first RQM Studio execution-orchestrator path:
-
-```text
-workload
- -> rqm-api
- -> rqm-compiler
- -> BackendCapabilityModel / materialization
- -> provider adapter
- -> real QPU
- -> result retrieval
- -> reference comparison
- -> unified RQM execution/provenance record
-```
-
-The purpose is to validate both compiler 0.4 and the future agent-native RQM
-Studio full-stack execution architecture.
-
-Minimum evidence for each stack:
-
-1. provider/device identity and modality;
-2. compiler/backend capability model selected;
-3. exact submitted circuit artifact and compiler report;
-4. backend-lowered artifact;
-5. hardware job identifier/provenance;
-6. measured execution result and comparison against an exact/simulator
-   reference where tractable;
-7. any target-specific materializations, routing, unsupported operations or
-   fallback behavior;
-8. reproducibility notes sufficient to rerun the job;
-9. evidence that submission/retrieval was orchestrated through `rqm-api`;
-10. provider cost/charge metadata where available and an RQM commercial-accounting
-    slot suitable for a future orchestration/service fee.
-
-The two stacks should preferably represent different hardware modalities when
-access permits.
-
-**Bonus / preferred validation target:** one of the two real-hardware
-demonstrations should use an ORNL quantum-system/QSE/OpenQSE-connected stack if
-RQM has authorized access to such a target at validation time. Lack of access
-does not block 0.3.7 provided two other real hardware stacks satisfy the
-mandatory evidence gate; the ORNL target is an additional preferred result,
-not a reason to weaken provenance or access controls.
+Real-hardware testing has already been completed on IBM Marrakesh and Rigetti
+Cepheus-1-108Q through Amazon Braket. These bounded experiments validate the
+submitted workloads; they do not establish a hardware speedup or universal
+compiler correctness. Their retained records and applicability to the released
+compiler are consolidated in [final acceptance](RELEASE_0_3_8_ACCEPTANCE.md).
 
 ### 0.3.8 — Final release acceptance
 
-Repeat frozen benchmarks and cross-stack tests from clean release-candidate
-artifacts, verify documentation/provenance and remove candidate-only dependency
-pins before promoting `rqm-compiler 0.4.0`.
+This milestone closes the compiler's evidence and packaging work before a
+separate decision to promote `rqm-compiler 0.4.0`:
+
+1. Verify clean installation and compatibility using released dependencies.
+2. Compare published wheel and sdist runtime payloads with certified code;
+   rerun checks affected by dependency, packaging or runtime changes.
+3. Consolidate benchmark, numerical and completed hardware evidence, preserving
+   revisions, hashes, measurement limitations and all unavailable cases.
+4. Reconcile documentation and release configuration with this scope.
+
+Reuse unchanged certified artifacts and historical hardware records. A changed
+archive hash alone is not a runtime change; source payload and dependency
+comparisons establish which evidence can be reused. Replaying retained hardware
+inputs offline checks applicability without claiming a new QPU execution.
+
+The compiler release does not require API deployment, production job lifecycle,
+provider credentials, billing, or integration with ORNL. API orchestration,
+provider integration, durable submission/retrieval and ORNL/OpenQSE execution
+belong to the separate **openqse-rqm-adapter / ORNL workstream**, with `rqm-api`
+and provider bridges owning the appropriate implementation boundaries.
+See [the workstream boundary](RELEASE_0_3_7_EXECUTION_PROGRAM.md).
+
+A generated release PR is preparation, not acceptance or authorization to publish
+0.4.0. Keep the released version in the manifest until its successor is merged;
+remove the one-time 0.3.7 version override so a documentation/patch successor
+can be prepared normally. No new compiler features are required by this pass.
 
 
 ## 0.3.6 public release contract
