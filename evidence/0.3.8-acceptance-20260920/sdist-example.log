@@ -1,0 +1,3 @@
+chain {'C_R': 25, 'C_Q': 3, 'topology': 'chain', 'route': 'chain_boundary_transfer', 'fallback': False, 'value': (0.9819776593496193+0j)}
+general {'C_R': 14, 'C_Q': 2, 'topology': None, 'route': 'general_pauli_promoted', 'fallback': True, 'value': (0.9523335698857134+0j)}
+backend amazon_braket BackendMaterializationPlan(backend='braket_gate_model', modality='gate_model', framework='amazon_braket', lowering_profile='named_1q', materialize_operations=('u1q',), unsupported_operations=())

@@ -1,0 +1,5 @@
+{
+  "scripts/verify_published_release.py": "cc43e077691c378b07ee710ca252f70142eacb12eb99ca0115a1eca8d06037c9",
+  "scripts/replay_hardware_acceptance.py": "c15d4d98d7c2de32a104b2e85d3cee0b98c05fc05181cb98b01ddbc9584f44f5",
+  "benchmarks/job_taxonomy.py": "01d77777571f1824eca37fe083d615c2c87950622a094009f4f63b21ebb47f07"
+}

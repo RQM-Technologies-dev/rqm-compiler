@@ -1,0 +1,41 @@
+{
+  "baseline": "rqm-compiler 0.3.7",
+  "baseline_commit": "8cdf4ec9a27d93d46c7daeb921fc10cc2491eb30",
+  "milestone": "0.3.8 acceptance",
+  "new_version_published": false,
+  "runtime_changes": false,
+  "artifact_verification_passed": true,
+  "github_pypi_digests_match": true,
+  "installed_source_parity": true,
+  "suites": {
+    "py311": {
+      "passed": 929,
+      "skipped": 1,
+      "failures": 0,
+      "errors": 0
+    },
+    "py312": {
+      "passed": 930,
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0
+    }
+  },
+  "taxonomy": {
+    "valid": 21,
+    "total": 21,
+    "max_error": 2.1094237467877974e-15
+  },
+  "hardware_replay": {
+    "passed": 36,
+    "total": 36,
+    "network_attempts": [],
+    "new_hardware_jobs": 0
+  },
+  "integration_findings": [
+    "API Braket helper requires circuit_factory keyword absent in public rqm-braket 0.2.2; direct descriptor bridge passes.",
+    "Published rqm-qiskit 0.4.0 requires rqm-compiler<0.4; a future compiler 0.4.0 consumer needs compatible bridge metadata."
+  ],
+  "reused_evidence": "../0.3.7-release-20260920/summary.json",
+  "performance_claim": "No new performance claim."
+}

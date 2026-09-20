@@ -1,68 +1,47 @@
-> Scientific release clarification (2026-09-19): `rqm-compiler` owns computation
-> and scientific certification; `rqm-api` owns orchestration. `rqm-qiskit` and
-> `rqm-braket` provide backend execution routes. The two-hardware milestones below
-> remain API/bridge integration deliverables, and do not gate the compiler's
-> software-only 0.4.0 scientific release. This supersedes language below treating
-> hardware execution as a prerequisite for compiler scientific acceptance.
+# Compiler acceptance and the OpenQSE / ORNL execution workstream
 
-# RQM Compiler 0.3.7 Execution Program
+Scope corrected September 20, 2026. The earlier version of this document
+combined compiler release acceptance with production execution integration.
+This document replaces that combined gate; earlier text remains in Git history.
 
-0.3.7 is the first RQM Studio full-stack execution proof as well as the final
-research/performance milestone before release acceptance.
+## Compiler release scope
 
-## 0.3.7A — Provider abstraction and execution record
+`rqm-compiler` owns backend-neutral compilation, query planning, exactness
+guards, backend materialization planning and compiler reports. The completed
+IBM Marrakesh and Rigetti/Braket experiments supply bounded real-hardware
+validation. Consolidate their evidence and check applicability to the released
+code; do not require another hardware integration project to publish the
+compiler. See [0.3.8 acceptance](RELEASE_0_3_8_ACCEPTANCE.md).
 
-Acceptance:
+Final acceptance covers public-package installation, certified-source parity,
+affected regression checks, numerical/benchmark/hardware evidence and accurate
+documentation. Wider frontier research, new planner routes and new provider
+features are outside this frozen pass.
 
-- `QuantumExecutionProvider` contract is stable in `rqm-api`;
-- canonical `RQMExecutionRecord` is stable;
-- target selection and spending authorization are separate;
-- provider observations are not embedded in `rqm-compiler`;
-- tests prove null commercial facts remain unknown rather than zero.
+## Separate OpenQSE-rqm-adapter / ORNL workstream
 
-## 0.3.7B — First real QPU
+The following are integration deliverables, not compiler publication gates:
 
-Execute one bounded workload through:
+- Use `openqse-rqm-adapter` for scientific interoperability and the authorized
+  ORNL/OpenQSE execution path.
+- Keep the provider abstraction and common execution/provenance record in
+  `rqm-api` and the appropriate bridges.
+- Qualify durable cross-provider submission, polling, retrieval, restart and
+  explanation behavior through the API when developing that integration.
+- Keep credentials, target observations, spending authorization and commercial
+  accounting outside the compiler.
+- Preserve actual provider/device identities, submitted and native artifacts,
+  job IDs, measurements, reference comparisons and cost observations.
 
-`rqm-api -> rqm-compiler -> provider adapter -> real QPU`.
-
-Retain the complete execution record and independent reference comparison.
-
-## 0.3.7C — Second real hardware stack
-
-Repeat through a distinct real hardware stack. Prefer a different modality.
-Do not weaken the evidence contract to accommodate provider differences.
-
-## 0.3.7D — Cross-provider + agent-ready workflow
-
-Demonstrate that the same outcome-oriented API workflow can discover/estimate
-targets, obtain authorization, execute, retrieve and explain without requiring
-the browser Studio. Compare provider-specific materialization and results
-without declaring a universal provider winner.
-
-## 0.3.7E — Random-sparse C_Q frontier
-
-Return to the frozen random-sparse family. Profile the first query-expansion
-event, test validated contraction-order machinery before inventing a new
-representation, and either graduate a proven improvement or record the family
-as a promotion/performance boundary.
-
-## Hardware requirement
-
-At least two real hardware stacks remain mandatory. An authorized
-ORNL/QSC/QSE-connected target is preferred additional evidence.
+The completed research dispatches do not certify a production HTTP execution
+workflow. The two providers are distinct stacks; both tested devices are
+superconducting, so the evidence does not demonstrate different modalities.
 
 ## Post-0.4.0 OpenQSE Show and Tell
 
-After RQM Compiler 0.4.0 is released and its benchmark evidence is frozen, prepare a post for the OpenQSE Compiler Working Group `openQSE/wg-compiler` **Show and Tell** page.
-
-The post should compare RQM Compiler 0.4.0 against a conventional/reference quantum compiler on the same reproducible benchmark workloads and environment. Report measured wall-clock compile time, scaling with circuit size/depth, output-circuit metrics where relevant, and resulting speedup ratios. Include methodology, hardware/software versions, repeated-run statistics, raw benchmark artifacts, and links to reproducible code.
-
-Only claim speedups actually demonstrated by the benchmark evidence. Separate compile-time improvements from circuit-quality, execution-time, or asymptotic-complexity claims, and include workloads where RQM does not outperform the reference. The goal is a reproducible technical Show and Tell demonstrating where 0.4.0's representation-aware compiler architecture produces measured advantages.
-
-
-## Provider-boundary implementation rule
-
-Do not pre-build a broad speculative provider framework before 0.3.7B/0.3.7C. The two real hardware integrations must force the smallest provider abstraction that satisfies both stacks. Stabilize that observed common contract in `rqm-api` only after the evidence exists.
-
-`rqm-compiler` ends at validated target-appropriate computational artifacts and associated compiler evidence. Authentication, account state, cost authorization, provider submission, polling/retrieval, remote execution state, and provider lifecycle belong outside the compiler in `rqm-api` and provider adapters.
+After compiler 0.4.0 is released and its evidence is frozen, prepare the
+OpenQSE Compiler Working Group Show and Tell using reproducible workloads,
+repeated-run statistics, raw evidence and exact software versions. Separate
+compile-time, circuit-quality and execution-time results. Retain workloads
+where RQM does not outperform the reference. Publication of the presentation
+and ORNL integration are separate from compiler release acceptance.

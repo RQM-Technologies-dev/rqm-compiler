@@ -1,0 +1,90 @@
+{
+  "ibm": {
+    "unchanged_files": [
+      "adaptive.py",
+      "adaptive_closure.py",
+      "backends.py",
+      "circuit.py",
+      "compile.py",
+      "depth.py",
+      "descriptors.py",
+      "io/__init__.py",
+      "io/from_dict.py",
+      "io/to_dict.py",
+      "normalize.py",
+      "ops.py",
+      "passes/__init__.py",
+      "passes/basis.py",
+      "passes/cancel_2q.py",
+      "passes/canonicalize.py",
+      "passes/flatten.py",
+      "passes/lower_u1q_named_1q.py",
+      "passes/merge_u1q.py",
+      "passes/sign_canon.py",
+      "passes/to_u1q.py",
+      "su4_blocks.py",
+      "topology_readout.py",
+      "validate.py",
+      "verification.py"
+    ],
+    "changed_files": [
+      "__init__.py",
+      "direct_readout.py",
+      "observables.py",
+      "planner.py",
+      "regional.py",
+      "report.py",
+      "stable_prototype.py",
+      "structured_observables.py"
+    ],
+    "added_files": [
+      "frontier.py",
+      "local_observable.py"
+    ],
+    "removed_files": []
+  },
+  "braket": {
+    "unchanged_files": [
+      "adaptive.py",
+      "adaptive_closure.py",
+      "backends.py",
+      "circuit.py",
+      "compile.py",
+      "depth.py",
+      "descriptors.py",
+      "io/__init__.py",
+      "io/from_dict.py",
+      "io/to_dict.py",
+      "normalize.py",
+      "ops.py",
+      "passes/__init__.py",
+      "passes/basis.py",
+      "passes/cancel_2q.py",
+      "passes/canonicalize.py",
+      "passes/flatten.py",
+      "passes/lower_u1q_named_1q.py",
+      "passes/merge_u1q.py",
+      "passes/sign_canon.py",
+      "passes/to_u1q.py",
+      "su4_blocks.py",
+      "topology_readout.py",
+      "validate.py",
+      "verification.py"
+    ],
+    "changed_files": [
+      "__init__.py",
+      "direct_readout.py",
+      "observables.py",
+      "planner.py",
+      "regional.py",
+      "report.py",
+      "stable_prototype.py",
+      "structured_observables.py"
+    ],
+    "added_files": [
+      "frontier.py",
+      "local_observable.py"
+    ],
+    "removed_files": []
+  }
+}

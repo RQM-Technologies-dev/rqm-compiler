@@ -1,0 +1,11 @@
+Using Python 3.12.14 environment at: acceptance-038/sdist-env
+Resolved 5 packages in 9ms
+   Building rqm-compiler @ file:///workspace/scratch/6be2d8223fab/acceptance-038/public-artifacts/rqm_compiler-0.3.7.tar.gz
+      Built rqm-compiler @ file:///workspace/scratch/6be2d8223fab/acceptance-038/public-artifacts/rqm_compiler-0.3.7.tar.gz
+Prepared 1 package in 4.74s
+Installed 5 packages in 18ms
+ + numpy==2.5.3
+ + opt-einsum==3.4.0
+ + rqm-compiler==0.3.7 (from file:///workspace/scratch/6be2d8223fab/acceptance-038/public-artifacts/rqm_compiler-0.3.7.tar.gz)
+ + rqm-core==0.2.2
+ + rqm-entanglement==0.2.2

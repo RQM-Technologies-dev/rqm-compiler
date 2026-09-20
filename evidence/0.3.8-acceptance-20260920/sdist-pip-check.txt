@@ -1,0 +1,3 @@
+Using Python 3.12.14 environment at: acceptance-038/sdist-env
+Checked 5 packages in 0.51ms
+All installed packages are compatible
