@@ -16,6 +16,7 @@ import numpy as np
 
 from .circuit import Circuit
 from .su4_blocks import _operation_matrix, _single_qubit_matrix
+from .validate import validate_observable_query
 
 _PAULI = {
     "I": np.asarray([[1, 0], [0, 1]], dtype=np.complex128),
@@ -75,11 +76,7 @@ def expectation_pauli(
     ``pauli`` is indexed by compiler qubit number: character 0 applies to q0.
     Supported symbols are I/X/Y/Z.
     """
-    labels = tuple(pauli) if not isinstance(pauli, str) else tuple(pauli)
-    if len(labels) != circuit.num_qubits:
-        raise ValueError("Pauli string length must equal circuit.num_qubits")
-    if any(label not in _LABELS for label in labels):
-        raise ValueError("Pauli string may contain only I, X, Y, Z")
+    labels = validate_observable_query(circuit, pauli, max_terms=max_terms)
 
     terms: dict[tuple[str, ...], complex] = {labels: 1.0 + 0.0j}
     peak = 1

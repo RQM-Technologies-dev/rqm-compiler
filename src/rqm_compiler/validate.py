@@ -7,7 +7,8 @@ Circuit and operation validation.
 from __future__ import annotations
 
 import math
-from typing import Any
+from numbers import Integral
+from typing import Any, Iterable
 
 from .circuit import Circuit
 from .descriptors import (
@@ -43,6 +44,7 @@ def validate_circuit(circuit: Circuit) -> None:
         CircuitValidationError: If any validation rule is violated.
     """
     n = circuit.num_qubits
+    _validate_qubit_count(n)
     for idx, op in enumerate(circuit.operations):
         _validate_operation(op, num_qubits=n, op_index=idx)
 
@@ -57,6 +59,8 @@ def validate_descriptor(descriptor: dict[str, Any], *, num_qubits: int | None = 
     Raises:
         CircuitValidationError: If any validation rule is violated.
     """
+    if num_qubits is not None:
+        _validate_qubit_count(num_qubits)
     op = Operation.from_descriptor(descriptor)
     _validate_operation(op, num_qubits=num_qubits, op_index=None)
 
@@ -64,6 +68,43 @@ def validate_descriptor(descriptor: dict[str, Any], *, num_qubits: int | None = 
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------
+
+def _validate_qubit_count(value: int) -> None:
+    if isinstance(value, bool) or not isinstance(value, Integral) or value < 1:
+        raise CircuitValidationError("num_qubits must be a positive integer.")
+
+
+def _finite_real(value: Any) -> bool:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
+
+
+def validate_observable_query(
+    circuit: Circuit, pauli: str | Iterable[str], *, max_terms: int,
+) -> tuple[str, ...]:
+    """Validate before routing, including empty circuits and cheap invariants.
+
+    Return materialized symbols so one-shot iterables are consumed only once.
+    Measurement remains valid circuit IR, but is not a unitary-query input.
+    """
+    validate_circuit(circuit)
+    if isinstance(max_terms, bool) or not isinstance(max_terms, Integral) or max_terms < 1:
+        raise ValueError("max_terms must be a finite positive integer.")
+    try:
+        labels = tuple(pauli)
+    except TypeError as exc:
+        raise TypeError("Pauli observable must be a string or iterable of symbols.") from exc
+    if len(labels) != circuit.num_qubits:
+        raise ValueError("Pauli string length must equal circuit.num_qubits")
+    if any(not isinstance(label, str) or label not in ("I", "X", "Y", "Z") for label in labels):
+        raise ValueError("Pauli string may contain only I, X, Y, Z")
+    if any(op.gate == "measure" for op in circuit.operations):
+        raise ValueError("Observable evaluator requires a unitary circuit")
+    return labels
 
 def _validate_operation(
     op: Operation,
@@ -83,6 +124,14 @@ def _validate_operation(
     # Target list must not be empty for non-barrier operations.
     if op.gate != "barrier" and not op.targets:
         raise CircuitValidationError(f"{prefix}: targets list must not be empty.")
+
+    for role, indices in (("target", op.targets), ("control", op.controls)):
+        if any(isinstance(q, bool) or not isinstance(q, Integral) for q in indices):
+            raise CircuitValidationError(f"{prefix}: {role} indices must be integers (not bool).")
+        if any(q < 0 for q in indices):
+            raise CircuitValidationError(f"{prefix}: {role} qubit index is out of range (must be non-negative).")
+        if len(set(indices)) != len(indices):
+            raise CircuitValidationError(f"{prefix}: duplicate {role} qubit indices are not allowed.")
 
     # Validate qubit index bounds when num_qubits is known.
     if num_qubits is not None:
@@ -162,9 +211,9 @@ def _validate_operation(
                     f"{prefix}: gate {op.gate!r} requires param {param_name!r}."
                 )
 
-    if op.gate in {"rxx", "ryy", "rzz"}:
+    if op.gate in {"rx", "ry", "rz", "phaseshift", "rxx", "ryy", "rzz"}:
         angle = op.params.get("angle")
-        if isinstance(angle, bool) or not isinstance(angle, (int, float)) or not math.isfinite(angle):
+        if not _finite_real(angle):
             raise CircuitValidationError(f"{prefix}: angle must be a finite real number.")
 
     if op.gate == "su4q":
@@ -186,7 +235,10 @@ def _validate_operation(
         x = op.params.get("x", 0.0)
         y = op.params.get("y", 0.0)
         z = op.params.get("z", 0.0)
-        norm_sq = w ** 2 + x ** 2 + y ** 2 + z ** 2
+        if not all(_finite_real(value) for value in (w, x, y, z)):
+            raise CircuitValidationError(f"{prefix}: u1q components must be finite real numbers.")
+        norm = math.hypot(w, x, y, z)
+        norm_sq = norm * norm
         if abs(norm_sq - 1.0) > 1e-9:
             raise CircuitValidationError(
                 f"{prefix}: u1q quaternion (w={w}, x={x}, y={y}, z={z}) is not unit "

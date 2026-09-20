@@ -23,6 +23,7 @@ from .compile import optimize_circuit
 from .direct_readout import global_z_star
 from .structured_observables import expectation_structured, ObservableExpansionExceeded
 from .su4_blocks import _operation_matrix
+from .validate import validate_observable_query
 
 _I=np.eye(2,dtype=complex)
 _X=np.array([[0,1],[1,0]],complex)
@@ -86,7 +87,7 @@ def global_z_chain(circuit:Circuit)->StableReadoutResult:
  return StableReadoutResult(complex(np.trace(rho@O)),"chain_boundary_transfer",True,True,n-1)
 
 def expectation_stable(circuit:Circuit, pauli:str|Iterable[str], *, max_terms:int=250_000)->StableReadoutResult:
- labels="".join(pauli) if not isinstance(pauli,str) else pauli
+ labels="".join(validate_observable_query(circuit,pauli,max_terms=max_terms))
  if labels=="Z"*circuit.num_qubits:
   direct=global_z_star(circuit)
   if direct.available:

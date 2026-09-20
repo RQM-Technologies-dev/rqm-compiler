@@ -9,6 +9,7 @@ currently published 0.2.x package until the next package release lands.
 from __future__ import annotations
 
 import math
+from functools import lru_cache
 from typing import Any
 
 from ..circuit import Circuit
@@ -33,18 +34,33 @@ def _finite_angle(op: Operation) -> float | None:
     return angle if math.isfinite(angle) else None
 
 
-def _compose_coordinates(coords: tuple[float, float, float], gate: str, angle: float) -> tuple[float, float, float]:
-    """Compose through rqm-entanglement when its relational API is available."""
+@lru_cache(maxsize=1)
+def _relational_api() -> tuple[Any, Any, Any] | None:
+    """Resolve optional symbols once, including absence in older installations.
+
+    Resolution is lazy to avoid import cycles. Dependency upgrades take effect
+    in a new process; failed compositions do not change the cached capability.
+    """
     try:
         from rqm_entanglement import AxisHinge, CartanRelation, compose_relations
-
-        relation: Any = CartanRelation(*coords)
-        merged = compose_relations(relation, AxisHinge(gate[1:], angle))
-        cartan = merged.promote() if isinstance(merged, AxisHinge) else merged
-        if isinstance(cartan, CartanRelation):
-            return cartan.c1, cartan.c2, cartan.c3
     except (ImportError, AttributeError):
-        pass
+        return None
+    return AxisHinge, CartanRelation, compose_relations
+
+
+def _compose_coordinates(coords: tuple[float, float, float], gate: str, angle: float) -> tuple[float, float, float]:
+    """Compose through rqm-entanglement when its relational API is available."""
+    api = _relational_api()
+    if api is not None:
+        AxisHinge, CartanRelation, compose_relations = api
+        try:
+            relation: Any = CartanRelation(*coords)
+            merged = compose_relations(relation, AxisHinge(gate[1:], angle))
+            cartan = merged.promote() if isinstance(merged, AxisHinge) else merged
+            if isinstance(cartan, CartanRelation):
+                return cartan.c1, cartan.c2, cartan.c3
+        except (ImportError, AttributeError):
+            pass
     values = list(coords)
     values[_AXIS_INDEX[gate]] += angle
     return values[0], values[1], values[2]

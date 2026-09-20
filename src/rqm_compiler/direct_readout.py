@@ -54,18 +54,26 @@ def _leaf_transfer(rho, psi, gates, *, insert_z):
  return np.einsum("abad->bd",x)
 
 def global_z_star(circuit:Circuit, hub:int=0)->DirectReadout:
- # Recognize: arbitrary initial/final 1Q gates plus disjoint leaf episodes;
+ # Recognize: initial 1Q gates, uninterrupted leaf episodes, then final 1Q gates;
  # each non-hub qubit participates in exactly one contiguous hub-leaf 2Q block.
  n=circuit.num_qubits
  if n<2:return DirectReadout(0j,False,0,"star_transfer","n<2")
  # For the benchmark family, collect all 1Q gates separately and 2Q episodes
  # per leaf.  Reject leaf-leaf interactions and repeated noncontiguous leaves.
  pre={q:[] for q in range(n)};post={q:[] for q in range(n)};blocks=[];seen=set();current=None
- started=False
+ started=False;post_started=False
  for op in circuit.operations:
+  # A barrier is scheduling metadata, not a unitary interaction. Keep it in
+  # the circuit IR, but do not send it to the local gate-matrix builder.
+  if op.gate=="barrier":continue
   touched=sorted(set(op.targets)|set(op.controls))
   if len(touched)==1:
+   if started:post_started=True
    (post if started else pre)[touched[0]].append(op);continue
+  # Z-preserving gates may be dropped only at the end, not moved across a
+  # later interaction. Reject even potentially commuting placements unless
+  # proven by this recognizer; the public planner retains its exact fallback.
+  if post_started:return DirectReadout(0j,False,len(blocks),"star_transfer","interleaved single-qubit gate")
   if len(touched)!=2 or hub not in touched:return DirectReadout(0j,False,0,"star_transfer","non-star interaction")
   leaf=touched[0] if touched[1]==hub else touched[1];started=True
   if current is None or current[0]!=leaf:

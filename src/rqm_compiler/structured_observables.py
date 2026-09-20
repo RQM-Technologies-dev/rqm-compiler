@@ -12,6 +12,7 @@ from typing import Iterable
 import cmath,math
 from .circuit import Circuit
 from .observables import expectation_pauli,ObservableExpansionExceeded
+from .validate import validate_observable_query
 
 @dataclass(frozen=True)
 class StructuredObservableResult:
@@ -77,8 +78,7 @@ def _cx_label(p,c,t):
  return acc,sign
 
 def expectation_structured(circuit:Circuit,pauli:str|Iterable[str],*,cutoff:float=1e-13,max_terms:int=250000):
- labels=tuple(pauli)
- if len(labels)!=circuit.num_qubits:raise ValueError("Pauli string length must equal circuit.num_qubits")
+ labels=validate_observable_query(circuit,pauli,max_terms=max_terms)
  terms={labels:1+0j};peak=1;processed=0;promotions=0;closed2q=0
  for op in reversed(circuit.operations):
   if op.gate=="barrier":continue
