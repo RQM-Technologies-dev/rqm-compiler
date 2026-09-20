@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.8](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.3.7...v0.3.8) (2026-09-20)
+
+
+### Documentation
+
+* complete frozen compiler release acceptance ([#34](https://github.com/RQM-Technologies-dev/rqm-compiler/issues/34)) ([8e7f540](https://github.com/RQM-Technologies-dev/rqm-compiler/commit/8e7f54012617cabbcf6b78f30934398e6808589d))
+* record verified 0.3.7 publication handoff ([#32](https://github.com/RQM-Technologies-dev/rqm-compiler/issues/32)) ([830d495](https://github.com/RQM-Technologies-dev/rqm-compiler/commit/830d4957194fac7d5ab92a152b6de6de409287f6))
+
 ## [0.3.7](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.3.0...v0.3.7) (2026-09-20)
 
 
