@@ -1,0 +1,18 @@
+[
+  {
+    "package": "rqm-compiler",
+    "wheel": "rqm_compiler-0.3.7-py3-none-any.whl",
+    "all_payload_files_equal": true,
+    "file_count": 39,
+    "direct_sha256": "48c723c48979c21666a8a93ed81ece4a75d304e73aa7283e0395c4b408c79726",
+    "rebuilt_sha256": "3d9e769b5a3052265a5a4b35b28b6ef64e8d0f5bf06f865eb30d0a6e5ce6759d"
+  },
+  {
+    "package": "rqm-entanglement",
+    "wheel": "rqm_entanglement-0.2.2-py3-none-any.whl",
+    "all_payload_files_equal": true,
+    "file_count": 21,
+    "direct_sha256": "84dc5100436b939462fb7e114fb35e691d2b05bd28e6150e7312b602fec61e90",
+    "rebuilt_sha256": "2aa2c5638f069646a8ee4375e43080e423f185813635b4d53f22141d7f53b6aa"
+  }
+]

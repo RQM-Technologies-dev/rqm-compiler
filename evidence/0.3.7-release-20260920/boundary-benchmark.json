@@ -1,0 +1,6951 @@
+{
+  "certification_manifest": {
+    "status": "passed",
+    "repositories": {
+      "rqm-core": {
+        "commit": "6d1a06dfa7d40847df3d0fc60f635c78365abec8",
+        "tree": "317e478a1e3cd98aab84058a6e1f2ad9d66a26b7"
+      },
+      "rqm-circuits": {
+        "commit": "c8f970f222a10cc95a044947c522ec574bae9dab",
+        "tree": "b104ca8f5ab6d3ff59414ad21d38386e68d0828d"
+      },
+      "rqm-entanglement": {
+        "commit": "60d30b3c8e6937f442f9df487cfdf152ea80e562",
+        "tree": "b3c3e8703b55fc429bb406f2d5d9faefd17af761"
+      },
+      "rqm-compiler": {
+        "commit": "dbfe8ee4af4cbbbf28de4adc5db045a371706c59",
+        "tree": "b6f1ff4517d3758e57ec8e056f1c155eae6d4fc9"
+      },
+      "rqm-qiskit": {
+        "commit": "a472ef44cf235c28e2bff29430573c6abdf66d0f",
+        "tree": "2b54d85edf3cdd521dc91185411720fc41c1964b"
+      },
+      "rqm-optimize": {
+        "commit": "be12b2c9e16477a81f9af0a549189aa61299e7d3",
+        "tree": "cce4e582d1b5befe332de6ab4a8281cd6bc0eaaa"
+      },
+      "rqm-braket": {
+        "commit": "ee15b2c761f9cd48bf5b81c54a715bea8c4768f6",
+        "tree": "bba6f45f520921e5a693099e837d1132f6b800f8"
+      },
+      "openqse-rqm-adapter": {
+        "commit": "2f73303ece25c26839254135b58002b995395841",
+        "tree": "cc6e396bff8fabc99660fe70703ed2ffeeeebced"
+      }
+    },
+    "wheels": {
+      "rqm_braket-0.2.3-py3-none-any.whl": "d6a9d7f8fe2688295e8c9b414aed4c0df25e567f118b46d271d3deb4cd173220",
+      "rqm_circuits-0.2.1-py3-none-any.whl": "9671c00beb01f8aba57f84ef0931933ddfd088b1fc58cdd8560a264be812ccae",
+      "rqm_compiler-0.3.7-py3-none-any.whl": "48c723c48979c21666a8a93ed81ece4a75d304e73aa7283e0395c4b408c79726",
+      "rqm_core-0.2.2-py3-none-any.whl": "54aa5fa8ead01b0cdd2a88aa6999142f6b1e87e3ff4ab365242edbad2526715b",
+      "rqm_entanglement-0.2.2-py3-none-any.whl": "84dc5100436b939462fb7e114fb35e691d2b05bd28e6150e7312b602fec61e90",
+      "rqm_openqse_adapter-0.1.1-py3-none-any.whl": "553a56d3da9c711c0540b1ef66e9a87274b78a65dd430cd9ddc89b0034fd3452",
+      "rqm_optimize-0.1.3-py3-none-any.whl": "2f41c3d718b4520d19c7ca4d7307e3fb7100cd4231b3d7617573e8000e05af46",
+      "rqm_qiskit-0.4.1-py3-none-any.whl": "ef08f7541c4004bc24200921171d2efde0ab92fb7b1c9ed12c83eef2d2c831ac"
+    },
+    "hardware_execution": false,
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "installed_modules": {
+      "rqm_core": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_core/__init__.py",
+      "rqm_circuits": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_circuits/__init__.py",
+      "rqm_entanglement": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_entanglement/__init__.py",
+      "rqm_compiler": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_compiler/__init__.py",
+      "rqm_qiskit": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_qiskit/__init__.py",
+      "rqm_optimize": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_optimize/__init__.py",
+      "rqm_braket": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_braket/__init__.py",
+      "rqm_openqse_adapter": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_openqse_adapter/__init__.py"
+    },
+    "test_counts": {
+      "rqm-core": {
+        "tests": 448,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 448
+      },
+      "rqm-circuits": {
+        "tests": 262,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 10,
+        "passed": 252
+      },
+      "rqm-entanglement": {
+        "tests": 162,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1,
+        "passed": 161
+      },
+      "rqm-compiler": {
+        "tests": 930,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 930
+      },
+      "rqm-qiskit": {
+        "tests": 568,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 568
+      },
+      "rqm-optimize": {
+        "tests": 101,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 101
+      },
+      "rqm-braket": {
+        "tests": 417,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 417
+      },
+      "openqse-rqm-adapter": {
+        "tests": 64,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 64
+      }
+    }
+  },
+  "repeats": 5,
+  "seed": 7300,
+  "benchmark_sha256": "82b7e532a45c30b31500e0b9e6aca5b0019b07afee78311926fc23743dea8cb3",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "thread_settings": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1"
+  },
+  "timing_unit": "nanoseconds",
+  "tolerance": 1e-09,
+  "memory_measure": "tracemalloc traced allocations during query only; not process RSS",
+  "intermediate_note": "Largest individual array/tensor entries or retained Pauli terms, not total memory. Star/chain bound is 16 complex entries; circuit storage remains O(n). Pauli cap is tested after gate expansion and can overshoot. Floating point evaluators prune coefficients below 1e-13; exact denotes the algebraic route.",
+  "baseline": "Qiskit level-3 compilation plus single-thread Aer statevector native expectation; no full statevector export",
+  "rows": [
+    {
+      "family": "star",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9816087531805022,
+      "answer_imag": 0.0,
+      "reference": 0.9816087531805019,
+      "abs_error": 3.3306690738754696e-16,
+      "route": "direct_star_relational",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 13093,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5178
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 370
+        }
+      },
+      "rqm_compile_ns": [
+        2089626,
+        2881147,
+        2223146,
+        2048694,
+        1914902
+      ],
+      "rqm_query_ns": [
+        345470,
+        285379,
+        327733,
+        269055,
+        300733
+      ],
+      "qiskit_compile_ns": [
+        10889230,
+        4229596,
+        4098369,
+        4212281,
+        4512312
+      ],
+      "aer_query_ns": [
+        955678,
+        882358,
+        826063,
+        881016,
+        827606
+      ],
+      "end_to_end_ratio": 2.1380102319358723
+    },
+    {
+      "family": "star",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9816087531805022,
+      "answer_imag": 0.0,
+      "reference": 0.9816087531805019,
+      "abs_error": 3.3306690738754696e-16,
+      "route": "direct_star_relational",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 13093,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5178
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 370
+        }
+      },
+      "rqm_compile_ns": [
+        2089626,
+        2881147,
+        2223146,
+        2048694,
+        1914902
+      ],
+      "rqm_query_ns": [
+        323677,
+        275916,
+        284659,
+        267392,
+        257477
+      ],
+      "qiskit_compile_ns": [
+        10889230,
+        4229596,
+        4098369,
+        4212281,
+        4512312
+      ],
+      "aer_query_ns": [
+        955678,
+        882358,
+        826063,
+        881016,
+        827606
+      ],
+      "end_to_end_ratio": 2.160440186646443
+    },
+    {
+      "family": "star",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 4.561365726937503e-17,
+      "abs_error": 4.561365726937503e-17,
+      "route": "star_product_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 12981,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5178
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 370
+        }
+      },
+      "rqm_compile_ns": [
+        2089626,
+        2881147,
+        2223146,
+        2048694,
+        1914902
+      ],
+      "rqm_query_ns": [
+        285350,
+        311058,
+        261895,
+        251859,
+        246441
+      ],
+      "qiskit_compile_ns": [
+        10889230,
+        4229596,
+        4098369,
+        4212281,
+        4512312
+      ],
+      "aer_query_ns": [
+        1237362,
+        838091,
+        883389,
+        810650,
+        862959
+      ],
+      "end_to_end_ratio": 2.165643002975521
+    },
+    {
+      "family": "star",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 4.561365726937503e-17,
+      "abs_error": 4.561365726937503e-17,
+      "route": "star_product_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 12981,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5178
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 370
+        }
+      },
+      "rqm_compile_ns": [
+        2089626,
+        2881147,
+        2223146,
+        2048694,
+        1914902
+      ],
+      "rqm_query_ns": [
+        276776,
+        306311,
+        256176,
+        237888,
+        239661
+      ],
+      "qiskit_compile_ns": [
+        10889230,
+        4229596,
+        4098369,
+        4212281,
+        4512312
+      ],
+      "aer_query_ns": [
+        1237362,
+        838091,
+        883389,
+        810650,
+        862959
+      ],
+      "end_to_end_ratio": 2.170922780354011
+    },
+    {
+      "family": "star",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9602552899516308,
+      "answer_imag": 0.0,
+      "reference": 0.9602552899516307,
+      "abs_error": 1.1102230246251565e-16,
+      "route": "direct_star_relational",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 19433,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5418
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 441
+        }
+      },
+      "rqm_compile_ns": [
+        2871632,
+        2472192,
+        2436507,
+        2435876,
+        2422927
+      ],
+      "rqm_query_ns": [
+        556108,
+        601776,
+        535316,
+        552562,
+        556258
+      ],
+      "qiskit_compile_ns": [
+        4945644,
+        5022930,
+        5282531,
+        5462001,
+        6456838
+      ],
+      "aer_query_ns": [
+        1565026,
+        1786118,
+        1444104,
+        1621010,
+        1518035
+      ],
+      "end_to_end_ratio": 2.288151666686159
+    },
+    {
+      "family": "star",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9602552899516308,
+      "answer_imag": 0.0,
+      "reference": 0.9602552899516307,
+      "abs_error": 1.1102230246251565e-16,
+      "route": "direct_star_relational",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 19433,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5418
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 441
+        }
+      },
+      "rqm_compile_ns": [
+        2871632,
+        2472192,
+        2436507,
+        2435876,
+        2422927
+      ],
+      "rqm_query_ns": [
+        585551,
+        582086,
+        564119,
+        523538,
+        651711
+      ],
+      "qiskit_compile_ns": [
+        4945644,
+        5022930,
+        5282531,
+        5462001,
+        6456838
+      ],
+      "aer_query_ns": [
+        1565026,
+        1786118,
+        1444104,
+        1621010,
+        1518035
+      ],
+      "end_to_end_ratio": 2.268459842052241
+    },
+    {
+      "family": "star",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -9.503630217849662e-17,
+      "abs_error": 9.503630217849662e-17,
+      "route": "star_product_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 19321,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5418
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 441
+        }
+      },
+      "rqm_compile_ns": [
+        2871632,
+        2472192,
+        2436507,
+        2435876,
+        2422927
+      ],
+      "rqm_query_ns": [
+        567814,
+        512151,
+        609027,
+        590710,
+        512121
+      ],
+      "qiskit_compile_ns": [
+        4945644,
+        5022930,
+        5282531,
+        5462001,
+        6456838
+      ],
+      "aer_query_ns": [
+        1431565,
+        1408810,
+        1393077,
+        1354149,
+        1365415
+      ],
+      "end_to_end_ratio": 2.222002242769664
+    },
+    {
+      "family": "star",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -9.503630217849662e-17,
+      "abs_error": 9.503630217849662e-17,
+      "route": "star_product_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 19321,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5418
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 441
+        }
+      },
+      "rqm_compile_ns": [
+        2871632,
+        2472192,
+        2436507,
+        2435876,
+        2422927
+      ],
+      "rqm_query_ns": [
+        530338,
+        553072,
+        679282,
+        565370,
+        504149
+      ],
+      "qiskit_compile_ns": [
+        4945644,
+        5022930,
+        5282531,
+        5462001,
+        6456838
+      ],
+      "aer_query_ns": [
+        1431565,
+        1408810,
+        1393077,
+        1354149,
+        1365415
+      ],
+      "end_to_end_ratio": 2.2329592226865387
+    },
+    {
+      "family": "star",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9358731685156886,
+      "answer_imag": 0.0,
+      "reference": 0.9358731685156859,
+      "abs_error": 2.6645352591003757e-15,
+      "route": "direct_star_relational",
+      "reason": "",
+      "query_work_units": 11,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 25845,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5188
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 380
+        }
+      },
+      "rqm_compile_ns": [
+        3026045,
+        3219816,
+        3120757,
+        2826965,
+        2935638
+      ],
+      "rqm_query_ns": [
+        869189,
+        829489,
+        853484,
+        830880,
+        846494
+      ],
+      "qiskit_compile_ns": [
+        6187949,
+        7474070,
+        5542342,
+        5230954,
+        5019255
+      ],
+      "aer_query_ns": [
+        3455261,
+        4611151,
+        3829243,
+        4187333,
+        4049445
+      ],
+      "end_to_end_ratio": 2.4768729249724792
+    },
+    {
+      "family": "star",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9358731685156886,
+      "answer_imag": 0.0,
+      "reference": 0.9358731685156859,
+      "abs_error": 2.6645352591003757e-15,
+      "route": "direct_star_relational",
+      "reason": "",
+      "query_work_units": 11,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 25845,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5188
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 380
+        }
+      },
+      "rqm_compile_ns": [
+        3026045,
+        3219816,
+        3120757,
+        2826965,
+        2935638
+      ],
+      "rqm_query_ns": [
+        908247,
+        848176,
+        814436,
+        812532,
+        910681
+      ],
+      "qiskit_compile_ns": [
+        6187949,
+        7474070,
+        5542342,
+        5230954,
+        5019255
+      ],
+      "aer_query_ns": [
+        3455261,
+        4611151,
+        3829243,
+        4187333,
+        4049445
+      ],
+      "end_to_end_ratio": 2.475797586146996
+    },
+    {
+      "family": "star",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 7.257602807698235e-17,
+      "abs_error": 7.257602807698235e-17,
+      "route": "star_product_transfer",
+      "reason": "",
+      "query_work_units": 11,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 25733,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5188
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 380
+        }
+      },
+      "rqm_compile_ns": [
+        3026045,
+        3219816,
+        3120757,
+        2826965,
+        2935638
+      ],
+      "rqm_query_ns": [
+        849598,
+        788396,
+        815828,
+        773765,
+        778722
+      ],
+      "qiskit_compile_ns": [
+        6187949,
+        7474070,
+        5542342,
+        5230954,
+        5019255
+      ],
+      "aer_query_ns": [
+        3741992,
+        3582332,
+        3367709,
+        3462411,
+        3440899
+      ],
+      "end_to_end_ratio": 2.3607005587450427
+    },
+    {
+      "family": "star",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 7.257602807698235e-17,
+      "abs_error": 7.257602807698235e-17,
+      "route": "star_product_transfer",
+      "reason": "",
+      "query_work_units": 11,
+      "query_work_unit": "leaf_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 25733,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5188
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 380
+        }
+      },
+      "rqm_compile_ns": [
+        3026045,
+        3219816,
+        3120757,
+        2826965,
+        2935638
+      ],
+      "rqm_query_ns": [
+        986976,
+        864351,
+        796840,
+        776649,
+        753284
+      ],
+      "qiskit_compile_ns": [
+        6187949,
+        7474070,
+        5542342,
+        5230954,
+        5019255
+      ],
+      "aer_query_ns": [
+        3741992,
+        3582332,
+        3367709,
+        3462411,
+        3440899
+      ],
+      "end_to_end_ratio": 2.355486236180267
+    },
+    {
+      "family": "chain",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9725448189045677,
+      "answer_imag": 0.0,
+      "reference": 0.9725448189045679,
+      "abs_error": 2.220446049250313e-16,
+      "route": "chain_boundary_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "edge_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 10589,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 41412
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 390
+        }
+      },
+      "rqm_compile_ns": [
+        1965218,
+        1893480,
+        1956345,
+        1915403,
+        2045229
+      ],
+      "rqm_query_ns": [
+        261464,
+        239851,
+        256827,
+        237938,
+        262485
+      ],
+      "qiskit_compile_ns": [
+        4651151,
+        4279661,
+        4187122,
+        4536999,
+        31508445
+      ],
+      "aer_query_ns": [
+        1133225,
+        862639,
+        1242821,
+        1078814,
+        1172125
+      ],
+      "end_to_end_ratio": 2.562034943510943
+    },
+    {
+      "family": "chain",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9725448189045677,
+      "answer_imag": 0.0,
+      "reference": 0.9725448189045679,
+      "abs_error": 2.220446049250313e-16,
+      "route": "chain_boundary_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "edge_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 10589,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 41412
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 390
+        }
+      },
+      "rqm_compile_ns": [
+        1965218,
+        1893480,
+        1956345,
+        1915403,
+        2045229
+      ],
+      "rqm_query_ns": [
+        320953,
+        276937,
+        237878,
+        362946,
+        252229
+      ],
+      "qiskit_compile_ns": [
+        4651151,
+        4279661,
+        4187122,
+        4536999,
+        31508445
+      ],
+      "aer_query_ns": [
+        1133225,
+        862639,
+        1242821,
+        1078814,
+        1172125
+      ],
+      "end_to_end_ratio": 2.538964626948142
+    },
+    {
+      "family": "chain",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -3.794871716332796e-16,
+      "abs_error": 3.794871716332796e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 10990,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 41412
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 390
+        }
+      },
+      "rqm_compile_ns": [
+        1965218,
+        1893480,
+        1956345,
+        1915403,
+        2045229
+      ],
+      "rqm_query_ns": [
+        266761,
+        290577,
+        253131,
+        236576,
+        211057
+      ],
+      "qiskit_compile_ns": [
+        4651151,
+        4279661,
+        4187122,
+        4536999,
+        31508445
+      ],
+      "aer_query_ns": [
+        847125,
+        793384,
+        805722,
+        918142,
+        834176
+      ],
+      "end_to_end_ratio": 2.4309723210390155
+    },
+    {
+      "family": "chain",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -3.794871716332796e-16,
+      "abs_error": 3.794871716332796e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 25,
+      "query_tracemalloc_peak_bytes": 10926,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 41412
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 390
+        }
+      },
+      "rqm_compile_ns": [
+        1965218,
+        1893480,
+        1956345,
+        1915403,
+        2045229
+      ],
+      "rqm_query_ns": [
+        237748,
+        245469,
+        261643,
+        210286,
+        197427
+      ],
+      "qiskit_compile_ns": [
+        4651151,
+        4279661,
+        4187122,
+        4536999,
+        31508445
+      ],
+      "aer_query_ns": [
+        847125,
+        793384,
+        805722,
+        918142,
+        834176
+      ],
+      "end_to_end_ratio": 2.4480161050602685
+    },
+    {
+      "family": "chain",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9315168169305214,
+      "answer_imag": 0.0,
+      "reference": 0.9315168169305219,
+      "abs_error": 5.551115123125783e-16,
+      "route": "chain_boundary_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "edge_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 12673,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83115
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 411
+        }
+      },
+      "rqm_compile_ns": [
+        2411560,
+        2655518,
+        2437419,
+        2445361,
+        2673885
+      ],
+      "rqm_query_ns": [
+        536798,
+        523037,
+        505490,
+        489256,
+        981056
+      ],
+      "qiskit_compile_ns": [
+        5048538,
+        4600766,
+        4782889,
+        5264564,
+        5086055
+      ],
+      "aer_query_ns": [
+        1562923,
+        1467800,
+        1459426,
+        1493888,
+        1442962
+      ],
+      "end_to_end_ratio": 2.1952372963463795
+    },
+    {
+      "family": "chain",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9315168169305214,
+      "answer_imag": 0.0,
+      "reference": 0.9315168169305219,
+      "abs_error": 5.551115123125783e-16,
+      "route": "chain_boundary_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "edge_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 12673,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83115
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 411
+        }
+      },
+      "rqm_compile_ns": [
+        2411560,
+        2655518,
+        2437419,
+        2445361,
+        2673885
+      ],
+      "rqm_query_ns": [
+        512852,
+        611350,
+        546422,
+        482816,
+        483758
+      ],
+      "qiskit_compile_ns": [
+        5048538,
+        4600766,
+        4782889,
+        5264564,
+        5086055
+      ],
+      "aer_query_ns": [
+        1562923,
+        1467800,
+        1459426,
+        1493888,
+        1442962
+      ],
+      "end_to_end_ratio": 2.2027954038468494
+    },
+    {
+      "family": "chain",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -4.899717869719955e-16,
+      "abs_error": 4.899717869719955e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 12794,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83115
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 411
+        }
+      },
+      "rqm_compile_ns": [
+        2411560,
+        2655518,
+        2437419,
+        2445361,
+        2673885
+      ],
+      "rqm_query_ns": [
+        429696,
+        394824,
+        374353,
+        373813,
+        338039
+      ],
+      "qiskit_compile_ns": [
+        5048538,
+        4600766,
+        4782889,
+        5264564,
+        5086055
+      ],
+      "aer_query_ns": [
+        1975584,
+        1508511,
+        1572998,
+        1442641,
+        1412255
+      ],
+      "end_to_end_ratio": 2.3254305223863128
+    },
+    {
+      "family": "chain",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -4.899717869719955e-16,
+      "abs_error": 4.899717869719955e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 53,
+      "query_tracemalloc_peak_bytes": 12794,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83115
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 411
+        }
+      },
+      "rqm_compile_ns": [
+        2411560,
+        2655518,
+        2437419,
+        2445361,
+        2673885
+      ],
+      "rqm_query_ns": [
+        369055,
+        461044,
+        473893,
+        405441,
+        382005
+      ],
+      "qiskit_compile_ns": [
+        5048538,
+        4600766,
+        4782889,
+        5264564,
+        5086055
+      ],
+      "aer_query_ns": [
+        1975584,
+        1508511,
+        1572998,
+        1442641,
+        1412255
+      ],
+      "end_to_end_ratio": 2.3000716991218613
+    },
+    {
+      "family": "chain",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.885661543492527,
+      "answer_imag": 0.0,
+      "reference": 0.8856615434925269,
+      "abs_error": 1.1102230246251565e-16,
+      "route": "chain_boundary_transfer",
+      "reason": "",
+      "query_work_units": 11,
+      "query_work_unit": "edge_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 17320,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 177607
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 420
+        }
+      },
+      "rqm_compile_ns": [
+        3534700,
+        3070612,
+        3083611,
+        3160316,
+        4296867
+      ],
+      "rqm_query_ns": [
+        769268,
+        744110,
+        733825,
+        942959,
+        817801
+      ],
+      "qiskit_compile_ns": [
+        5790435,
+        5538196,
+        5962455,
+        5398065,
+        4568887
+      ],
+      "aer_query_ns": [
+        3683684,
+        3539848,
+        3548130,
+        3682462,
+        3646970
+      ],
+      "end_to_end_ratio": 2.3374397900642916
+    },
+    {
+      "family": "chain",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.885661543492527,
+      "answer_imag": 0.0,
+      "reference": 0.8856615434925269,
+      "abs_error": 1.1102230246251565e-16,
+      "route": "chain_boundary_transfer",
+      "reason": "",
+      "query_work_units": 11,
+      "query_work_unit": "edge_transfers",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 17320,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 177607
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 420
+        }
+      },
+      "rqm_compile_ns": [
+        3534700,
+        3070612,
+        3083611,
+        3160316,
+        4296867
+      ],
+      "rqm_query_ns": [
+        962930,
+        754195,
+        1885849,
+        794606,
+        1069820
+      ],
+      "qiskit_compile_ns": [
+        5790435,
+        5538196,
+        5962455,
+        5398065,
+        4568887
+      ],
+      "aer_query_ns": [
+        3683684,
+        3539848,
+        3548130,
+        3682462,
+        3646970
+      ],
+      "end_to_end_ratio": 2.2276541346308223
+    },
+    {
+      "family": "chain",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -3.483930907205324e-16,
+      "abs_error": 3.483930907205324e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 19085,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 177607
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 420
+        }
+      },
+      "rqm_compile_ns": [
+        3534700,
+        3070612,
+        3083611,
+        3160316,
+        4296867
+      ],
+      "rqm_query_ns": [
+        532211,
+        542777,
+        483537,
+        504709,
+        528706
+      ],
+      "qiskit_compile_ns": [
+        5790435,
+        5538196,
+        5962455,
+        5398065,
+        4568887
+      ],
+      "aer_query_ns": [
+        3937386,
+        3838798,
+        3712328,
+        3709023,
+        3647780
+      ],
+      "end_to_end_ratio": 2.507581684251273
+    },
+    {
+      "family": "chain",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -3.483930907205324e-16,
+      "abs_error": 3.483930907205324e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 3,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 81,
+      "query_tracemalloc_peak_bytes": 19085,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 177607
+        },
+        "chain": {
+          "rejected": false,
+          "rejection_ns": null
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 420
+        }
+      },
+      "rqm_compile_ns": [
+        3534700,
+        3070612,
+        3083611,
+        3160316,
+        4296867
+      ],
+      "rqm_query_ns": [
+        546152,
+        524509,
+        516027,
+        503328,
+        594735
+      ],
+      "qiskit_compile_ns": [
+        5790435,
+        5538196,
+        5962455,
+        5398065,
+        4568887
+      ],
+      "aer_query_ns": [
+        3937386,
+        3838798,
+        3712328,
+        3709023,
+        3647780
+      ],
+      "end_to_end_ratio": 2.51043780912255
+    },
+    {
+      "family": "hardware_2",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.19878437967636636,
+      "answer_imag": 1.3877787807814457e-17,
+      "reference": -0.19878437967636664,
+      "abs_error": 2.779024842816778e-16,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=2",
+      "query_work_units": 16,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 16,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 50,
+      "query_tracemalloc_peak_bytes": 99112,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 80261
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        2350127,
+        2274613,
+        2572923,
+        2436638,
+        2191709
+      ],
+      "rqm_query_ns": [
+        2980285,
+        2964842,
+        2905173,
+        2935729,
+        3084784
+      ],
+      "qiskit_compile_ns": [
+        5808363,
+        5386047,
+        4953326,
+        5275180,
+        4829409
+      ],
+      "aer_query_ns": [
+        1105484,
+        872603,
+        1133416,
+        938242,
+        1161899
+      ],
+      "end_to_end_ratio": 1.2005082249774175
+    },
+    {
+      "family": "hardware_2",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.19878437967636636,
+      "answer_imag": 1.3877787807814457e-17,
+      "reference": -0.19878437967636664,
+      "abs_error": 2.779024842816778e-16,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=2",
+      "query_work_units": 16,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 16,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 50,
+      "query_tracemalloc_peak_bytes": 99112,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 80261
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        2350127,
+        2274613,
+        2572923,
+        2436638,
+        2191709
+      ],
+      "rqm_query_ns": [
+        2977031,
+        3224904,
+        3082180,
+        3144253,
+        2878483
+      ],
+      "qiskit_compile_ns": [
+        5808363,
+        5386047,
+        4953326,
+        5275180,
+        4829409
+      ],
+      "aer_query_ns": [
+        1105484,
+        872603,
+        1133416,
+        938242,
+        1161899
+      ],
+      "end_to_end_ratio": 1.1745772100140879
+    },
+    {
+      "family": "hardware_2",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 1.0928757898653885e-16,
+      "abs_error": 1.0928757898653885e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 50,
+      "query_tracemalloc_peak_bytes": 14486,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 80261
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        2350127,
+        2274613,
+        2572923,
+        2436638,
+        2191709
+      ],
+      "rqm_query_ns": [
+        813364,
+        809719,
+        791190,
+        809939,
+        730339
+      ],
+      "qiskit_compile_ns": [
+        5808363,
+        5386047,
+        4953326,
+        5275180,
+        4829409
+      ],
+      "aer_query_ns": [
+        1061778,
+        948838,
+        975639,
+        879364,
+        1057582
+      ],
+      "end_to_end_ratio": 1.9782036846099462
+    },
+    {
+      "family": "hardware_2",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 1.0928757898653885e-16,
+      "abs_error": 1.0928757898653885e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 50,
+      "query_tracemalloc_peak_bytes": 14486,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 80261
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        2350127,
+        2274613,
+        2572923,
+        2436638,
+        2191709
+      ],
+      "rqm_query_ns": [
+        800035,
+        802097,
+        763129,
+        798452,
+        831912
+      ],
+      "qiskit_compile_ns": [
+        5808363,
+        5386047,
+        4953326,
+        5275180,
+        4829409
+      ],
+      "aer_query_ns": [
+        1061778,
+        948838,
+        975639,
+        879364,
+        1057582
+      ],
+      "end_to_end_ratio": 1.9842849351874603
+    },
+    {
+      "family": "hardware_2",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.006573116822825009,
+      "answer_imag": 6.288372600415926e-18,
+      "reference": -0.00657311682282507,
+      "abs_error": 6.104010086934945e-17,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=2",
+      "query_work_units": 32,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 32,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 106,
+      "query_tracemalloc_peak_bytes": 241256,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 151157
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2073
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        6897893,
+        5025384,
+        4098689,
+        4052670,
+        4028995
+      ],
+      "rqm_query_ns": [
+        7396453,
+        7065154,
+        6945534,
+        6879345,
+        88585125
+      ],
+      "qiskit_compile_ns": [
+        5276511,
+        4810991,
+        4461535,
+        4854146,
+        4605943
+      ],
+      "aer_query_ns": [
+        1619567,
+        1501120,
+        1488912,
+        1452647,
+        1375741
+      ],
+      "end_to_end_ratio": 0.5643131133248649
+    },
+    {
+      "family": "hardware_2",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.006573116822825009,
+      "answer_imag": 6.288372600415926e-18,
+      "reference": -0.00657311682282507,
+      "abs_error": 6.104010086934945e-17,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=2",
+      "query_work_units": 32,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 32,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 106,
+      "query_tracemalloc_peak_bytes": 219984,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 151157
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2073
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        6897893,
+        5025384,
+        4098689,
+        4052670,
+        4028995
+      ],
+      "rqm_query_ns": [
+        10395416,
+        8849901,
+        9630515,
+        10664832,
+        7950667
+      ],
+      "qiskit_compile_ns": [
+        5276511,
+        4810991,
+        4461535,
+        4854146,
+        4605943
+      ],
+      "aer_query_ns": [
+        1619567,
+        1501120,
+        1488912,
+        1452647,
+        1375741
+      ],
+      "end_to_end_ratio": 0.4588687734554749
+    },
+    {
+      "family": "hardware_2",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 2.6468085535802377e-16,
+      "abs_error": 2.6468085535802377e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 106,
+      "query_tracemalloc_peak_bytes": 24131,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 151157
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2073
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        6897893,
+        5025384,
+        4098689,
+        4052670,
+        4028995
+      ],
+      "rqm_query_ns": [
+        744230,
+        1080627,
+        881387,
+        887886,
+        749398
+      ],
+      "qiskit_compile_ns": [
+        5276511,
+        4810991,
+        4461535,
+        4854146,
+        4605943
+      ],
+      "aer_query_ns": [
+        1642081,
+        1792218,
+        1474850,
+        1692147,
+        1424639
+      ],
+      "end_to_end_ratio": 1.2957778154389612
+    },
+    {
+      "family": "hardware_2",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 2.6468085535802377e-16,
+      "abs_error": 2.6468085535802377e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 106,
+      "query_tracemalloc_peak_bytes": 24131,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 151157
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2073
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        6897893,
+        5025384,
+        4098689,
+        4052670,
+        4028995
+      ],
+      "rqm_query_ns": [
+        771551,
+        888837,
+        761316,
+        823420,
+        719053
+      ],
+      "qiskit_compile_ns": [
+        5276511,
+        4810991,
+        4461535,
+        4854146,
+        4605943
+      ],
+      "aer_query_ns": [
+        1642081,
+        1792218,
+        1474850,
+        1692147,
+        1424639
+      ],
+      "end_to_end_ratio": 1.3250008213147606
+    },
+    {
+      "family": "hardware_2",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.00010991676916675093,
+      "answer_imag": -1.5585406229479126e-19,
+      "reference": 0.00010991676916674497,
+      "abs_error": 5.965148330184924e-18,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=2",
+      "query_work_units": 32,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 32,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 162,
+      "query_tracemalloc_peak_bytes": 348202,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 223907
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2113
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        5785969,
+        6003516,
+        5840941,
+        6872083,
+        6310748
+      ],
+      "rqm_query_ns": [
+        11297434,
+        11156332,
+        11265587,
+        10906186,
+        11919561
+      ],
+      "qiskit_compile_ns": [
+        5112675,
+        6180673,
+        4619293,
+        4774716,
+        5423563
+      ],
+      "aer_query_ns": [
+        3243412,
+        3106320,
+        3414960,
+        3156772,
+        3155119
+      ],
+      "end_to_end_ratio": 0.4788579348910016
+    },
+    {
+      "family": "hardware_2",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.00010991676916675093,
+      "answer_imag": -1.5585406229479126e-19,
+      "reference": 0.00010991676916674497,
+      "abs_error": 5.965148330184924e-18,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=2",
+      "query_work_units": 32,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 32,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 162,
+      "query_tracemalloc_peak_bytes": 348202,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 223907
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2113
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        5785969,
+        6003516,
+        5840941,
+        6872083,
+        6310748
+      ],
+      "rqm_query_ns": [
+        11032626,
+        11263854,
+        11161029,
+        11210323,
+        10927268
+      ],
+      "qiskit_compile_ns": [
+        5112675,
+        6180673,
+        4619293,
+        4774716,
+        5423563
+      ],
+      "aer_query_ns": [
+        3243412,
+        3106320,
+        3414960,
+        3156772,
+        3155119
+      ],
+      "end_to_end_ratio": 0.48177490285935337
+    },
+    {
+      "family": "hardware_2",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 2.2787473270098266e-16,
+      "abs_error": 2.2787473270098266e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 162,
+      "query_tracemalloc_peak_bytes": 36437,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 223907
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2113
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        5785969,
+        6003516,
+        5840941,
+        6872083,
+        6310748
+      ],
+      "rqm_query_ns": [
+        1212775,
+        1206636,
+        1177963,
+        1132906,
+        991112
+      ],
+      "qiskit_compile_ns": [
+        5112675,
+        6180673,
+        4619293,
+        4774716,
+        5423563
+      ],
+      "aer_query_ns": [
+        3344824,
+        3229441,
+        3180096,
+        3536173,
+        3621762
+      ],
+      "end_to_end_ratio": 1.1776820624275306
+    },
+    {
+      "family": "hardware_2",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 2.2787473270098266e-16,
+      "abs_error": 2.2787473270098266e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 7,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 162,
+      "query_tracemalloc_peak_bytes": 36437,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 223907
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2113
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        5785969,
+        6003516,
+        5840941,
+        6872083,
+        6310748
+      ],
+      "rqm_query_ns": [
+        995098,
+        965023,
+        1001758,
+        1419106,
+        1039405
+      ],
+      "qiskit_compile_ns": [
+        5112675,
+        6180673,
+        4619293,
+        4774716,
+        5423563
+      ],
+      "aer_query_ns": [
+        3344824,
+        3229441,
+        3180096,
+        3536173,
+        3621762
+      ],
+      "end_to_end_ratio": 1.2073045251334922
+    },
+    {
+      "family": "hardware_4",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.1709840831484906,
+      "answer_imag": 0.0,
+      "reference": -0.1709840831484905,
+      "abs_error": 8.326672684688674e-17,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=4",
+      "query_work_units": 16,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 16,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 182224,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 238409
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 3715
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        4996131,
+        7354900,
+        6622087,
+        7199596,
+        4982850
+      ],
+      "rqm_query_ns": [
+        8649730,
+        8861949,
+        8875840,
+        6775323,
+        5949154
+      ],
+      "qiskit_compile_ns": [
+        5078814,
+        4959184,
+        4060802,
+        4121543,
+        4508146
+      ],
+      "aer_query_ns": [
+        1288940,
+        1242631,
+        1242440,
+        1453488,
+        1228749
+      ],
+      "end_to_end_ratio": 0.3765614137466419
+    },
+    {
+      "family": "hardware_4",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.1709840831484906,
+      "answer_imag": 0.0,
+      "reference": -0.1709840831484905,
+      "abs_error": 8.326672684688674e-17,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=4",
+      "query_work_units": 16,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 16,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 182224,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 238409
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 3715
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        4996131,
+        7354900,
+        6622087,
+        7199596,
+        4982850
+      ],
+      "rqm_query_ns": [
+        6054914,
+        5739639,
+        5904137,
+        5704676,
+        5715843
+      ],
+      "qiskit_compile_ns": [
+        5078814,
+        4959184,
+        4060802,
+        4121543,
+        4508146
+      ],
+      "aer_query_ns": [
+        1288940,
+        1242631,
+        1242440,
+        1453488,
+        1228749
+      ],
+      "end_to_end_ratio": 0.46520825651692976
+    },
+    {
+      "family": "hardware_4",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.1822908064772118,
+      "answer_imag": 0.0,
+      "reference": 0.18229080647721135,
+      "abs_error": 4.440892098500626e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 27,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 27542,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 238409
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 3715
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        4996131,
+        7354900,
+        6622087,
+        7199596,
+        4982850
+      ],
+      "rqm_query_ns": [
+        1248660,
+        1650925,
+        1390053,
+        1464244,
+        1366527
+      ],
+      "qiskit_compile_ns": [
+        5078814,
+        4959184,
+        4060802,
+        4121543,
+        4508146
+      ],
+      "aer_query_ns": [
+        1351054,
+        1244544,
+        1195460,
+        1287689,
+        1290528
+      ],
+      "end_to_end_ratio": 0.7233816433562069
+    },
+    {
+      "family": "hardware_4",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.1822908064772118,
+      "answer_imag": 0.0,
+      "reference": 0.18229080647721135,
+      "abs_error": 4.440892098500626e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 27,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 27542,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 238409
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 3715
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        4996131,
+        7354900,
+        6622087,
+        7199596,
+        4982850
+      ],
+      "rqm_query_ns": [
+        1357863,
+        1469111,
+        1731626,
+        1804125,
+        1251914
+      ],
+      "qiskit_compile_ns": [
+        5078814,
+        4959184,
+        4060802,
+        4121543,
+        4508146
+      ],
+      "aer_query_ns": [
+        1351054,
+        1244544,
+        1195460,
+        1287689,
+        1290528
+      ],
+      "end_to_end_ratio": 0.7163135792746637
+    },
+    {
+      "family": "hardware_4",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.06853175933310418,
+      "answer_imag": -2.42861286636753e-17,
+      "reference": -0.06853175933310408,
+      "abs_error": 1.0013427371767394e-16,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=4",
+      "query_work_units": 512,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 512,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 212,
+      "query_tracemalloc_peak_bytes": 412782,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 299040
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2193
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        11452117,
+        13097504,
+        13162061,
+        10844688,
+        9479398
+      ],
+      "rqm_query_ns": [
+        14962792,
+        14985836,
+        14652244,
+        15989066,
+        16672785
+      ],
+      "qiskit_compile_ns": [
+        6918723,
+        12737262,
+        5093467,
+        4826665,
+        4953406
+      ],
+      "aer_query_ns": [
+        2754405,
+        2775548,
+        2478271,
+        2491000,
+        2579643
+      ],
+      "end_to_end_ratio": 0.29023086620964944
+    },
+    {
+      "family": "hardware_4",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.06853175933310418,
+      "answer_imag": -2.42861286636753e-17,
+      "reference": -0.06853175933310408,
+      "abs_error": 1.0013427371767394e-16,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=4",
+      "query_work_units": 512,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 512,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 212,
+      "query_tracemalloc_peak_bytes": 412782,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 299040
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2193
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        11452117,
+        13097504,
+        13162061,
+        10844688,
+        9479398
+      ],
+      "rqm_query_ns": [
+        18223975,
+        17235132,
+        15430205,
+        18592735,
+        16913027
+      ],
+      "qiskit_compile_ns": [
+        6918723,
+        12737262,
+        5093467,
+        4826665,
+        4953406
+      ],
+      "aer_query_ns": [
+        2754405,
+        2775548,
+        2478271,
+        2491000,
+        2579643
+      ],
+      "end_to_end_ratio": 0.2674745842656436
+    },
+    {
+      "family": "hardware_4",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 1.8409752888803865e-16,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 72,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 72,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 5 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 212,
+      "query_tracemalloc_peak_bytes": 51817,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 299040
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2193
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        11452117,
+        13097504,
+        13162061,
+        10844688,
+        9479398
+      ],
+      "rqm_query_ns": [
+        3800381,
+        3799068,
+        3532908,
+        3514580,
+        3726058
+      ],
+      "qiskit_compile_ns": [
+        6918723,
+        12737262,
+        5093467,
+        4826665,
+        4953406
+      ],
+      "aer_query_ns": [
+        2620425,
+        2351249,
+        2219871,
+        2349596,
+        2296867
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_4",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 1.8409752888803865e-16,
+      "abs_error": 1.8409752888803865e-16,
+      "route": "axis_hinge_cartan_pauli_sparse",
+      "reason": "",
+      "query_work_units": 504,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 504,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 5 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 212,
+      "query_tracemalloc_peak_bytes": 149765,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 299040
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2193
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        11452117,
+        13097504,
+        13162061,
+        10844688,
+        9479398
+      ],
+      "rqm_query_ns": [
+        12577271,
+        12522348,
+        12508768,
+        12713135,
+        12253603
+      ],
+      "qiskit_compile_ns": [
+        6918723,
+        12737262,
+        5093467,
+        4826665,
+        4953406
+      ],
+      "aer_query_ns": [
+        2620425,
+        2351249,
+        2219871,
+        2349596,
+        2296867
+      ],
+      "end_to_end_ratio": 0.31045793931168014
+    },
+    {
+      "family": "hardware_4",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.0068788865327386725,
+      "answer_imag": -3.7947076036992655e-19,
+      "reference": -0.006878886532738676,
+      "abs_error": 3.490137563248182e-18,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=4",
+      "query_work_units": 1024,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 1024,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 324,
+      "query_tracemalloc_peak_bytes": 675142,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 443418
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2544
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        17128982,
+        13356203,
+        11647391,
+        11832149,
+        11428381
+      ],
+      "rqm_query_ns": [
+        25194492,
+        25802217,
+        26663663,
+        26305575,
+        26316160
+      ],
+      "qiskit_compile_ns": [
+        4828468,
+        4493403,
+        4415326,
+        4172701,
+        4150538
+      ],
+      "aer_query_ns": [
+        7995064,
+        7673280,
+        6312391,
+        5736775,
+        5671266
+      ],
+      "end_to_end_ratio": 0.2812888624397198
+    },
+    {
+      "family": "hardware_4",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.0068788865327386725,
+      "answer_imag": -3.7947076036992655e-19,
+      "reference": -0.006878886532738676,
+      "abs_error": 3.490137563248182e-18,
+      "route": "topology_hardware_1d",
+      "reason": "validated_layers=4",
+      "query_work_units": 1024,
+      "query_work_unit": "complex_tensor_entries",
+      "largest_intermediate": 1024,
+      "intermediate_unit": "complex_tensor_entries",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 324,
+      "query_tracemalloc_peak_bytes": 675142,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 443418
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2544
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        17128982,
+        13356203,
+        11647391,
+        11832149,
+        11428381
+      ],
+      "rqm_query_ns": [
+        25433031,
+        26750333,
+        26713538,
+        27536677,
+        26711675
+      ],
+      "qiskit_compile_ns": [
+        4828468,
+        4493403,
+        4415326,
+        4172701,
+        4150538
+      ],
+      "aer_query_ns": [
+        7995064,
+        7673280,
+        6312391,
+        5736775,
+        5671266
+      ],
+      "end_to_end_ratio": 0.2783117343323003
+    },
+    {
+      "family": "hardware_4",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 1.5124620306172787e-16,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 72,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 72,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 5 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 324,
+      "query_tracemalloc_peak_bytes": 85801,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 443418
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2544
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        17128982,
+        13356203,
+        11647391,
+        11832149,
+        11428381
+      ],
+      "rqm_query_ns": [
+        6113341,
+        5717146,
+        5798868,
+        5841121,
+        5714762
+      ],
+      "qiskit_compile_ns": [
+        4828468,
+        4493403,
+        4415326,
+        4172701,
+        4150538
+      ],
+      "aer_query_ns": [
+        5839309,
+        5748753,
+        5618527,
+        5560169,
+        5553398
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_4",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 1.5124620306172787e-16,
+      "abs_error": 1.5124620306172787e-16,
+      "route": "axis_hinge_cartan_pauli_sparse",
+      "reason": "",
+      "query_work_units": 504,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 504,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 5 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 324,
+      "query_tracemalloc_peak_bytes": 159705,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 443418
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2544
+        },
+        "hardware": {
+          "rejected": false,
+          "rejection_ns": null
+        }
+      },
+      "rqm_compile_ns": [
+        17128982,
+        13356203,
+        11647391,
+        11832149,
+        11428381
+      ],
+      "rqm_query_ns": [
+        22704594,
+        24112633,
+        23194872,
+        24439616,
+        23295063
+      ],
+      "qiskit_compile_ns": [
+        4828468,
+        4493403,
+        4415326,
+        4172701,
+        4150538
+      ],
+      "aer_query_ns": [
+        5839309,
+        5748753,
+        5618527,
+        5560169,
+        5553398
+      ],
+      "end_to_end_ratio": 0.2856433069609965
+    },
+    {
+      "family": "hardware_5",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.3480270488026789,
+      "answer_imag": 0.0,
+      "reference": -0.34802704880267815,
+      "abs_error": 7.216449660063518e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 47,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 125,
+      "query_tracemalloc_peak_bytes": 33926,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 175174
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2163
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 5508
+        }
+      },
+      "rqm_compile_ns": [
+        5755643,
+        5596754,
+        5748683,
+        5502002,
+        6262476
+      ],
+      "rqm_query_ns": [
+        1481099,
+        1539157,
+        1474339,
+        1419257,
+        1450994
+      ],
+      "qiskit_compile_ns": [
+        4976310,
+        3878849,
+        4191969,
+        3855053,
+        3798397
+      ],
+      "aer_query_ns": [
+        1557204,
+        1501631,
+        1403803,
+        1397694,
+        1634400
+      ],
+      "end_to_end_ratio": 0.7449070486009872
+    },
+    {
+      "family": "hardware_5",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.3480270488026789,
+      "answer_imag": 0.0,
+      "reference": -0.34802704880267815,
+      "abs_error": 7.216449660063518e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 47,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 125,
+      "query_tracemalloc_peak_bytes": 33926,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 175174
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2163
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 5508
+        }
+      },
+      "rqm_compile_ns": [
+        5755643,
+        5596754,
+        5748683,
+        5502002,
+        6262476
+      ],
+      "rqm_query_ns": [
+        1544655,
+        1476763,
+        1407348,
+        1595591,
+        1454609
+      ],
+      "qiskit_compile_ns": [
+        4976310,
+        3878849,
+        4191969,
+        3855053,
+        3798397
+      ],
+      "aer_query_ns": [
+        1557204,
+        1501631,
+        1403803,
+        1397694,
+        1634400
+      ],
+      "end_to_end_ratio": 0.7446571464239025
+    },
+    {
+      "family": "hardware_5",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.6119453293137427,
+      "answer_imag": 0.0,
+      "reference": -0.6119453293137415,
+      "abs_error": 1.2212453270876722e-15,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 38,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 125,
+      "query_tracemalloc_peak_bytes": 31718,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 175174
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2163
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 5508
+        }
+      },
+      "rqm_compile_ns": [
+        5755643,
+        5596754,
+        5748683,
+        5502002,
+        6262476
+      ],
+      "rqm_query_ns": [
+        1391464,
+        1351444,
+        1282480,
+        1620008,
+        1380838
+      ],
+      "qiskit_compile_ns": [
+        4976310,
+        3878849,
+        4191969,
+        3855053,
+        3798397
+      ],
+      "aer_query_ns": [
+        1608131,
+        1383082,
+        1725327,
+        1768221,
+        1401580
+      ],
+      "end_to_end_ratio": 0.7696141157309165
+    },
+    {
+      "family": "hardware_5",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.6119453293137427,
+      "answer_imag": 0.0,
+      "reference": -0.6119453293137415,
+      "abs_error": 1.2212453270876722e-15,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 38,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 125,
+      "query_tracemalloc_peak_bytes": 31718,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 175174
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2163
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 5508
+        }
+      },
+      "rqm_compile_ns": [
+        5755643,
+        5596754,
+        5748683,
+        5502002,
+        6262476
+      ],
+      "rqm_query_ns": [
+        1481610,
+        1436622,
+        1491064,
+        1297132,
+        1285965
+      ],
+      "qiskit_compile_ns": [
+        4976310,
+        3878849,
+        4191969,
+        3855053,
+        3798397
+      ],
+      "aer_query_ns": [
+        1608131,
+        1383082,
+        1725327,
+        1768221,
+        1401580
+      ],
+      "end_to_end_ratio": 0.7636391217909331
+    },
+    {
+      "family": "hardware_5",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": -0.11013107677521619,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 81,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 81,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 8 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 265,
+      "query_tracemalloc_peak_bytes": 68959,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 437869
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2213
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 10997
+        }
+      },
+      "rqm_compile_ns": [
+        10771112,
+        11318195,
+        10701779,
+        10724342,
+        10953307
+      ],
+      "rqm_query_ns": [
+        2343709,
+        2136697,
+        2225380,
+        2286242,
+        2269978
+      ],
+      "qiskit_compile_ns": [
+        5180419,
+        5350856,
+        5456184,
+        5845571,
+        4822010
+      ],
+      "aer_query_ns": [
+        4395097,
+        4309087,
+        4239252,
+        4286674,
+        4229969
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_5",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": -0.11013107677521619,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=4096",
+      "query_work_units": 4617,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 4617,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 8 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 265,
+      "query_tracemalloc_peak_bytes": 1466309,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 437869
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2213
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 10997
+        }
+      },
+      "rqm_compile_ns": [
+        10771112,
+        11318195,
+        10701779,
+        10724342,
+        10953307
+      ],
+      "rqm_query_ns": [
+        16134542,
+        15000094,
+        15668911,
+        17505255,
+        16943810
+      ],
+      "qiskit_compile_ns": [
+        5180419,
+        5350856,
+        5456184,
+        5845571,
+        4822010
+      ],
+      "aer_query_ns": [
+        4395097,
+        4309087,
+        4239252,
+        4286674,
+        4229969
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_5",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 3.0097452308197603e-16,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 72,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 72,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 6 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 265,
+      "query_tracemalloc_peak_bytes": 68791,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 437869
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2213
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 10997
+        }
+      },
+      "rqm_compile_ns": [
+        10771112,
+        11318195,
+        10701779,
+        10724342,
+        10953307
+      ],
+      "rqm_query_ns": [
+        4107504,
+        3688794,
+        4167144,
+        4414055,
+        4745766
+      ],
+      "qiskit_compile_ns": [
+        5180419,
+        5350856,
+        5456184,
+        5845571,
+        4822010
+      ],
+      "aer_query_ns": [
+        4915421,
+        3076262,
+        2893267,
+        2965174,
+        2731652
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_5",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 3.0097452308197603e-16,
+      "abs_error": 3.0097452308197603e-16,
+      "route": "axis_hinge_cartan_pauli_sparse",
+      "reason": "",
+      "query_work_units": 2040,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 2040,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 6 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 265,
+      "query_tracemalloc_peak_bytes": 775565,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 437869
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2213
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 10997
+        }
+      },
+      "rqm_compile_ns": [
+        10771112,
+        11318195,
+        10701779,
+        10724342,
+        10953307
+      ],
+      "rqm_query_ns": [
+        57977870,
+        59283706,
+        58611644,
+        60178132,
+        56274524
+      ],
+      "qiskit_compile_ns": [
+        5180419,
+        5350856,
+        5456184,
+        5845571,
+        4822010
+      ],
+      "aer_query_ns": [
+        4915421,
+        3076262,
+        2893267,
+        2965174,
+        2731652
+      ],
+      "end_to_end_ratio": 0.1198573028722007
+    },
+    {
+      "family": "hardware_5",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": -0.015716726896201336,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 81,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 81,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 12 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 405,
+      "query_tracemalloc_peak_bytes": 107171,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 571591
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 16325
+        }
+      },
+      "rqm_compile_ns": [
+        14917440,
+        14042662,
+        16995528,
+        14843207,
+        14770328
+      ],
+      "rqm_query_ns": [
+        3131124,
+        3160078,
+        3271806,
+        3119356,
+        3040788
+      ],
+      "qiskit_compile_ns": [
+        5296364,
+        4856312,
+        4765885,
+        4957244,
+        4890293
+      ],
+      "aer_query_ns": [
+        7126350,
+        7495536,
+        7363116,
+        9289516,
+        7643568
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_5",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": -0.015716726896201336,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=4096",
+      "query_work_units": 4860,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 4860,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 12 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 405,
+      "query_tracemalloc_peak_bytes": 1886018,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 571591
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 16325
+        }
+      },
+      "rqm_compile_ns": [
+        14917440,
+        14042662,
+        16995528,
+        14843207,
+        14770328
+      ],
+      "rqm_query_ns": [
+        169822544,
+        152099366,
+        153286243,
+        156905938,
+        151819570
+      ],
+      "qiskit_compile_ns": [
+        5296364,
+        4856312,
+        4765885,
+        4957244,
+        4890293
+      ],
+      "aer_query_ns": [
+        7126350,
+        7495536,
+        7363116,
+        9289516,
+        7643568
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_5",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 1.9060274192295168e-16,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 72,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 72,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 6 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 405,
+      "query_tracemalloc_peak_bytes": 107003,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 571591
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 16325
+        }
+      },
+      "rqm_compile_ns": [
+        14917440,
+        14042662,
+        16995528,
+        14843207,
+        14770328
+      ],
+      "rqm_query_ns": [
+        6517452,
+        6418623,
+        6752026,
+        6376590,
+        6259313
+      ],
+      "qiskit_compile_ns": [
+        5296364,
+        4856312,
+        4765885,
+        4957244,
+        4890293
+      ],
+      "aer_query_ns": [
+        7293301,
+        7757459,
+        6931856,
+        6905236,
+        6947810
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "hardware_5",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 1.9060274192295168e-16,
+      "abs_error": 1.9060274192295168e-16,
+      "route": "axis_hinge_cartan_pauli_sparse",
+      "reason": "",
+      "query_work_units": 2040,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 2040,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 6 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 405,
+      "query_tracemalloc_peak_bytes": 878697,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 571591
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2323
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 16325
+        }
+      },
+      "rqm_compile_ns": [
+        14917440,
+        14042662,
+        16995528,
+        14843207,
+        14770328
+      ],
+      "rqm_query_ns": [
+        97334420,
+        98041215,
+        97738710,
+        97113198,
+        97248612
+      ],
+      "qiskit_compile_ns": [
+        5296364,
+        4856312,
+        4765885,
+        4957244,
+        4890293
+      ],
+      "aer_query_ns": [
+        7293301,
+        7757459,
+        6931856,
+        6905236,
+        6947810
+      ],
+      "end_to_end_ratio": 0.10552998237340143
+    },
+    {
+      "family": "interleaved_star",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9557594560149806,
+      "answer_imag": 0.0,
+      "reference": 0.9557594560149811,
+      "abs_error": 5.551115123125783e-16,
+      "route": "general_pauli_promoted",
+      "reason": "",
+      "query_work_units": 5,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 5,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 1,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 29,
+      "query_tracemalloc_peak_bytes": 9438,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 47001
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4496
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 320
+        }
+      },
+      "rqm_compile_ns": [
+        2262215,
+        2129306,
+        2020301,
+        2122555,
+        2033962
+      ],
+      "rqm_query_ns": [
+        4267405,
+        4243459,
+        4229298,
+        4255677,
+        4195707
+      ],
+      "qiskit_compile_ns": [
+        4406564,
+        3864739,
+        3741913,
+        3864308,
+        3693060
+      ],
+      "aer_query_ns": [
+        878352,
+        825773,
+        1132785,
+        832454,
+        884352
+      ],
+      "end_to_end_ratio": 0.7449967907704884
+    },
+    {
+      "family": "interleaved_star",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9557594560149806,
+      "answer_imag": 0.0,
+      "reference": 0.9557594560149811,
+      "abs_error": 5.551115123125783e-16,
+      "route": "general_pauli_promoted",
+      "reason": "",
+      "query_work_units": 5,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 5,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 1,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 29,
+      "query_tracemalloc_peak_bytes": 9250,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 47001
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4496
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 320
+        }
+      },
+      "rqm_compile_ns": [
+        2262215,
+        2129306,
+        2020301,
+        2122555,
+        2033962
+      ],
+      "rqm_query_ns": [
+        4248036,
+        4298421,
+        4270650,
+        4232773,
+        4198160
+      ],
+      "qiskit_compile_ns": [
+        4406564,
+        3864739,
+        3741913,
+        3864308,
+        3693060
+      ],
+      "aer_query_ns": [
+        878352,
+        825773,
+        1132785,
+        832454,
+        884352
+      ],
+      "end_to_end_ratio": 0.7444615421081027
+    },
+    {
+      "family": "interleaved_star",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 2.930649294205154e-17,
+      "abs_error": 2.930649294205154e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 10,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 29,
+      "query_tracemalloc_peak_bytes": 12574,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 47001
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4496
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 320
+        }
+      },
+      "rqm_compile_ns": [
+        2262215,
+        2129306,
+        2020301,
+        2122555,
+        2033962
+      ],
+      "rqm_query_ns": [
+        460484,
+        370799,
+        1136561,
+        372751,
+        339080
+      ],
+      "qiskit_compile_ns": [
+        4406564,
+        3864739,
+        3741913,
+        3864308,
+        3693060
+      ],
+      "aer_query_ns": [
+        1087687,
+        965829,
+        865333,
+        801436,
+        912288
+      ],
+      "end_to_end_ratio": 1.9142325630604022
+    },
+    {
+      "family": "interleaved_star",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 2.930649294205154e-17,
+      "abs_error": 2.930649294205154e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 10,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 29,
+      "query_tracemalloc_peak_bytes": 12574,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 47001
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4496
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 320
+        }
+      },
+      "rqm_compile_ns": [
+        2262215,
+        2129306,
+        2020301,
+        2122555,
+        2033962
+      ],
+      "rqm_query_ns": [
+        421244,
+        356537,
+        518872,
+        346872,
+        320753
+      ],
+      "qiskit_compile_ns": [
+        4406564,
+        3864739,
+        3741913,
+        3864308,
+        3693060
+      ],
+      "aer_query_ns": [
+        1087687,
+        965829,
+        865333,
+        801436,
+        912288
+      ],
+      "end_to_end_ratio": 1.926752214117104
+    },
+    {
+      "family": "interleaved_star",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9349683064520452,
+      "answer_imag": 0.0,
+      "reference": 0.934968306452046,
+      "abs_error": 7.771561172376096e-16,
+      "route": "general_pauli_promoted",
+      "reason": "",
+      "query_work_units": 20,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 20,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 1,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 57,
+      "query_tracemalloc_peak_bytes": 11858,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83365
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4177
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        2782199,
+        3627682,
+        3551718,
+        2559713,
+        2665993
+      ],
+      "rqm_query_ns": [
+        10455832,
+        9622607,
+        12210433,
+        15172012,
+        13325452
+      ],
+      "qiskit_compile_ns": [
+        4553986,
+        4704774,
+        4166062,
+        4025731,
+        4178341
+      ],
+      "aer_query_ns": [
+        1474840,
+        1465426,
+        1404124,
+        1439928,
+        1463373
+      ],
+      "end_to_end_ratio": 0.376299104786938
+    },
+    {
+      "family": "interleaved_star",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9349683064520452,
+      "answer_imag": 0.0,
+      "reference": 0.934968306452046,
+      "abs_error": 7.771561172376096e-16,
+      "route": "general_pauli_promoted",
+      "reason": "",
+      "query_work_units": 20,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 20,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 1,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 57,
+      "query_tracemalloc_peak_bytes": 11858,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83365
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4177
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        2782199,
+        3627682,
+        3551718,
+        2559713,
+        2665993
+      ],
+      "rqm_query_ns": [
+        11197689,
+        10435321,
+        9695506,
+        10457484,
+        9842278
+      ],
+      "qiskit_compile_ns": [
+        4553986,
+        4704774,
+        4166062,
+        4025731,
+        4178341
+      ],
+      "aer_query_ns": [
+        1474840,
+        1465426,
+        1404124,
+        1439928,
+        1463373
+      ],
+      "end_to_end_ratio": 0.42683604791216506
+    },
+    {
+      "family": "interleaved_star",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -3.8382757770560694e-17,
+      "abs_error": 3.8382757770560694e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 22,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 57,
+      "query_tracemalloc_peak_bytes": 16242,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83365
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4177
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        2782199,
+        3627682,
+        3551718,
+        2559713,
+        2665993
+      ],
+      "rqm_query_ns": [
+        978883,
+        809549,
+        835568,
+        739193,
+        745543
+      ],
+      "qiskit_compile_ns": [
+        4553986,
+        4704774,
+        4166062,
+        4025731,
+        4178341
+      ],
+      "aer_query_ns": [
+        1704446,
+        1609143,
+        1552287,
+        1529342,
+        1835403
+      ],
+      "end_to_end_ratio": 1.6113279662158926
+    },
+    {
+      "family": "interleaved_star",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -3.8382757770560694e-17,
+      "abs_error": 3.8382757770560694e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 22,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 57,
+      "query_tracemalloc_peak_bytes": 16242,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 83365
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4177
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        2782199,
+        3627682,
+        3551718,
+        2559713,
+        2665993
+      ],
+      "rqm_query_ns": [
+        661126,
+        720455,
+        924642,
+        706503,
+        753785
+      ],
+      "qiskit_compile_ns": [
+        4553986,
+        4704774,
+        4166062,
+        4025731,
+        4178341
+      ],
+      "aer_query_ns": [
+        1704446,
+        1609143,
+        1552287,
+        1529342,
+        1835403
+      ],
+      "end_to_end_ratio": 1.6523139310933939
+    },
+    {
+      "family": "interleaved_star",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.9112282541709272,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "Pauli expansion exceeded max_terms=64 after 34 operations",
+      "query_work_units": 80,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 80,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 1,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 85,
+      "query_tracemalloc_peak_bytes": 20961,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 130476
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4497
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        3381471,
+        3421211,
+        3881784,
+        3209442,
+        2908819
+      ],
+      "rqm_query_ns": [
+        17692847,
+        17015818,
+        17214117,
+        17580008,
+        19922233
+      ],
+      "qiskit_compile_ns": [
+        5220780,
+        4370670,
+        4686376,
+        4385483,
+        4636781
+      ],
+      "aer_query_ns": [
+        3510055,
+        3437776,
+        3667481,
+        3594542,
+        3535022
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "interleaved_star",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.911228254170928,
+      "answer_imag": 0.0,
+      "reference": 0.9112282541709272,
+      "abs_error": 7.771561172376096e-16,
+      "route": "general_pauli_promoted",
+      "reason": "",
+      "query_work_units": 80,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 80,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 1,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 85,
+      "query_tracemalloc_peak_bytes": 21668,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 130476
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4497
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        3381471,
+        3421211,
+        3881784,
+        3209442,
+        2908819
+      ],
+      "rqm_query_ns": [
+        17420707,
+        17823013,
+        19982915,
+        16203635,
+        16532310
+      ],
+      "qiskit_compile_ns": [
+        5220780,
+        4370670,
+        4686376,
+        4385483,
+        4636781
+      ],
+      "aer_query_ns": [
+        3510055,
+        3437776,
+        3667481,
+        3594542,
+        3535022
+      ],
+      "end_to_end_ratio": 0.3928340099772245
+    },
+    {
+      "family": "interleaved_star",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -1.5388806248038978e-16,
+      "abs_error": 1.5388806248038978e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 34,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 85,
+      "query_tracemalloc_peak_bytes": 19699,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 130476
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4497
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        3381471,
+        3421211,
+        3881784,
+        3209442,
+        2908819
+      ],
+      "rqm_query_ns": [
+        1224123,
+        1083091,
+        997662,
+        1348229,
+        1126626
+      ],
+      "qiskit_compile_ns": [
+        5220780,
+        4370670,
+        4686376,
+        4385483,
+        4636781
+      ],
+      "aer_query_ns": [
+        3353098,
+        3507891,
+        3723325,
+        3639149,
+        3489553
+      ],
+      "end_to_end_ratio": 1.8066762982251714
+    },
+    {
+      "family": "interleaved_star",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -1.5388806248038978e-16,
+      "abs_error": 1.5388806248038978e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 34,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 16,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 2,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 85,
+      "query_tracemalloc_peak_bytes": 19699,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 130476
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4497
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 451
+        }
+      },
+      "rqm_compile_ns": [
+        3381471,
+        3421211,
+        3881784,
+        3209442,
+        2908819
+      ],
+      "rqm_query_ns": [
+        1090862,
+        1444565,
+        1310543,
+        1161429,
+        995789
+      ],
+      "qiskit_compile_ns": [
+        5220780,
+        4370670,
+        4686376,
+        4385483,
+        4636781
+      ],
+      "aer_query_ns": [
+        3353098,
+        3507891,
+        3723325,
+        3639149,
+        3489553
+      ],
+      "end_to_end_ratio": 1.7928354135023883
+    },
+    {
+      "family": "revisited_star",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9816087531805022,
+      "answer_imag": 0.0,
+      "reference": 0.981608753180502,
+      "abs_error": 2.220446049250313e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 10,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 27,
+      "query_tracemalloc_peak_bytes": 13430,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 46109
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5007
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 341
+        }
+      },
+      "rqm_compile_ns": [
+        2145741,
+        2136827,
+        2460434,
+        2026652,
+        1996766
+      ],
+      "rqm_query_ns": [
+        483598,
+        444369,
+        675628,
+        447764,
+        471940
+      ],
+      "qiskit_compile_ns": [
+        4672014,
+        3925750,
+        4226444,
+        3970908,
+        3674171
+      ],
+      "aer_query_ns": [
+        945494,
+        874517,
+        890500,
+        921487,
+        866655
+      ],
+      "end_to_end_ratio": 1.8634887669155582
+    },
+    {
+      "family": "revisited_star",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9816087531805022,
+      "answer_imag": 0.0,
+      "reference": 0.981608753180502,
+      "abs_error": 2.220446049250313e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 10,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 27,
+      "query_tracemalloc_peak_bytes": 13430,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 46109
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5007
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 341
+        }
+      },
+      "rqm_compile_ns": [
+        2145741,
+        2136827,
+        2460434,
+        2026652,
+        1996766
+      ],
+      "rqm_query_ns": [
+        689948,
+        425621,
+        364318,
+        468656,
+        380402
+      ],
+      "qiskit_compile_ns": [
+        4672014,
+        3925750,
+        4226444,
+        3970908,
+        3674171
+      ],
+      "aer_query_ns": [
+        945494,
+        874517,
+        890500,
+        921487,
+        866655
+      ],
+      "end_to_end_ratio": 1.897173328005095
+    },
+    {
+      "family": "revisited_star",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 6.938893903907228e-18,
+      "abs_error": 6.938893903907228e-18,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 10,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 27,
+      "query_tracemalloc_peak_bytes": 13238,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 46109
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5007
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 341
+        }
+      },
+      "rqm_compile_ns": [
+        2145741,
+        2136827,
+        2460434,
+        2026652,
+        1996766
+      ],
+      "rqm_query_ns": [
+        450909,
+        419051,
+        352891,
+        332690,
+        546773
+      ],
+      "qiskit_compile_ns": [
+        4672014,
+        3925750,
+        4226444,
+        3970908,
+        3674171
+      ],
+      "aer_query_ns": [
+        967406,
+        902389,
+        839544,
+        834105,
+        838903
+      ],
+      "end_to_end_ratio": 1.882113309007707
+    },
+    {
+      "family": "revisited_star",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 6.938893903907228e-18,
+      "abs_error": 6.938893903907228e-18,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 10,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 27,
+      "query_tracemalloc_peak_bytes": 13238,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 46109
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5007
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 341
+        }
+      },
+      "rqm_compile_ns": [
+        2145741,
+        2136827,
+        2460434,
+        2026652,
+        1996766
+      ],
+      "rqm_query_ns": [
+        414263,
+        355185,
+        342536,
+        474485,
+        472442
+      ],
+      "qiskit_compile_ns": [
+        4672014,
+        3925750,
+        4226444,
+        3970908,
+        3674171
+      ],
+      "aer_query_ns": [
+        967406,
+        902389,
+        839544,
+        834105,
+        838903
+      ],
+      "end_to_end_ratio": 1.885645743584115
+    },
+    {
+      "family": "revisited_star",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9602552899516308,
+      "answer_imag": 0.0,
+      "reference": 0.9602552899516307,
+      "abs_error": 1.1102230246251565e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 22,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 55,
+      "query_tracemalloc_peak_bytes": 17082,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 93190
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4747
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 401
+        }
+      },
+      "rqm_compile_ns": [
+        2843111,
+        2676179,
+        2872185,
+        2620916,
+        2979686
+      ],
+      "rqm_query_ns": [
+        949139,
+        755948,
+        736218,
+        717250,
+        677831
+      ],
+      "qiskit_compile_ns": [
+        5049393,
+        5006127,
+        7608975,
+        4848059,
+        4966587
+      ],
+      "aer_query_ns": [
+        1597395,
+        1601251,
+        1568822,
+        1538015,
+        1631686
+      ],
+      "end_to_end_ratio": 1.8449050087320835
+    },
+    {
+      "family": "revisited_star",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9602552899516308,
+      "answer_imag": 0.0,
+      "reference": 0.9602552899516307,
+      "abs_error": 1.1102230246251565e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 22,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 55,
+      "query_tracemalloc_peak_bytes": 17082,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 93190
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4747
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 401
+        }
+      },
+      "rqm_compile_ns": [
+        2843111,
+        2676179,
+        2872185,
+        2620916,
+        2979686
+      ],
+      "rqm_query_ns": [
+        735678,
+        926075,
+        843390,
+        749148,
+        723420
+      ],
+      "qiskit_compile_ns": [
+        5049393,
+        5006127,
+        7608975,
+        4848059,
+        4966587
+      ],
+      "aer_query_ns": [
+        1597395,
+        1601251,
+        1568822,
+        1538015,
+        1631686
+      ],
+      "end_to_end_ratio": 1.838264445854266
+    },
+    {
+      "family": "revisited_star",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -1.0408340855860843e-17,
+      "abs_error": 1.0408340855860843e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 22,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 55,
+      "query_tracemalloc_peak_bytes": 16858,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 93190
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4747
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 401
+        }
+      },
+      "rqm_compile_ns": [
+        2843111,
+        2676179,
+        2872185,
+        2620916,
+        2979686
+      ],
+      "rqm_query_ns": [
+        865543,
+        684280,
+        688798,
+        778131,
+        812013
+      ],
+      "qiskit_compile_ns": [
+        5049393,
+        5006127,
+        7608975,
+        4848059,
+        4966587
+      ],
+      "aer_query_ns": [
+        1538906,
+        1443003,
+        1579348,
+        1509302,
+        1482582
+      ],
+      "end_to_end_ratio": 1.7992249620434093
+    },
+    {
+      "family": "revisited_star",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": -1.0408340855860843e-17,
+      "abs_error": 1.0408340855860843e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 22,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 55,
+      "query_tracemalloc_peak_bytes": 16858,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 93190
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 4747
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 401
+        }
+      },
+      "rqm_compile_ns": [
+        2843111,
+        2676179,
+        2872185,
+        2620916,
+        2979686
+      ],
+      "rqm_query_ns": [
+        946795,
+        741446,
+        962579,
+        1111894,
+        734375
+      ],
+      "qiskit_compile_ns": [
+        5049393,
+        5006127,
+        7608975,
+        4848059,
+        4966587
+      ],
+      "aer_query_ns": [
+        1538906,
+        1443003,
+        1579348,
+        1509302,
+        1482582
+      ],
+      "end_to_end_ratio": 1.7191531927177086
+    },
+    {
+      "family": "revisited_star",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9358731685156886,
+      "answer_imag": 0.0,
+      "reference": 0.9358731685156896,
+      "abs_error": 9.992007221626409e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 34,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 83,
+      "query_tracemalloc_peak_bytes": 20230,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 137377
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5147
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 410
+        }
+      },
+      "rqm_compile_ns": [
+        3105726,
+        3387831,
+        2944013,
+        3097474,
+        3748614
+      ],
+      "rqm_query_ns": [
+        1196602,
+        1045253,
+        1341460,
+        1230723,
+        1461791
+      ],
+      "qiskit_compile_ns": [
+        4595749,
+        4653946,
+        4433334,
+        5152818,
+        4386825
+      ],
+      "aer_query_ns": [
+        3729645,
+        3625528,
+        3493119,
+        3509013,
+        3431757
+      ],
+      "end_to_end_ratio": 1.8689858914517385
+    },
+    {
+      "family": "revisited_star",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.9358731685156886,
+      "answer_imag": 0.0,
+      "reference": 0.9358731685156896,
+      "abs_error": 9.992007221626409e-16,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 34,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 83,
+      "query_tracemalloc_peak_bytes": 20230,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 137377
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5147
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 410
+        }
+      },
+      "rqm_compile_ns": [
+        3105726,
+        3387831,
+        2944013,
+        3097474,
+        3748614
+      ],
+      "rqm_query_ns": [
+        1063932,
+        1030511,
+        1025865,
+        1428962,
+        1079165
+      ],
+      "qiskit_compile_ns": [
+        4595749,
+        4653946,
+        4433334,
+        5152818,
+        4386825
+      ],
+      "aer_query_ns": [
+        3729645,
+        3625528,
+        3493119,
+        3509013,
+        3431757
+      ],
+      "end_to_end_ratio": 1.9437474248487525
+    },
+    {
+      "family": "revisited_star",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 7.806255641895632e-17,
+      "abs_error": 7.806255641895632e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 34,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 83,
+      "query_tracemalloc_peak_bytes": 19974,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 137377
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5147
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 410
+        }
+      },
+      "rqm_compile_ns": [
+        3105726,
+        3387831,
+        2944013,
+        3097474,
+        3748614
+      ],
+      "rqm_query_ns": [
+        1229942,
+        1241068,
+        1023320,
+        1126646,
+        1189220
+      ],
+      "qiskit_compile_ns": [
+        4595749,
+        4653946,
+        4433334,
+        5152818,
+        4386825
+      ],
+      "aer_query_ns": [
+        3611818,
+        3437114,
+        3684447,
+        3749184,
+        4436860
+      ],
+      "end_to_end_ratio": 1.927892923450027
+    },
+    {
+      "family": "revisited_star",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.0,
+      "answer_imag": 0.0,
+      "reference": 7.806255641895632e-17,
+      "abs_error": 7.806255641895632e-17,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 34,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 64,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 3,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 83,
+      "query_tracemalloc_peak_bytes": 19974,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 137377
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 5147
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 410
+        }
+      },
+      "rqm_compile_ns": [
+        3105726,
+        3387831,
+        2944013,
+        3097474,
+        3748614
+      ],
+      "rqm_query_ns": [
+        1039365,
+        1009690,
+        1090502,
+        1014989,
+        1002229
+      ],
+      "qiskit_compile_ns": [
+        4595749,
+        4653946,
+        4433334,
+        5152818,
+        4386825
+      ],
+      "aer_query_ns": [
+        3611818,
+        3437114,
+        3684447,
+        3749184,
+        4436860
+      ],
+      "end_to_end_ratio": 2.009407590672978
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.06552563959538604,
+      "answer_imag": 0.0,
+      "reference": -0.06552563959538443,
+      "abs_error": 1.609823385706477e-15,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 32,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 25350,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 135664
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1973
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 431
+        }
+      },
+      "rqm_compile_ns": [
+        10264283,
+        10624556,
+        9668306,
+        8999829,
+        9900045
+      ],
+      "rqm_query_ns": [
+        1286788,
+        1257654,
+        1230954,
+        1153377,
+        1284985
+      ],
+      "qiskit_compile_ns": [
+        4533095,
+        4680256,
+        4282107,
+        4676070,
+        4207124
+      ],
+      "aer_query_ns": [
+        1738848,
+        1424284,
+        1600199,
+        1532808,
+        1367609
+      ],
+      "end_to_end_ratio": 0.5436517869858293
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 4,
+      "query": "global_Z",
+      "pauli": "ZZZZ",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": -0.06552563959538604,
+      "answer_imag": 0.0,
+      "reference": -0.06552563959538443,
+      "abs_error": 1.609823385706477e-15,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 32,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 25350,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 135664
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1973
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 431
+        }
+      },
+      "rqm_compile_ns": [
+        10264283,
+        10624556,
+        9668306,
+        8999829,
+        9900045
+      ],
+      "rqm_query_ns": [
+        1312806,
+        1182901,
+        1216873,
+        1188529,
+        1171804
+      ],
+      "qiskit_compile_ns": [
+        4533095,
+        4680256,
+        4282107,
+        4676070,
+        4207124
+      ],
+      "aer_query_ns": [
+        1738848,
+        1424284,
+        1600199,
+        1532808,
+        1367609
+      ],
+      "end_to_end_ratio": 0.5470408548475214
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 64,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.20083580630266912,
+      "answer_imag": 0.0,
+      "reference": 0.20083580630266804,
+      "abs_error": 1.0824674490095276e-15,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 26,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 24582,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 135664
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1973
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 431
+        }
+      },
+      "rqm_compile_ns": [
+        10264283,
+        10624556,
+        9668306,
+        8999829,
+        9900045
+      ],
+      "rqm_query_ns": [
+        1083191,
+        1544255,
+        1097362,
+        1235400,
+        1112034
+      ],
+      "qiskit_compile_ns": [
+        4533095,
+        4680256,
+        4282107,
+        4676070,
+        4207124
+      ],
+      "aer_query_ns": [
+        1379667,
+        1342380,
+        1661311,
+        1399257,
+        1895794
+      ],
+      "end_to_end_ratio": 0.5387131712367846
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 4,
+      "query": "local_X",
+      "pauli": "XIII",
+      "max_terms": 4096,
+      "available": true,
+      "exact_within_tolerance": true,
+      "answer_real": 0.20083580630266912,
+      "answer_imag": 0.0,
+      "reference": 0.20083580630266804,
+      "abs_error": 1.0824674490095276e-15,
+      "route": "bounded_frontier_transfer",
+      "reason": "",
+      "query_work_units": 26,
+      "query_work_unit": "frontier_operations",
+      "largest_intermediate": 256,
+      "intermediate_unit": "real_pauli_coefficients",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": false,
+      "frontier_width": 4,
+      "frontier_rejection": null,
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 100,
+      "query_tracemalloc_peak_bytes": 24582,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 135664
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1973
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 431
+        }
+      },
+      "rqm_compile_ns": [
+        10264283,
+        10624556,
+        9668306,
+        8999829,
+        9900045
+      ],
+      "rqm_query_ns": [
+        1058042,
+        1052465,
+        1003862,
+        1112996,
+        1057712
+      ],
+      "qiskit_compile_ns": [
+        4533095,
+        4680256,
+        4282107,
+        4676070,
+        4207124
+      ],
+      "aer_query_ns": [
+        1379667,
+        1342380,
+        1661311,
+        1399257,
+        1895794
+      ],
+      "end_to_end_ratio": 0.5413837886713494
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.02552450910074365,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 128,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 128,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 8 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 224,
+      "query_tracemalloc_peak_bytes": 49523,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 266231
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2034
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        18004516,
+        20423929,
+        20165540,
+        18385280,
+        17969954
+      ],
+      "rqm_query_ns": [
+        1583174,
+        1596664,
+        1517415,
+        1520600,
+        1536624
+      ],
+      "qiskit_compile_ns": [
+        6373586,
+        6466346,
+        6443060,
+        6279955,
+        6066643
+      ],
+      "aer_query_ns": [
+        3310464,
+        3633320,
+        3320999,
+        3391856,
+        3398186
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 8,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZ",
+      "max_terms": 4096,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.02552450910074365,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=4096",
+      "query_work_units": 4536,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 4536,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 8 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 224,
+      "query_tracemalloc_peak_bytes": 1079253,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 266231
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2034
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        18004516,
+        20423929,
+        20165540,
+        18385280,
+        17969954
+      ],
+      "rqm_query_ns": [
+        29750230,
+        30341291,
+        30187368,
+        30191064,
+        30328771
+      ],
+      "qiskit_compile_ns": [
+        6373586,
+        6466346,
+        6443060,
+        6279955,
+        6066643
+      ],
+      "aer_query_ns": [
+        3310464,
+        3633320,
+        3320999,
+        3391856,
+        3398186
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.36590755770522476,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 76,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 76,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 7 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 224,
+      "query_tracemalloc_peak_bytes": 49355,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 266231
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2034
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        18004516,
+        20423929,
+        20165540,
+        18385280,
+        17969954
+      ],
+      "rqm_query_ns": [
+        2058700,
+        1948313,
+        2019750,
+        1970707,
+        1776285
+      ],
+      "qiskit_compile_ns": [
+        6373586,
+        6466346,
+        6443060,
+        6279955,
+        6066643
+      ],
+      "aer_query_ns": [
+        3707251,
+        3860717,
+        4135902,
+        3826551,
+        3357384
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 8,
+      "query": "local_X",
+      "pauli": "XIIIIIII",
+      "max_terms": 4096,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.36590755770522476,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=4096",
+      "query_work_units": 4182,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 4182,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 7 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 224,
+      "query_tracemalloc_peak_bytes": 1432917,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 266231
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 2034
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        18004516,
+        20423929,
+        20165540,
+        18385280,
+        17969954
+      ],
+      "rqm_query_ns": [
+        16623528,
+        17125163,
+        17392605,
+        16984150,
+        16753774
+      ],
+      "qiskit_compile_ns": [
+        6373586,
+        6466346,
+        6443060,
+        6279955,
+        6066643
+      ],
+      "aer_query_ns": [
+        3707251,
+        3860717,
+        4135902,
+        3826551,
+        3357384
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.008159229829416588,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 128,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 128,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 12 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 336,
+      "query_tracemalloc_peak_bytes": 79173,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 416117
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1953
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        22420685,
+        22655278,
+        22381166,
+        23755846,
+        22936141
+      ],
+      "rqm_query_ns": [
+        2639094,
+        2438962,
+        2793836,
+        2629840,
+        2965255
+      ],
+      "qiskit_compile_ns": [
+        6351091,
+        6270260,
+        5787132,
+        6530743,
+        5888695
+      ],
+      "aer_query_ns": [
+        8545986,
+        8512536,
+        8414058,
+        8820970,
+        9479332
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 12,
+      "query": "global_Z",
+      "pauli": "ZZZZZZZZZZZZ",
+      "max_terms": 4096,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.008159229829416588,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=4096",
+      "query_work_units": 6144,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 6144,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 12 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 336,
+      "query_tracemalloc_peak_bytes": 1945482,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 416117
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1953
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        22420685,
+        22655278,
+        22381166,
+        23755846,
+        22936141
+      ],
+      "rqm_query_ns": [
+        13813306,
+        13119632,
+        15212473,
+        14025336,
+        13696330
+      ],
+      "qiskit_compile_ns": [
+        6351091,
+        6270260,
+        5787132,
+        6530743,
+        5888695
+      ],
+      "aer_query_ns": [
+        8545986,
+        8512536,
+        8414058,
+        8820970,
+        9479332
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 64,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.1388249892973477,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=64",
+      "query_work_units": 66,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 66,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 11 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 336,
+      "query_tracemalloc_peak_bytes": 79005,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 416117
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1953
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        22420685,
+        22655278,
+        22381166,
+        23755846,
+        22936141
+      ],
+      "rqm_query_ns": [
+        2513424,
+        2420995,
+        2525492,
+        2342526,
+        2760516
+      ],
+      "qiskit_compile_ns": [
+        6351091,
+        6270260,
+        5787132,
+        6530743,
+        5888695
+      ],
+      "aer_query_ns": [
+        8492134,
+        8465826,
+        8353617,
+        8645376,
+        8438795
+      ],
+      "end_to_end_ratio": null
+    },
+    {
+      "family": "random_noncommuting",
+      "n": 12,
+      "query": "local_X",
+      "pauli": "XIIIIIIIIIII",
+      "max_terms": 4096,
+      "available": false,
+      "exact_within_tolerance": false,
+      "answer_real": null,
+      "answer_imag": null,
+      "reference": 0.1388249892973477,
+      "abs_error": null,
+      "route": "structured_exact",
+      "reason": "structured expansion exceeded max_terms=4096",
+      "query_work_units": 6100,
+      "query_work_unit": "pauli_terms",
+      "largest_intermediate": 6100,
+      "intermediate_unit": "pauli_terms",
+      "query_promotions": 0,
+      "compiler_promotions": 0,
+      "query_fallback": true,
+      "frontier_width": null,
+      "frontier_rejection": "frontier width 11 exceeds cap 4 or unsupported locality",
+      "plan_reused": false,
+      "compilation_fallback": null,
+      "representation_size": 336,
+      "query_tracemalloc_peak_bytes": 1802362,
+      "recognizer_rejections": {
+        "star": {
+          "rejected": true,
+          "rejection_ns": 416117
+        },
+        "chain": {
+          "rejected": true,
+          "rejection_ns": 1953
+        },
+        "hardware": {
+          "rejected": true,
+          "rejection_ns": 511
+        }
+      },
+      "rqm_compile_ns": [
+        22420685,
+        22655278,
+        22381166,
+        23755846,
+        22936141
+      ],
+      "rqm_query_ns": [
+        27653173,
+        27055532,
+        28403824,
+        27409706,
+        27610148
+      ],
+      "qiskit_compile_ns": [
+        6351091,
+        6270260,
+        5787132,
+        6530743,
+        5888695
+      ],
+      "aer_query_ns": [
+        8492134,
+        8465826,
+        8353617,
+        8645376,
+        8438795
+      ],
+      "end_to_end_ratio": null
+    }
+  ]
+}

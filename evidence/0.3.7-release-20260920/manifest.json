@@ -1,0 +1,117 @@
+{
+  "status": "passed",
+  "repositories": {
+    "rqm-core": {
+      "commit": "6d1a06dfa7d40847df3d0fc60f635c78365abec8",
+      "tree": "317e478a1e3cd98aab84058a6e1f2ad9d66a26b7"
+    },
+    "rqm-circuits": {
+      "commit": "c8f970f222a10cc95a044947c522ec574bae9dab",
+      "tree": "b104ca8f5ab6d3ff59414ad21d38386e68d0828d"
+    },
+    "rqm-entanglement": {
+      "commit": "60d30b3c8e6937f442f9df487cfdf152ea80e562",
+      "tree": "b3c3e8703b55fc429bb406f2d5d9faefd17af761"
+    },
+    "rqm-compiler": {
+      "commit": "dbfe8ee4af4cbbbf28de4adc5db045a371706c59",
+      "tree": "b6f1ff4517d3758e57ec8e056f1c155eae6d4fc9"
+    },
+    "rqm-qiskit": {
+      "commit": "a472ef44cf235c28e2bff29430573c6abdf66d0f",
+      "tree": "2b54d85edf3cdd521dc91185411720fc41c1964b"
+    },
+    "rqm-optimize": {
+      "commit": "be12b2c9e16477a81f9af0a549189aa61299e7d3",
+      "tree": "cce4e582d1b5befe332de6ab4a8281cd6bc0eaaa"
+    },
+    "rqm-braket": {
+      "commit": "ee15b2c761f9cd48bf5b81c54a715bea8c4768f6",
+      "tree": "bba6f45f520921e5a693099e837d1132f6b800f8"
+    },
+    "openqse-rqm-adapter": {
+      "commit": "2f73303ece25c26839254135b58002b995395841",
+      "tree": "cc6e396bff8fabc99660fe70703ed2ffeeeebced"
+    }
+  },
+  "wheels": {
+    "rqm_braket-0.2.3-py3-none-any.whl": "d6a9d7f8fe2688295e8c9b414aed4c0df25e567f118b46d271d3deb4cd173220",
+    "rqm_circuits-0.2.1-py3-none-any.whl": "9671c00beb01f8aba57f84ef0931933ddfd088b1fc58cdd8560a264be812ccae",
+    "rqm_compiler-0.3.7-py3-none-any.whl": "48c723c48979c21666a8a93ed81ece4a75d304e73aa7283e0395c4b408c79726",
+    "rqm_core-0.2.2-py3-none-any.whl": "54aa5fa8ead01b0cdd2a88aa6999142f6b1e87e3ff4ab365242edbad2526715b",
+    "rqm_entanglement-0.2.2-py3-none-any.whl": "84dc5100436b939462fb7e114fb35e691d2b05bd28e6150e7312b602fec61e90",
+    "rqm_openqse_adapter-0.1.1-py3-none-any.whl": "553a56d3da9c711c0540b1ef66e9a87274b78a65dd430cd9ddc89b0034fd3452",
+    "rqm_optimize-0.1.3-py3-none-any.whl": "2f41c3d718b4520d19c7ca4d7307e3fb7100cd4231b3d7617573e8000e05af46",
+    "rqm_qiskit-0.4.1-py3-none-any.whl": "ef08f7541c4004bc24200921171d2efde0ab92fb7b1c9ed12c83eef2d2c831ac"
+  },
+  "hardware_execution": false,
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "installed_modules": {
+    "rqm_core": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_core/__init__.py",
+    "rqm_circuits": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_circuits/__init__.py",
+    "rqm_entanglement": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_entanglement/__init__.py",
+    "rqm_compiler": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_compiler/__init__.py",
+    "rqm_qiskit": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_qiskit/__init__.py",
+    "rqm_optimize": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_optimize/__init__.py",
+    "rqm_braket": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_braket/__init__.py",
+    "rqm_openqse_adapter": "/workspace/scratch/6be2d8223fab/certification-037-final/venv/lib/python3.12/site-packages/rqm_openqse_adapter/__init__.py"
+  },
+  "test_counts": {
+    "rqm-core": {
+      "tests": 448,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 448
+    },
+    "rqm-circuits": {
+      "tests": 262,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 10,
+      "passed": 252
+    },
+    "rqm-entanglement": {
+      "tests": 162,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "passed": 161
+    },
+    "rqm-compiler": {
+      "tests": 930,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 930
+    },
+    "rqm-qiskit": {
+      "tests": 568,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 568
+    },
+    "rqm-optimize": {
+      "tests": 101,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 101
+    },
+    "rqm-braket": {
+      "tests": 417,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 417
+    },
+    "openqse-rqm-adapter": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 64
+    }
+  }
+}

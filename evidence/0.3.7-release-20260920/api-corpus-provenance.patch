@@ -1,0 +1,8 @@
+--- a/scripts/compiler_cross_provider_preflight_0_3_7.py
++++ b/scripts/compiler_cross_provider_preflight_0_3_7.py
+@@
+-def main():
++def main(qualification_path: Path | None = None):
+@@
+-    qualified=json.loads((ROOT/'artifacts/0.3.7-installed-qualification/final/qualification.json').read_text())
++    qualified=json.loads((qualification_path or ROOT/'artifacts/0.3.7-installed-qualification/final/qualification.json').read_text())

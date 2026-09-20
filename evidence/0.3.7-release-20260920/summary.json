@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "suite_passed": 2941,
+  "suite_skipped": 11,
+  "compiler_passed": 930,
+  "python311": {
+    "passed": 1090,
+    "skipped": 2
+  },
+  "taxonomy": {
+    "valid": 21,
+    "total": 21,
+    "max_error": 2.1094237467877974e-15
+  },
+  "boundary": {
+    "available": 79,
+    "total": 96,
+    "max_error": 2.6645352591003757e-15,
+    "coverage_change": {
+      "family": "interleaved_star",
+      "qubits": 12,
+      "query": "global_Z",
+      "max_terms": 64,
+      "old_available": true,
+      "new_available": false,
+      "reason": "Qualified unsafe-star-placement fallback exceeds the unchanged Pauli cap."
+    }
+  },
+  "api": {
+    "unitary_exit": 0,
+    "measurement_exit": 0,
+    "unitary": {
+      "passed": 216
+    },
+    "measurement": {
+      "passed": 270
+    },
+    "qualified_source_parity": true
+  },
+  "hardware_execution": false,
+  "timing_note": "Taxonomy and boundary checks ran concurrently. Timings are diagnostic; this release certification makes no new performance claim.",
+  "api_revision": "72c57aef880e262654c1c2c761efd7bf028e4b74",
+  "api_harness_patch_sha256": "49b5a1b622f38f4ec39af22c379bd67bf84656b9b83214b23ae87165398b840a",
+  "public_source_equivalence": {
+    "rqm-compiler": {
+      "certified_commit": "dbfe8ee4af4cbbbf28de4adc5db045a371706c59",
+      "github_commit": "c7d0056d73f126b4d160d4dd1c26f5182c6f3112",
+      "tree": "b6f1ff4517d3758e57ec8e056f1c155eae6d4fc9"
+    },
+    "rqm-entanglement": {
+      "certified_commit": "60d30b3c8e6937f442f9df487cfdf152ea80e562",
+      "github_commit": "3e09e26125362210771e7596262beb5317ebae9e",
+      "tree": "b3c3e8703b55fc429bb406f2d5d9faefd17af761"
+    },
+    "openqse-rqm-adapter": {
+      "certified_commit": "2f73303ece25c26839254135b58002b995395841",
+      "github_commit": "5b24ac90fb10307ca2736108af3d044cbaab6fb9",
+      "tree": "cc6e396bff8fabc99660fe70703ed2ffeeeebced"
+    }
+  }
+}
