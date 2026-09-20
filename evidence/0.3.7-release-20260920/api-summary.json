@@ -1,0 +1,11 @@
+{
+  "unitary_exit": 0,
+  "measurement_exit": 0,
+  "unitary": {
+    "passed": 216
+  },
+  "measurement": {
+    "passed": 270
+  },
+  "qualified_source_parity": true
+}

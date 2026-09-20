@@ -1,0 +1,319 @@
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-core', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-core']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-core'...
+
+['git', 'checkout', '--detach', '6d1a06dfa7d40847df3d0fc60f635c78365abec8']
+HEAD is now at 6d1a06d chore: release 0.2.2 (#18)
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-core']
+Processing ./sources/rqm-core
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-core
+  Building wheel for rqm-core (pyproject.toml): started
+  Building wheel for rqm-core (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-core: filename=rqm_core-0.2.2-py3-none-any.whl size=55211 sha256=54aa5fa8ead01b0cdd2a88aa6999142f6b1e87e3ff4ab365242edbad2526715b
+  Stored in directory: /root/.cache/pip/wheels/8b/a8/85/ebaaa1e3bc6ec5ae6e1b8a192e2cc73ddc5e9c72248c8371b2
+Successfully built rqm-core
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-circuits', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-circuits']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-circuits'...
+
+['git', 'checkout', '--detach', 'c8f970f222a10cc95a044947c522ec574bae9dab']
+HEAD is now at c8f970f Align canonical RQM API identity
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-circuits']
+Processing ./sources/rqm-circuits
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-circuits
+  Building wheel for rqm-circuits (pyproject.toml): started
+  Building wheel for rqm-circuits (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-circuits: filename=rqm_circuits-0.2.1-py3-none-any.whl size=40636 sha256=9671c00beb01f8aba57f84ef0931933ddfd088b1fc58cdd8560a264be812ccae
+  Stored in directory: /root/.cache/pip/wheels/2a/8c/50/5410f6673b56f9143bf8ea5efa0b95dc8fedd3dd21b6674f50
+Successfully built rqm-circuits
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-entanglement', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-entanglement']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-entanglement'...
+
+['git', 'checkout', '--detach', '60d30b3c8e6937f442f9df487cfdf152ea80e562']
+HEAD is now at 60d30b3 fix: qualify entanglement 0.2.2 dependency package
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-entanglement']
+Processing ./sources/rqm-entanglement
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-entanglement
+  Building wheel for rqm-entanglement (pyproject.toml): started
+  Building wheel for rqm-entanglement (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-entanglement: filename=rqm_entanglement-0.2.2-py3-none-any.whl size=44491 sha256=84dc5100436b939462fb7e114fb35e691d2b05bd28e6150e7312b602fec61e90
+  Stored in directory: /root/.cache/pip/wheels/d5/5a/a7/84c5de670e7ddf27fd0a3306001f9b4dfb4f220b4f32749081
+Successfully built rqm-entanglement
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-compiler', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-compiler']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-compiler'...
+
+['git', 'checkout', '--detach', 'dbfe8ee4af4cbbbf28de4adc5db045a371706c59']
+HEAD is now at dbfe8ee fix: freeze compiler 0.3.7 and require compatible transfer dependency
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-compiler']
+Processing ./sources/rqm-compiler
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-compiler
+  Building wheel for rqm-compiler (pyproject.toml): started
+  Building wheel for rqm-compiler (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-compiler: filename=rqm_compiler-0.3.7-py3-none-any.whl size=77711 sha256=48c723c48979c21666a8a93ed81ece4a75d304e73aa7283e0395c4b408c79726
+  Stored in directory: /root/.cache/pip/wheels/f2/8b/11/fa245babe64b39c50f79a1c50ab88218613510fdffe9faf404
+Successfully built rqm-compiler
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-qiskit', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-qiskit']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-qiskit'...
+
+['git', 'checkout', '--detach', 'a472ef44cf235c28e2bff29430573c6abdf66d0f']
+HEAD is now at a472ef4 chore: preserve 0.3.7 qualification and release candidates [skip ci] [skip render]
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-qiskit']
+Processing ./sources/rqm-qiskit
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-qiskit
+  Building wheel for rqm-qiskit (pyproject.toml): started
+  Building wheel for rqm-qiskit (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-qiskit: filename=rqm_qiskit-0.4.1-py3-none-any.whl size=82326 sha256=ef08f7541c4004bc24200921171d2efde0ab92fb7b1c9ed12c83eef2d2c831ac
+  Stored in directory: /root/.cache/pip/wheels/89/cc/3f/543affce056fc0f1259404f53d6fc35b1b7bda874b723683da
+Successfully built rqm-qiskit
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-optimize', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-optimize']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-optimize'...
+
+['git', 'checkout', '--detach', 'be12b2c9e16477a81f9af0a549189aa61299e7d3']
+HEAD is now at be12b2c Align canonical RQM API identity
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-optimize']
+Processing ./sources/rqm-optimize
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-optimize
+  Building wheel for rqm-optimize (pyproject.toml): started
+  Building wheel for rqm-optimize (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-optimize: filename=rqm_optimize-0.1.3-py3-none-any.whl size=23704 sha256=2f41c3d718b4520d19c7ca4d7307e3fb7100cd4231b3d7617573e8000e05af46
+  Stored in directory: /root/.cache/pip/wheels/41/0f/c4/58c7d7d3b05ced9890f643b5822ea69d13bf5267c8085f2ff6
+Successfully built rqm-optimize
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/rqm-braket', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-braket']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-braket'...
+
+['git', 'checkout', '--detach', 'ee15b2c761f9cd48bf5b81c54a715bea8c4768f6']
+HEAD is now at ee15b2c chore: preserve 0.3.7 qualification and release candidates [skip ci] [skip render]
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-braket']
+Processing ./sources/rqm-braket
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-braket
+  Building wheel for rqm-braket (pyproject.toml): started
+  Building wheel for rqm-braket (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-braket: filename=rqm_braket-0.2.3-py3-none-any.whl size=39028 sha256=d6a9d7f8fe2688295e8c9b414aed4c0df25e567f118b46d271d3deb4cd173220
+  Stored in directory: /root/.cache/pip/wheels/2e/6f/3e/9c133c64592badbebd1967cca36f1df90234009cd5df2ec4ce
+Successfully built rqm-braket
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['git', 'clone', '--no-local', '--no-checkout', '/workspace/scratch/6be2d8223fab/openqse-rqm-adapter', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/openqse-rqm-adapter']
+Cloning into '/workspace/scratch/6be2d8223fab/certification-037-final/sources/openqse-rqm-adapter'...
+
+['git', 'checkout', '--detach', '2f73303ece25c26839254135b58002b995395841']
+HEAD is now at 2f73303 fix: include optional IBM SDK in offline certification
+
+['/workspace/scratch/6be2d8223fab/qualification-tools/bin/python', '-m', 'pip', 'wheel', '--no-deps', '--wheel-dir', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/openqse-rqm-adapter']
+Processing ./sources/openqse-rqm-adapter
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: rqm-openqse-adapter
+  Building wheel for rqm-openqse-adapter (pyproject.toml): started
+  Building wheel for rqm-openqse-adapter (pyproject.toml): finished with status 'done'
+  Created wheel for rqm-openqse-adapter: filename=rqm_openqse_adapter-0.1.1-py3-none-any.whl size=50591 sha256=553a56d3da9c711c0540b1ef66e9a87274b78a65dd430cd9ddc89b0034fd3452
+  Stored in directory: /root/.cache/pip/wheels/0b/b3/e0/5c0d97af6971360e7b5faf84e20439d82b71d8597114a3eada
+Successfully built rqm-openqse-adapter
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: python -m pip install --upgrade pip
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pip', 'install', '-c', '/workspace/scratch/6be2d8223fab/openqse-rqm-adapter/candidate-constraints.txt', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_braket-0.2.3-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_circuits-0.2.1-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_compiler-0.3.7-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_core-0.2.2-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_entanglement-0.2.2-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_openqse_adapter-0.1.1-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_optimize-0.1.3-py3-none-any.whl', '/workspace/scratch/6be2d8223fab/certification-037-final/wheels/rqm_qiskit-0.4.1-py3-none-any.whl', 'pytest', 'pytest-cov', 'qiskit-aer==0.17.2', 'qiskit-qasm3-import==0.6.0', 'qiskit-ibm-runtime>=0.48,<0.49', 'flask']
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pip', 'check']
+No broken requirements found.
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-core/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-core.xml']
+........................................................................ [ 16%]
+........................................................................ [ 32%]
+........................................................................ [ 48%]
+........................................................................ [ 64%]
+........................................................................ [ 80%]
+........................................................................ [ 96%]
+................                                                         [100%]
+448 passed in 0.60s
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-circuits/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-circuits.xml']
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-circuits
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 262 items
+
+sources/rqm-circuits/tests/test_circuit.py ............................. [ 11%]
+..........                                                               [ 14%]
+sources/rqm-circuits/tests/test_gates.py ............................... [ 26%]
+...........                                                              [ 30%]
+sources/rqm-circuits/tests/test_new_features.py ........................ [ 40%]
+........................                                                 [ 49%]
+sources/rqm-circuits/tests/test_public_boundary.py ..                    [ 50%]
+sources/rqm-circuits/tests/test_schema.py ................ssssssssss...  [ 61%]
+sources/rqm-circuits/tests/test_serialization.py ....................... [ 69%]
+....................                                                     [ 77%]
+sources/rqm-circuits/tests/test_two_qubit_rotations.py ............      [ 82%]
+sources/rqm-circuits/tests/test_validation.py .......................... [ 91%]
+.....................                                                    [100%]
+
+- generated xml file: /workspace/scratch/6be2d8223fab/certification-037-final/rqm-circuits.xml -
+======================= 252 passed, 10 skipped in 0.22s ========================
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-entanglement/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-entanglement.xml']
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-entanglement
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 162 items
+
+sources/rqm-entanglement/tests/test_adapter.py .s..                      [  2%]
+sources/rqm-entanglement/tests/test_analysis.py ...........              [  9%]
+sources/rqm-entanglement/tests/test_basis.py ........                    [ 14%]
+sources/rqm-entanglement/tests/test_canonical.py ....................... [ 28%]
+....                                                                     [ 30%]
+sources/rqm-entanglement/tests/test_classify.py .............            [ 38%]
+sources/rqm-entanglement/tests/test_compiler_0_4_boundary.py ....        [ 41%]
+sources/rqm-entanglement/tests/test_coupling.py .......                  [ 45%]
+sources/rqm-entanglement/tests/test_measures.py .............            [ 53%]
+sources/rqm-entanglement/tests/test_pauli_transfer.py .................. [ 64%]
+............                                                             [ 72%]
+sources/rqm-entanglement/tests/test_relational.py ......                 [ 75%]
+sources/rqm-entanglement/tests/test_su4.py ..........................    [ 91%]
+sources/rqm-entanglement/tests/test_tensor.py .............              [100%]
+
+- generated xml file: /workspace/scratch/6be2d8223fab/certification-037-final/rqm-entanglement.xml -
+======================== 161 passed, 1 skipped in 0.68s ========================
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-compiler/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-compiler.xml']
+........................................................................ [  7%]
+........................................................................ [ 15%]
+........................................................................ [ 23%]
+........................................................................ [ 30%]
+........................................................................ [ 38%]
+........................................................................ [ 46%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 77%]
+........................................................................ [ 85%]
+........................................................................ [ 92%]
+..................................................................       [100%]
+930 passed in 2.66s
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-qiskit/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-qiskit.xml']
+........................................................................ [ 12%]
+........................................................................ [ 25%]
+........................................................................ [ 38%]
+........................................................................ [ 50%]
+........................................................................ [ 63%]
+........................................................................ [ 76%]
+........................................................................ [ 88%]
+................................................................         [100%]
+568 passed in 4.20s
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-optimize/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-optimize.xml']
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: /workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-optimize
+configfile: pyproject.toml
+plugins: cov-7.1.0
+collected 101 items
+
+sources/rqm-optimize/tests/test_axis_aware.py .......................... [ 25%]
+                                                                         [ 25%]
+sources/rqm-optimize/tests/test_fusion.py .......                        [ 32%]
+sources/rqm-optimize/tests/test_geometry_quaternion.py ................. [ 49%]
+...................                                                      [ 68%]
+sources/rqm-optimize/tests/test_optimize_qiskit.py ..................... [ 89%]
+.....                                                                    [ 94%]
+sources/rqm-optimize/tests/test_public_api.py ......                     [100%]
+
+- generated xml file: /workspace/scratch/6be2d8223fab/certification-037-final/rqm-optimize.xml -
+============================= 101 passed in 0.46s ==============================
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/rqm-braket/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/rqm-braket.xml']
+........................................................................ [ 17%]
+........................................................................ [ 34%]
+........................................................................ [ 51%]
+........................................................................ [ 69%]
+........................................................................ [ 86%]
+.........................................................                [100%]
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-m', 'pytest', '/workspace/scratch/6be2d8223fab/certification-037-final/sources/openqse-rqm-adapter/tests', '-q', '--tb=short', '--import-mode=importlib', '-o', 'pythonpath=', '--junitxml=/workspace/scratch/6be2d8223fab/certification-037-final/openqse-rqm-adapter.xml']
+................................................................         [100%]
+64 passed in 3.89s
+
+['/workspace/scratch/6be2d8223fab/certification-037-final/venv/bin/python', '-c', 'import json; from pathlib import Path; from rqm_openqse_adapter.ecosystem.pipeline import run_clean_demonstration; r=run_clean_demonstration(ecosystem_root=Path(\'/workspace/scratch/6be2d8223fab\')).to_dict(); r["repository_shas"]={\'rqm-core\': \'6d1a06dfa7d40847df3d0fc60f635c78365abec8\', \'rqm-circuits\': \'c8f970f222a10cc95a044947c522ec574bae9dab\', \'rqm-entanglement\': \'60d30b3c8e6937f442f9df487cfdf152ea80e562\', \'rqm-compiler\': \'dbfe8ee4af4cbbbf28de4adc5db045a371706c59\', \'rqm-qiskit\': \'a472ef44cf235c28e2bff29430573c6abdf66d0f\', \'rqm-optimize\': \'be12b2c9e16477a81f9af0a549189aa61299e7d3\', \'rqm-braket\': \'ee15b2c761f9cd48bf5b81c54a715bea8c4768f6\', \'openqse-rqm-adapter\': \'2f73303ece25c26839254135b58002b995395841\'}; Path("conformance.json").write_text(json.dumps(r,indent=2,default=str))']
