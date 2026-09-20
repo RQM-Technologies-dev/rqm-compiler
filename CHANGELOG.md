@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.7 — release candidate
+
+- Freeze the representation-aware prototype at the integrated September 20 runtime.
+- Include quaternion-native observable updates, analytic hinge/CX transfers,
+  bounded frontier evaluation, query reuse, and verified regional compilation.
+- Preserve input validation and the global-Z unsafe-star-placement fallback.
+- Require rqm-entanglement 0.2.2 for the analytic Pauli transfer module and
+  rqm-core 0.2.2; retain a default frontier cap of four.
+- Qualify exact installed packages before publication; hardware integration
+  and wider-frontier research remain separate from this software release.
+
 ## [0.3.0](https://github.com/RQM-Technologies-dev/rqm-compiler/compare/v0.2.2...v0.3.0) (2026-08-06)
 
 

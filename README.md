@@ -1,6 +1,6 @@
 # rqm-compiler
 
-**RQM Compiler 0.4 is a representation-aware quantum computation planner.** It analyzes the circuit, requested observable, interaction structure, and target capabilities, then uses the least-general validated exact representation and readout/lowering strategy available. When specialized structure is not proven, it falls back conservatively to general exact machinery.
+**RQM Compiler 0.3.7 is a representation-aware quantum computation planner.** It analyzes the circuit, requested observable, interaction structure, and target capabilities, then uses the least-general validated exact representation and readout/lowering strategy available. When specialized structure is not proven, it falls back conservatively to general exact machinery.
 
 It remains backend-neutral: RQM plans the computation; backend bridges materialize and execute it.
 
@@ -37,7 +37,7 @@ pytest
 
 ## Representation-aware public API
 
-The validated 0.4.0 planner is now available through the normal `rqm_compiler`
+The 0.3.7 prototype planner is available through the normal `rqm_compiler`
 namespace; callers no longer need to import `stable_prototype` directly.
 
 ```python
