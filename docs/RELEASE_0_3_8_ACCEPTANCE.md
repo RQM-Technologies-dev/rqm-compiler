@@ -98,6 +98,16 @@ translator; it was corrected to use its documented `Circuit` interface.
 
 ## Release configuration and next promotion
 
+The follow-up push exposed a pre-existing benchmark workflow mismatch: the
+taxonomy script required `RQM_CANDIDATE_WHEEL` and `RQM_CANDIDATE_COMMIT`, while
+both workflows installed an editable checkout and supplied neither. The
+[taxonomy run](https://github.com/RQM-Technologies-dev/rqm-compiler/actions/runs/35517848542)
+and [baseline run](https://github.com/RQM-Technologies-dev/rqm-compiler/actions/runs/35517848530)
+failed at provenance recording. The repaired workflows build and install the
+actual wheel, verify site-packages imports, supply its path and source revision,
+and run in a clean output directory. Pull-request triggers exercise this setup
+before merge. Workloads, numerical tolerance and five repetitions are unchanged.
+
 The one-time `release-as: 0.3.7` override is removed. The manifest and package
 version remain at the actual published 0.3.7. Release Please can prepare the
 normal patch successor, 0.3.8, from these acceptance/documentation changes;
