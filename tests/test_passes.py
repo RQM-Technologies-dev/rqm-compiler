@@ -5,6 +5,12 @@ import pytest
 
 from rqm_compiler import Circuit, Operation, compile_circuit
 from rqm_compiler.passes import cancel_2q_pass, sign_canon_pass, to_u1q_pass
+# These legacy tests intentionally exercise terminal/Bloch canonicalization.
+# Exact defaults are independently covered by test_composable_phase.py.
+from functools import partial
+to_u1q_pass = partial(to_u1q_pass, phase_invariant=True)
+sign_canon_pass = partial(sign_canon_pass, phase_invariant=True)
+
 from rqm_compiler.passes.cancel_2q import SELF_INVERSE_TWO_QUBIT_GATES
 from rqm_compiler.descriptors import CANONICAL_SINGLE_QUBIT_GATE
 

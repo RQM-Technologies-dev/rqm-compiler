@@ -1,29 +1,13 @@
 """
 rqm_compiler.passes.to_u1q
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Pass that collapses all single-qubit named gates to the canonical u1q form.
+Convert exact SU(2) rotations to the u1q representation.
 
-After this pass the only single-qubit gate in the circuit is ``u1q``, giving
-an IR of the form::
-
-    two-qubit ops  +  u1q
-
-This is the minimal, complete, and geometrically elegant target representation
-described in the Q² compiler vision.
-
-Supported single-qubit gates (collapsed to u1q)
-------------------------------------------------
-* ``i``            — identity
-* ``x``            — Pauli X  (π rotation around X axis)
-* ``y``            — Pauli Y  (π rotation around Y axis)
-* ``z``            — Pauli Z  (π rotation around Z axis)
-* ``h``            — Hadamard (π rotation around (X+Z)/√2 axis)
-* ``s``            — S gate   (π/2 rotation around Z axis)
-* ``t``            — T gate   (π/4 rotation around Z axis)
-* ``rx(angle)``    — rotation around X by *angle*
-* ``ry(angle)``    — rotation around Y by *angle*
-* ``rz(angle)``    — rotation around Z by *angle*
-* ``phaseshift(angle)`` — phase shift (equivalent to rz up to global phase)
+By default only i/rx/ry/rz are converted, retaining the quaternion sign.
+Named U(2) gates x/y/z/h/s/t/phaseshift retain their original descriptors:
+a bare quaternion cannot carry their additional scalar phase. Explicit
+phase_invariant=True permits the historical terminal-circuit conversion.
+Its output must not be reused as an exact controlled block.
 
 Quaternion convention
 ---------------------
@@ -128,12 +112,12 @@ def _gate_to_quaternion(gate: str, params: dict[str, Any]) -> tuple[float, float
     raise ValueError(f"Internal error: unexpected gate {gate!r} in _gate_to_quaternion.")  # pragma: no cover
 
 
-def to_u1q_pass(circuit: Circuit) -> Circuit:
+def to_u1q_pass(circuit: Circuit, *, phase_invariant: bool = False) -> Circuit:
     """Return a new circuit with all collapsible single-qubit gates converted to u1q.
 
-    Any single-qubit gate in ``{i, x, y, z, h, s, t, rx, ry, rz, phaseshift}``
+    Any single-qubit gate in ``{i, rx, ry, rz}``
     is replaced with an equivalent ``u1q`` operation whose quaternion parameters
-    represent the same single-qubit action up to global phase.
+    represent exactly the same SU(2) action. Named U(2) gates remain unchanged.
 
     Two-qubit gates (cx, cy, cz, swap, iswap), ``measure``, ``barrier``, and
     operations that are already ``u1q`` are passed through unchanged.
@@ -158,9 +142,11 @@ def to_u1q_pass(circuit: Circuit) -> Circuit:
     """
     out = Circuit(circuit.num_qubits)
     for op in circuit.operations:
-        if op.gate in _COLLAPSIBLE_SINGLE_QUBIT_GATES and not op.controls:
+        # Only determinant-one gates have an exact phase-free u1q encoding.
+        # Keep named U(2) gates in the IR rather than discard their scalar phase.
+        if op.gate in (_COLLAPSIBLE_SINGLE_QUBIT_GATES if phase_invariant else {"i", "rx", "ry", "rz"}) and not op.controls:
             w, x, y, z = _gate_to_quaternion(op.gate, op.params)
-            w, x, y, z = normalize_quaternion(w, x, y, z, allow_renormalization=True)
+            w, x, y, z = normalize_quaternion(w, x, y, z, allow_renormalization=True, canonicalize_sign=phase_invariant)
             out.add(
                 Operation(
                     gate=CANONICAL_SINGLE_QUBIT_GATE,

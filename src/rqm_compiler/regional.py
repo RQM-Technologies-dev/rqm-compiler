@@ -201,7 +201,7 @@ def optimize_circuit_regions(
             "source_start": region.source_start, "routing": routing,
             "optimization_applied": compiler_report.optimization_applied})
         changed = optimized.to_descriptors() != local.to_descriptors()
-        proof = verify_equivalence(local, optimized)
+        proof = verify_equivalence(local, optimized, atol=1e-10, rtol=0.0)
         verified = proof.status is EquivalenceStatus.VERIFIED and proof.verified is True
         if changed and not verified:
             proof_failed = True

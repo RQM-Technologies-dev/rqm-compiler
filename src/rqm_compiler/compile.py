@@ -77,7 +77,7 @@ class CompiledCircuit:
 #: 3. ``flatten``     — resolve nesting (no-op for v0 flat circuits)
 #: 4. ``to_u1q``      — collapse all named single-qubit gates to u1q form
 #: 5. ``merge_u1q``   — merge adjacent u1q gates on the same qubit; drop identities
-#: 6. ``sign_canon``  — enforce w ≥ 0 on every u1q quaternion
+#: 6. ``sign_canon``  — normalize every u1q quaternion without changing its SU(2) sign
 #: 7. ``cancel_2q``   — cancel adjacent self-inverse two-qubit gate pairs (cx·cx, cy·cy, cz·cz, swap·swap)
 OPTIMIZATION_PIPELINE: tuple[tuple[str, Callable[[Circuit], Circuit]], ...] = (
     ("normalize", normalize_circuit),
@@ -179,10 +179,10 @@ def optimize_circuit(
     1. **normalize**    — canonical IR shape (lowercase names, list fields, …).
     2. **canonicalize** — stable operation form.
     3. **flatten**      — resolve nesting (no-op for v0 flat circuits).
-    4. **to_u1q**       — collapse all named single-qubit gates to ``u1q`` quaternion form.
+    4. **to_u1q**       — convert exact SU(2) rotations to ``u1q``, retaining phase-bearing named gates.
     5. **merge_u1q**    — merge adjacent ``u1q`` gates on the same qubit, dropping
        identities to reduce gate count and circuit depth.
-    6. **sign_canon**   — enforce ``w ≥ 0`` on every ``u1q`` quaternion for
+    6. **sign_canon**   — retain the SU(2) sign of every ``u1q`` quaternion for
        deterministic equality, cache stability, and optimization stability.
     7. **cancel_2q**    — cancel adjacent self-inverse two-qubit gate pairs
        (``cx·cx``, ``cy·cy``, ``cz·cz``, ``swap·swap``) on the same qubit pair.
@@ -234,7 +234,7 @@ def optimize_circuit(
         circuit_two_qubit_cost(circuit, policy.cost_model) - pre_adaptive_cost
     )
 
-    candidate_equivalence = verify_equivalence(circuit, candidate_optimized_circuit)
+    candidate_equivalence = verify_equivalence(circuit, candidate_optimized_circuit, atol=1e-10, rtol=0.0)
     proof_result = _map_proof_result(candidate_equivalence.status.value)
 
     # Fail-closed commit: only VERIFIED candidates may be committed.
@@ -254,7 +254,7 @@ def optimize_circuit(
         optimization_applied = False
         fallback_reason = "verification_not_established"
         # Returned circuit is literally the input circuit's structure, so equivalence is guaranteed.
-        committed_equivalence = verify_equivalence(circuit, committed_optimized_circuit)
+        committed_equivalence = verify_equivalence(circuit, committed_optimized_circuit, atol=1e-10, rtol=0.0)
 
     # Capture committed metrics.
     optimized_gate_count = len(committed_optimized_circuit)

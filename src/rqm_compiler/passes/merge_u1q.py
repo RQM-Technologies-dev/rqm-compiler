@@ -6,7 +6,7 @@ Pass that merges adjacent u1q gates on the same qubit.
 After :func:`~rqm_compiler.passes.to_u1q.to_u1q_pass`, consecutive ``u1q``
 gates on the same qubit can be combined into a single ``u1q`` gate whose
 quaternion is the product of the individual quaternions.  When the result is
-identity up to global phase (``q = ±1``) it is dropped entirely, reducing the
+positive identity (``q = +1``) it is dropped entirely, reducing the
 gate count.
 
 Quaternion product
@@ -30,7 +30,7 @@ from ..circuit import Circuit
 from ..normalize import normalize_quaternion
 from ..ops import Operation
 
-_IDENTITY_TOL: float = 1e-9
+_IDENTITY_TOL: float = 1e-12
 
 
 def _mul_quaternion(
@@ -47,9 +47,9 @@ def _mul_quaternion(
 
 
 def _is_identity(w: float, x: float, y: float, z: float) -> bool:
-    """Return ``True`` if the quaternion is identity up to global phase."""
+    """Return ``True`` if the quaternion is positive identity."""
     return (
-        abs(abs(w) - 1.0) <= _IDENTITY_TOL
+        abs(w - 1.0) <= _IDENTITY_TOL
         and math.isclose(abs(x), 0.0, abs_tol=_IDENTITY_TOL)
         and math.isclose(abs(y), 0.0, abs_tol=_IDENTITY_TOL)
         and math.isclose(abs(z), 0.0, abs_tol=_IDENTITY_TOL)
@@ -61,8 +61,7 @@ def merge_u1q_pass(circuit: Circuit) -> Circuit:
 
     Consecutive ``u1q`` gates on the same qubit (with no intervening gate that
     touches that qubit) are replaced by a single ``u1q`` gate whose quaternion
-    is the product of the individual quaternions.  Identity results up to
-    global phase (within :data:`_IDENTITY_TOL`) are dropped to further reduce
+    is the product of the individual quaternions.  Positive identity results (within :data:`_IDENTITY_TOL`) are dropped to further reduce
     the gate count.
 
     This pass is designed to operate on circuits that have already been through
@@ -101,7 +100,7 @@ def merge_u1q_pass(circuit: Circuit) -> Circuit:
         w, x, y, z = pending[qubit]
         pending[qubit] = None
         if not _is_identity(w, x, y, z):
-            w, x, y, z = normalize_quaternion(w, x, y, z, allow_renormalization=True)
+            w, x, y, z = normalize_quaternion(w, x, y, z, allow_renormalization=True, canonicalize_sign=False)
             output_ops.append(
                 Operation(
                     gate="u1q",
@@ -125,7 +124,13 @@ def merge_u1q_pass(circuit: Circuit) -> Circuit:
             # Flush any pending u1q on qubits touched by this operation.
             for q in set(op.targets) | set(op.controls):
                 _flush(q)
-            output_ops.append(op)
+            # Exact adjacent involutions remain safe even when named U(2)
+            # gates cannot be encoded by a phase-free quaternion.
+            if (op.gate in {"x", "y", "z", "h"} and not op.controls
+                    and output_ops and output_ops[-1].to_descriptor() == op.to_descriptor()):
+                output_ops.pop()
+            else:
+                output_ops.append(op)
 
     # Flush any pending u1q gates at the end of the circuit.
     for q in range(circuit.num_qubits):

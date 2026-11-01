@@ -90,7 +90,7 @@ def compile_stable(circuit:Circuit, *, adaptive_policy:AdaptiveCartanPolicy|None
    passes_applied=passes,optimization_applied=changed,fallback_reason=regional.fallback_reason,
    equivalence_report={"status":"VERIFIED","verified":True,
      "method":"REGIONAL_COMPOSITION" if changed else "GATEWISE_IDENTITY",
-     "phase_invariant":True,"regional":regional.to_dict()},
+     "phase_invariant":False,"regional":regional.to_dict()},
    adaptive_routing={"mode":(adaptive_policy or AdaptiveCartanPolicy.safe()).mode,
      "representation_events":events,"regions":regional.adaptive_regions,
      "kak_invocations":sum(r["routing"].get("kak_invocations",0) for r in regional.adaptive_regions)},

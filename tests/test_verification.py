@@ -35,7 +35,7 @@ def test_sign_canonical_semantics_verified_for_q_and_minus_q():
     optimized = Circuit(1)
     optimized.u1q(0, -0.5, -0.5, -0.5, -0.5)
 
-    report = verify_equivalence(original, optimized)
+    report = verify_equivalence(original, optimized, phase_invariant=True)
     assert report.status == EquivalenceStatus.VERIFIED
     assert report.method == EquivalenceMethod.U1Q_CANONICAL.value
     assert report.verified is True
@@ -90,7 +90,7 @@ def test_global_phase_difference_is_verified():
     optimized = Circuit(1)
     optimized.z(0)
 
-    report = verify_equivalence(original, optimized)
+    report = verify_equivalence(original, optimized, phase_invariant=True)
     assert report.status == EquivalenceStatus.VERIFIED
 
 
@@ -195,3 +195,35 @@ def test_optimize_report_includes_equivalence_payload():
     assert payload is not None
     assert payload["status"] == EquivalenceStatus.VERIFIED.value
     assert payload["verified"] is True
+
+
+def test_zero_tolerance_equal_sparse_operators():
+    # Matching structural zeros must contribute zero relative error, not 0/0.
+    for phase_invariant in (False, True):
+        for gate in (None, "x", "z"):
+            source = Circuit(2)
+            if gate is not None:
+                getattr(source, gate)(0)
+            equivalent = Circuit(2)
+            if gate is not None:
+                getattr(equivalent, gate)(0)
+            equivalent.i(1)  # Different descriptors force numerical comparison.
+            report = verify_equivalence(
+                source, equivalent, atol=0.0, rtol=0.0,
+                phase_invariant=phase_invariant,
+            )
+            assert report.status == EquivalenceStatus.VERIFIED
+            assert report.verified
+            assert report.max_abs_err == 0.0
+            assert report.max_rel_err == 0.0
+
+
+def test_zero_tolerance_still_rejects_unequal_operators():
+    original = Circuit(2)
+    changed = Circuit(2)
+    changed.x(0)
+    report = verify_equivalence(original, changed, atol=0.0, rtol=0.0)
+    assert report.status == EquivalenceStatus.COUNTEREXAMPLE
+    assert not report.verified
+    assert report.max_abs_err == 1.0
+    assert report.max_rel_err == 1.0

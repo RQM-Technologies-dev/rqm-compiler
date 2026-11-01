@@ -21,7 +21,7 @@ from rqm_compiler.verification import (
 
 
 def _u1q_matrix_after_to_u1q(circuit: Circuit) -> np.ndarray:
-    out = to_u1q_pass(circuit)
+    out = to_u1q_pass(circuit, phase_invariant=True)
     descriptors = out.to_descriptors()
     assert len(descriptors) == 1
     assert descriptors[0]["gate"] == "u1q"
@@ -147,7 +147,7 @@ def test_q_and_minus_q_are_bloch_equivalent_not_identical_su2() -> None:
     optimized = Circuit(1)
     optimized.u1q(0, neg_q.w, neg_q.x, neg_q.y, neg_q.z)
 
-    report = verify_equivalence(original, optimized)
+    report = verify_equivalence(original, optimized, phase_invariant=True)
     assert report.status == EquivalenceStatus.VERIFIED
     assert report.comparison["exact_su2_equality"] is False
     assert report.comparison["equal_up_to_global_phase"] is True

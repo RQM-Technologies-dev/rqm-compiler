@@ -52,7 +52,7 @@ class EquivalenceReport:
     status: EquivalenceStatus
     method: str = EquivalenceMethod.NONE.value
     verified: bool | None = None
-    phase_invariant: bool = True
+    phase_invariant: bool = False
     atol: float = 1e-9
     rtol: float = 1e-7
     max_abs_err: float | None = None
@@ -73,11 +73,17 @@ def verify_equivalence(
     atol: float = 1e-9,
     rtol: float = 1e-7,
     max_dense_qubits: int = 3,
+    phase_invariant: bool = False,
 ) -> EquivalenceReport:
-    """Verify whether *original* and *optimized* implement the same transformation."""
+    """Verify exact composable operators by default.
+
+    Set phase_invariant=True only for a complete terminal circuit whose
+    scalar phase is unobservable. Such a proof cannot justify controlled reuse.
+    """
 
     base = EquivalenceReport(
         status=EquivalenceStatus.UNVERIFIED,
+        phase_invariant=phase_invariant,
         method=EquivalenceMethod.NONE.value,
         verified=None,
         atol=atol,
@@ -113,8 +119,10 @@ def verify_equivalence(
             return base
 
         # Stage A: exact 1-qubit canonical-u1q check.
-        stage_a = _verify_single_qubit_u1q_canonical(original, optimized, atol=atol, rtol=rtol)
+        stage_a = (_verify_single_qubit_u1q_canonical(original, optimized, atol=atol, rtol=rtol)
+                   if phase_invariant else None)
         if stage_a is not None:
+            stage_a.phase_invariant = True
             return stage_a
 
         # Stage B: numerical unitary verification for small supported circuits.
@@ -124,6 +132,7 @@ def verify_equivalence(
             atol=atol,
             rtol=rtol,
             max_dense_qubits=max_dense_qubits,
+            phase_invariant=phase_invariant,
         )
     except Exception as exc:  # pragma: no cover - defensive fallback
         base.status = EquivalenceStatus.ERROR
@@ -195,9 +204,9 @@ def _canonical_u1q_single_qubit(circuit: Circuit) -> list[dict[str, Any]]:
     working = normalize_circuit(circuit)
     working = canonicalize_pass(working)
     working = flatten_pass(working)
-    working = to_u1q_pass(working)
+    working = to_u1q_pass(working, phase_invariant=True)
     working = merge_u1q_pass(working)
-    working = sign_canon_pass(working)
+    working = sign_canon_pass(working, phase_invariant=True)
     return working.to_descriptors()
 
 
@@ -208,10 +217,12 @@ def _verify_dense_unitary(
     atol: float,
     rtol: float,
     max_dense_qubits: int,
+    phase_invariant: bool = False,
 ) -> EquivalenceReport:
     report = EquivalenceReport(
         status=EquivalenceStatus.UNVERIFIED,
         method=EquivalenceMethod.UNITARY_NUMERICAL.value,
+        phase_invariant=phase_invariant,
         verified=None,
         atol=atol,
         rtol=rtol,
@@ -250,6 +261,14 @@ def _verify_dense_unitary(
         atol=atol,
         rtol=rtol,
     )
+    phase_equal = max_abs_err <= atol + rtol * max(1.0, _matrix_max_abs(v))
+    if not phase_invariant:
+        phase = 1.0 + 0.0j
+        errors = [(abs(u[i][j] - v[i][j]), i, j) for i in range(len(u)) for j in range(len(u))]
+        max_abs_err, i, j = max(errors)
+        pivot = (i, j)
+        max_rel_err = max(0.0 if e == 0.0 else e / max(abs(u[i][j]), abs(v[i][j]), atol) for e, i, j in errors)
+        notes = ["Exact composable operator comparison; no global-phase alignment."]
     report.notes.extend(notes)
     report.max_abs_err = max_abs_err
     report.max_rel_err = max_rel_err
@@ -258,12 +277,12 @@ def _verify_dense_unitary(
         report.status = EquivalenceStatus.VERIFIED
         report.verified = True
         report.comparison["equal_up_to_global_phase"] = True
-        report.notes.append("Numerical unitary comparison passed up to global phase.")
+        report.notes.append("Numerical unitary comparison passed" + (" up to global phase." if phase_invariant else " with phase preserved."))
         return report
 
     report.status = EquivalenceStatus.COUNTEREXAMPLE
     report.verified = False
-    report.comparison["equal_up_to_global_phase"] = False
+    report.comparison["equal_up_to_global_phase"] = phase_equal
     i, j = pivot
     report.witness = {
         "pivot": {"row": i, "col": j},
@@ -329,7 +348,7 @@ def compare_unitaries_up_to_global_phase(
                 max_abs_err = err
                 max_idx = (r, c)
             denom_rel = max(abs(u[r][c]), abs(ref), atol)
-            max_rel_err = max(max_rel_err, err / denom_rel)
+            max_rel_err = max(max_rel_err, 0.0 if err == 0.0 else err / denom_rel)
 
     tol_bound = atol + rtol * max(1.0, _matrix_max_abs(v))
     if max_abs_err > tol_bound:

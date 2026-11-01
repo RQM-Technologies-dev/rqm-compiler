@@ -49,7 +49,7 @@ def test_compile_for_backend_records_capability_and_materialization():
  assert d["backend_framework"]=="amazon_braket"
  assert d["backend_modality"]=="gate_model"
  assert d["backend_lowering_profile"]=="named_1q"
- assert d["backend_materializations"]==["u1q"]
+ assert d["backend_materializations"]==[]  # H retains its exact U(2) phase
  assert d["backend_unsupported_operations"]==[]
 
 def test_braket_lowering_matches_direct_pre_capability_contract():
