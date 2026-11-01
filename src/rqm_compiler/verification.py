@@ -267,7 +267,7 @@ def _verify_dense_unitary(
         errors = [(abs(u[i][j] - v[i][j]), i, j) for i in range(len(u)) for j in range(len(u))]
         max_abs_err, i, j = max(errors)
         pivot = (i, j)
-        max_rel_err = max(e / max(abs(u[i][j]), abs(v[i][j]), atol) for e, i, j in errors)
+        max_rel_err = max(0.0 if e == 0.0 else e / max(abs(u[i][j]), abs(v[i][j]), atol) for e, i, j in errors)
         notes = ["Exact composable operator comparison; no global-phase alignment."]
     report.notes.extend(notes)
     report.max_abs_err = max_abs_err
@@ -348,7 +348,7 @@ def compare_unitaries_up_to_global_phase(
                 max_abs_err = err
                 max_idx = (r, c)
             denom_rel = max(abs(u[r][c]), abs(ref), atol)
-            max_rel_err = max(max_rel_err, err / denom_rel)
+            max_rel_err = max(max_rel_err, 0.0 if err == 0.0 else err / denom_rel)
 
     tol_bound = atol + rtol * max(1.0, _matrix_max_abs(v))
     if max_abs_err > tol_bound:
