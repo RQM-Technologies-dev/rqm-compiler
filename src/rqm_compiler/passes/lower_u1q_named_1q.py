@@ -42,7 +42,7 @@ def _quaternion_to_zyz(
 ) -> tuple[float, float, float]:
     """Delegate canonical quaternion decomposition to ``rqm-core``."""
     alpha, beta, gamma = quaternion_to_zyz(w, x, y, z, atol=_ZERO_TOL)
-    return _wrap_angle(alpha), _wrap_angle(beta), _wrap_angle(gamma)
+    return alpha, beta, gamma
 
 
 def lower_u1q_named_1q_pass(circuit: Circuit) -> Circuit:
@@ -63,7 +63,7 @@ def lower_u1q_named_1q_pass(circuit: Circuit) -> Circuit:
 
             # Axis-aligned simplification: Rz(a) Ry(0) Rz(g) -> Rz(a+g).
             if math.isclose(beta, 0.0, abs_tol=_ZERO_TOL):
-                theta = _wrap_angle(alpha + gamma)
+                theta = alpha + gamma
                 if not math.isclose(theta, 0.0, abs_tol=_ZERO_TOL):
                     out.add(Operation(gate="rz", targets=[qubit], params={"angle": theta}))
                 continue

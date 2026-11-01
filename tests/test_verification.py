@@ -35,7 +35,7 @@ def test_sign_canonical_semantics_verified_for_q_and_minus_q():
     optimized = Circuit(1)
     optimized.u1q(0, -0.5, -0.5, -0.5, -0.5)
 
-    report = verify_equivalence(original, optimized)
+    report = verify_equivalence(original, optimized, phase_invariant=True)
     assert report.status == EquivalenceStatus.VERIFIED
     assert report.method == EquivalenceMethod.U1Q_CANONICAL.value
     assert report.verified is True
@@ -90,7 +90,7 @@ def test_global_phase_difference_is_verified():
     optimized = Circuit(1)
     optimized.z(0)
 
-    report = verify_equivalence(original, optimized)
+    report = verify_equivalence(original, optimized, phase_invariant=True)
     assert report.status == EquivalenceStatus.VERIFIED
 
 

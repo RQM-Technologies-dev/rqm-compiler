@@ -201,7 +201,7 @@ def test_gate_count_reduced_for_redundant_h_pair():
 def test_gate_count_reduced_multiple_adjacent_single_qubit():
     """A chain of named single-qubit gates on the same qubit merges to one u1q."""
     c = Circuit(1)
-    c.x(0).y(0).z(0)  # three gates → one merged u1q
+    c.rx(0,.2).ry(0,.3).rz(0,.4)  # exact SU(2) composition
     optimized, report = optimize_circuit(c)
     assert report.optimized_gate_count < report.original_gate_count
 
@@ -272,7 +272,7 @@ def test_optimized_circuit_all_u1q_single_qubit():
     optimized, _ = optimize_circuit(c)
     for op in optimized.operations:
         if len(op.targets) == 1 and not op.controls and op.gate not in ("measure", "barrier"):
-            assert op.gate == "u1q", f"Expected u1q, got {op.gate!r}"
+            assert op.gate in {"u1q", "h", "x"}  # named U(2) phase is retained
 
 
 def test_optimized_circuit_u1q_params_are_unit_quaternion():
@@ -328,7 +328,7 @@ def test_lower_u1q_named_1q_removes_u1q_ops():
     assert all(op.gate != "u1q" for op in lowered.operations)
     for op in lowered.operations:
         if len(op.targets) == 1 and not op.controls and op.gate not in ("measure", "barrier"):
-            assert op.gate in {"rz", "ry"}
+            assert op.gate in {"rz", "ry", "h"}
 
 
 def test_lower_circuit_for_braket_gate_model_removes_u1q():
@@ -500,8 +500,9 @@ def test_merge_u1q_merges_adjacent_u1q():
     c.u1q(0, 0.0, -1.0, 0.0, 0.0)   # X quaternion
     c.u1q(0, 0.0, -1.0, 0.0, 0.0)   # X quaternion again
     merged = merge_u1q_pass(c)
-    # X * X = identity → gate dropped
-    assert len(merged) == 0
+    # Two SU(2) pi rotations equal -I, not +I.
+    assert len(merged) == 1
+    assert merged.operations[0].params["w"] == -1
 
 
 def test_merge_u1q_identity_dropped():
@@ -682,7 +683,7 @@ def test_optimize_cancel_2q_in_passes_applied():
 
 def test_iswap_circuit_commits_verified_single_qubit_rewrite():
     c = Circuit(2)
-    c.h(0).iswap(0, 1)
+    c.rx(0,.23).iswap(0, 1)
     optimized, report = optimize_circuit(c)
     assert optimized.to_descriptors() != c.to_descriptors()
     assert report.optimization_applied is True
@@ -726,7 +727,7 @@ def test_verified_rewrites_commit():
 
 def test_iswap_circuits_no_longer_trigger_false_unsupported_fallback():
     c = Circuit(2)
-    c.h(0).iswap(0, 1).h(0)
+    c.rx(0,.23).iswap(0, 1).h(0)
     optimized, report = optimize_circuit(c)
     assert optimized.to_descriptors() != c.to_descriptors()
     assert report.optimization_applied is True

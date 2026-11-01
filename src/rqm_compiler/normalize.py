@@ -79,6 +79,7 @@ def normalize_quaternion(
     *,
     allow_renormalization: bool = False,
     tolerance: float = _UNIT_NORM_TOLERANCE,
+    canonicalize_sign: bool = True,
 ) -> tuple[float, float, float, float]:
     """Return a sign-canonical, unit-norm quaternion from (w, x, y, z).
 
@@ -95,7 +96,7 @@ def normalize_quaternion(
     errors.  The *tolerance* parameter controls how close to 1.0 the squared
     norm must be before rescaling is skipped.
 
-    Sign canonicalization
+    Sign canonicalization (only when canonicalize_sign=True)
     ~~~~~~~~~~~~~~~~~~~~~
     ``q`` and ``-q`` represent the same SO(3)/Bloch rotation, but their SU(2)
     matrices differ by a global phase of ``-1``.  The function enforces a
@@ -115,11 +116,13 @@ def normalize_quaternion(
         z: k-component.
         allow_renormalization: If ``True``, rescale to unit norm instead of
             raising on a non-unit input.
+        canonicalize_sign: Fold q and -q only for phase-insensitive use.
+            Exact compiler paths pass False. Legacy default is True.
         tolerance: Maximum allowed deviation of ``‖q‖²`` from 1.0 before the
             quaternion is considered non-unit.  Defaults to ``1e-9``.
 
     Returns:
-        A ``(w, x, y, z)`` tuple satisfying ``‖q‖ = 1`` and ``w ≥ 0``.
+        A normalized tuple; ``w ≥ 0`` only when canonicalize_sign is True.
 
     Raises:
         ValueError: If the quaternion is not unit-norm and
@@ -146,7 +149,7 @@ def normalize_quaternion(
 
     # Sign canonicalization: enforce w >= 0 for phase-invariant descriptor
     # comparisons where q and -q are intentionally folded together.
-    if w < 0.0:
+    if canonicalize_sign and w < 0.0:
         w, x, y, z = -w, -x, -y, -z
 
     return (w, x, y, z)
