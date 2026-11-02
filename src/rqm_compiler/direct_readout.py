@@ -30,8 +30,6 @@ class DirectReadout:
  reason:str=""
  intermediate_unit:str="complex_array_entries"
 
-def _apply_1q_state(v,u): return u@v
-
 def _leaf_transfer(rho, psi, gates, *, hub, leaf, observable):
  # Contract one fresh leaf exactly.  Hub is pair[0], leaf pair[1] in the
  # compiler matrix convention used by _operation_matrix.
