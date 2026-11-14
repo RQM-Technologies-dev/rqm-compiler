@@ -19,8 +19,8 @@ jobs:
    OMP_NUM_THREADS: "1"
    REPEATS: "5"
   steps:
-   - uses: actions/checkout@v4
-   - uses: actions/setup-python@v5
+   - uses: actions/checkout@v7
+   - uses: actions/setup-python@v7
      with: {python-version: "3.12", cache: pip}
    - name: Build and install the recorded wheel
      run: |
@@ -45,7 +45,7 @@ jobs:
        cd "$RUNNER_TEMP/rqm-taxonomy"
        python "$GITHUB_WORKSPACE/benchmarks/job_taxonomy.py"
    - if: always()
-     uses: actions/upload-artifact@v4
+     uses: actions/upload-artifact@v7
      with:
        name: compiler-job-taxonomy-${{ github.run_id }}
        path: ${{ runner.temp }}/rqm-taxonomy/results/
