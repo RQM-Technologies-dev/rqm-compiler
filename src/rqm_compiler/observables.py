@@ -49,15 +49,6 @@ class ObservableResult:
     operations_processed: int
 
 
-def _decompose_1q(matrix: np.ndarray, *, cutoff: float) -> list[tuple[str, complex]]:
-    out: list[tuple[str, complex]] = []
-    for label in _LABELS:
-        coeff = np.trace(_PAULI[label] @ matrix) / 2.0
-        if abs(coeff) > cutoff:
-            out.append((label, complex(coeff)))
-    return out
-
-
 def _basis_2q(a: str, b: str) -> np.ndarray:
     # Pair convention matches su4_blocks: pair[0] is the least-significant
     # qubit and therefore the right Kronecker factor.

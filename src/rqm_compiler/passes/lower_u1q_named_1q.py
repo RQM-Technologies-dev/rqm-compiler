@@ -24,16 +24,6 @@ from ..ops import Operation
 _ZERO_TOL: float = 1e-12
 
 
-def _wrap_angle(theta: float) -> float:
-    """Map angle to (-pi, pi] with deterministic zero snapping."""
-    out = (theta + math.pi) % (2.0 * math.pi) - math.pi
-    if math.isclose(out, -math.pi, abs_tol=_ZERO_TOL):
-        out = math.pi
-    if math.isclose(out, 0.0, abs_tol=_ZERO_TOL):
-        out = 0.0
-    return out
-
-
 def _quaternion_to_zyz(
     w: float,
     x: float,
